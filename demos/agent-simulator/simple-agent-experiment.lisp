@@ -1,6 +1,6 @@
 ;;;; -*- Mode:Common-Lisp; Package:CLIP-USER; Fonts:(MEDFNT); Base:10 -*-
 ;;;; *-* File: Titanic: /usr/users/eksl/systems/clip/demos/agent-simulator/simple-agent-experiment.lisp *-*
-;;;; *-* Last-edit: Tuesday, October 26, 1993  17:23:13; Edited-By: Westy *-* 
+;;;; *-* Last-edit: Tuesday, October 26, 1993  17:23:13; Edited-By: Westy *-*
 ;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
 ;;;; *-* Software: TI Common Lisp System 6.49 *-*
 ;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
@@ -46,7 +46,7 @@
 
 (defclip completion-time ()
   ()
-  
+
   (current-time))
 
 ;;; ***************************************************************************
@@ -58,7 +58,7 @@
   :ivs ((transition-probability in '(.01 .1))
 	      (cost-factor from 1 to 3))
   :instrumentation (agents-cost completion-time)
-  :before-trial (setf *transition-probability* transition-probability 
+  :before-trial (setf *transition-probability* transition-probability
 		      *relative-cost* cost-factor)
   :after-trial (write-current-experiment-data))
 
@@ -71,12 +71,6 @@
 (run-experiment 'simple-agent-experiment-1 :output-file #+Explorer "ed-buffer:data.clasp")
 
 |#
-  
+
 ;;; ***************************************************************************
 ;;; EOF
-
-
-
-
-
-

@@ -1,6 +1,6 @@
 ;;;; -*- Mode:Common-Lisp; Package:CLIP; Fonts:(MEDFNT); Base:10 -*-
 ;;;; *-* File: Titanic: /usr/users/eksl/systems/clip/development/macros.lisp *-*
-;;;; *-* Last-edit: Friday, September 24, 1993  10:15:55; Edited-By: Westy *-* 
+;;;; *-* Last-edit: Friday, September 24, 1993  10:15:55; Edited-By: Westy *-*
 ;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
 ;;;; *-* Software: TI Common Lisp System 6.49 *-*
 ;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
@@ -62,7 +62,7 @@ Options supported:
     (let ((options (pop forms)))
       (setf stream (getf options :stream stream)
             no-newline (getf options :no-newline))))
-    
+
   (flet ((spy-1 (form)
 	   `(let ((form   ',form)
 		  (values  (multiple-value-list ,form)))
@@ -106,23 +106,23 @@ Options supported:
 ;;; ----------------------------------------------------------------------------
 
 (defmacro incf-safe (place &optional delta)
-  `(if (numberp ,place) 
+  `(if (numberp ,place)
      (incf ,place ,@(if delta `(,delta)))
      ;; Non-numbers are assumed to be zero.
      (setf ,place 1)))
 
 ;;; ----------------------------------------------------------------------------
 
-(defmacro with-open-experiment-file ((experiment instrumentations stream filename 
+(defmacro with-open-experiment-file ((experiment instrumentations stream filename
                                                  &rest options
                                                  &key
                                                  (direction :output)
                                                  (if-exists :append)
                                                  (if-does-not-exist :create)
                                                  &allow-other-keys) &body body)
-  `(el::with-conditional-open-file (,stream ,filename 
+  `(el::with-conditional-open-file (,stream ,filename
                                             :direction ,direction
-                                            :if-exists ,if-exists 
+                                            :if-exists ,if-exists
                                             :if-does-not-exist ,if-does-not-exist
                                             ,@options)
      (possibly-write-experiment-headers ,experiment ,instrumentations ,stream ,filename)
@@ -135,7 +135,7 @@ Options supported:
      (assert (not (gethash stream *clasp-row-started-table*)) ()
              "attempt to recursively write clasp formatted row to ~a;~
               you might want to specify a separate output-file for your clip" stream)
-     (unwind-protect 
+     (unwind-protect
 	 (progn
 	   (setf (gethash stream *clasp-row-started-table*) t)
 	   (fresh-line ,stream)
@@ -149,7 +149,3 @@ Options supported:
 
 ;;; ***************************************************************************
 ;;; EOF
-
-
-
-

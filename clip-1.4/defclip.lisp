@@ -1,6 +1,6 @@
 ;;;; -*- Mode:Lisp; Package:CLIP; Fonts:(MEDFNT); Base:10 -*-
 ;;;; *-* File: Titanic: /usr/users/eksl/systems/clip/development/defclip.lisp *-*
-;;;; *-* Last-edit: Wednesday, January 5, 1994  18:23:15; Edited-By: Westy *-* 
+;;;; *-* Last-edit: Wednesday, January 5, 1994  18:23:15; Edited-By: Westy *-*
 ;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
 ;;;; *-* Software: TI Common Lisp System 6.49 *-*
 ;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
@@ -61,8 +61,8 @@
 (defun build-report-code-function (name form args &optional build-standard composite-child-p)
   (cond (form
 	 (etypecase form
-           (cons (build-standard-code-function 
-                  name 
+           (cons (build-standard-code-function
+                  name
                   ;; eliminate not-referenced errors
                   form
                   `(instrumentation *instrumentation-report-stream*
@@ -77,13 +77,13 @@
 					    extracter))
 	       `(defun ,name (instrumentation *instrumentation-report-stream* extracter ,@args)
                   ,(if (member '&rest args)
-		     `(apply 
-                       #'standard-report-function 
-                       instrumentation 
+		     `(apply
+                       #'standard-report-function
+                       instrumentation
                        *instrumentation-report-stream*
                        extracter ,@(extract-arguments-from-lambda-list args))
-                     `(standard-report-function 
-                       instrumentation 
+                     `(standard-report-function
+                       instrumentation
                        *instrumentation-report-stream*
                        extracter ,@(extract-arguments-from-lambda-list args)))))))))
 
@@ -95,14 +95,14 @@
 				(substitute #\- #\space (string-capitalize name))
 				args)))
       (if (null args)
-	  clasp-format 
+	  clasp-format
 	  (list
-	    clasp-format 
+	    clasp-format
 	    ;; ASCII format
 	    (format nil "~a~{~~@[-~~a~~]~*~^-~}"
 		    (substitute #\- #\space (string-capitalize name))
 		    args))))))
-      
+
 ;;;----------------------------------------------------------------------------
 ;;; DEFCLIP
 
@@ -115,7 +115,7 @@
   (apply #'make-instance class-name initargs))
 
 (defmacro defclip (name args &rest body &aux documentation code)
-  
+
   "Defines a method for managing a set of functions used to collect data.
 
 :COMPONENTS is list of clips that are associated with this clip; ie., they are
@@ -128,7 +128,7 @@ stream.
 :TRIGGER-EVENT is a function which triggers collection
 :ENABLE-FUNCTION, :DISABLE-FUNCTION, :RESET-FUNCTION, :DISPLAY-FUNCTION are code
 that will be called to enable, disable, reset and display the clip.
-:REPORT-FUNCTION can be used to override the default report function.  
+:REPORT-FUNCTION can be used to override the default report function.
 
  For example:
 
@@ -141,10 +141,10 @@ that will be called to enable, disable, reset and display the clip.
  An example showing one with components:
   \(defclip methods-each-bd (bulldozer)
     \"Salient info for each instance of applying a recovery method:\"
-    (:components (trial-number agent-name method-type failure-type calculate-recovery-cost 
+    (:components (trial-number agent-name method-type failure-type calculate-recovery-cost
                   method-succeeded-p order-of-application)
      :map-function (gather-recovery-method-instances (name-of bulldozer)))
-    ;; This code executes before the map-function is executed.    
+    ;; This code executes before the map-function is executed.
     (send (fire-system) :set-frame-system (name-of bulldozer)))
 
  This one reports no values it simply provides an interface to some metering code:
@@ -168,7 +168,7 @@ that will be called to enable, disable, reset and display the clip.
                                                 output-file
                                                 time-series)
                     &body body))
-  
+
   (setf documentation
 	(if (stringp (car body)) (pop body) "No documentation supplied."))
   (let ((code-body (rest body)))
@@ -199,7 +199,7 @@ that will be called to enable, disable, reset and display the clip.
                               "~s is not a valid keyword for DEFCLIP.")
     (assert (member initial-status '(nil :enabled :disabled)) ()
             "`:initial-status' should be one of :ENABLED or :DISABLED")
-    
+
     (assert (or (null map-function) (not (null components))) ()
             "If `:map-function' is specified, `:columns' must also be.")
     (assert (not (and components map-function report-function)) ()
@@ -215,12 +215,12 @@ that will be called to enable, disable, reset and display the clip.
       (multiple-value-bind (class-name superclasses)
 			   (derive-instrumentation-class
 			    class parent-name period components map-function time-series trigger-spec)
-      
+
       ;(spy name parent-name superclasses class-name)
       ;; Update the hash table at compile time so that components of the composite will
       ;; now how to make themselves.
       (update-parents-children name (and (not map-function) components))
-      
+
       `(progn
          ;; Define the functional interface to this instrumentation.
          (defun ,name ,args
@@ -229,13 +229,13 @@ that will be called to enable, disable, reset and display the clip.
 		    class-name
                     documentation)
            . ,code)
-               
+
          ,(build-standard-code-function enable-function-name enable-function nil)
          ,(build-standard-code-function disable-function-name disable-function nil)
          ,(build-standard-code-function reset-function-name reset-function nil)
          ,(build-standard-code-function display-function-name display-function args)
-	 
-	 
+
+
 	 ;; Define the report function.
 	 ,(cond ((member 'mapping-instrumentation-mixin superclasses)
 		 ;; For super-instrumentation the report-function is basically an init
@@ -248,10 +248,10 @@ that will be called to enable, disable, reset and display the clip.
 		((member 'composite-instrumentation-mixin superclasses)
 		 ;; For composite-instrumentation the report function generates the values
                  ;; that are passed on to the components.
-                 (build-report-code-function report-function-name 
+                 (build-report-code-function report-function-name
                                              `(apply ',name args)
                                              '(&rest args)))
-                                             
+
                                               ; `(progn
                                                ;   instrumentation stream
                                                ;   (apply ',name args))
@@ -261,7 +261,7 @@ that will be called to enable, disable, reset and display the clip.
 		     (equal superclasses '(child-of-composite-instrumentation-mixin))
 		     (equal superclasses '(scheduled-instrumentation-mixin))
 		     (equal superclasses '(functional-instrumentation-mixin)))
-			    
+
 		 ;; For standard style instrumentation the report function is responsible
 		 ;; for outputing the data to the data output stream. It can be directly
 		 ;; specified by the user.
@@ -275,10 +275,10 @@ that will be called to enable, disable, reset and display the clip.
 		(t
 		 (error "cannot figure out how to define a report function for these superclasses; ~a"
 			 superclasses)))
-	 
+
          ;; Define map function.
          ,(build-standard-code-function map-function-name map-function args)
-	 
+
 	 ;; kill any old ones
 	 (mapcar #'kill (find-all-instrumentation ',name))
          ;; Make the instance.
@@ -297,9 +297,9 @@ that will be called to enable, disable, reset and display the clip.
                `(:disable-function ',disable-function-name))
            ,@(when reset-function
                `(:reset-function   ',reset-function-name))
-           ,@(when display-function              
+           ,@(when display-function
                `(:display-function ',display-function-name))
-           
+
            :arguments    ',args
            ;; Unless this is a mapping-instrumentation-mixin with no code define a
            ;; report function. The report function of a mapping-instrumentation-mixin
@@ -316,18 +316,18 @@ that will be called to enable, disable, reset and display the clip.
                `(:combiner ',combiner))
            ,@(when extracter-supplied-p
                `(:extracter ',extracter))
-           
+
 	   ;; Add class specific slots
 	   ,@(when (member 'column-producing-instrumentation-mixin superclasses)
 	       `(:components ',components
                  ,@(when unmapped-columns
                      `(:unmapped-columns ',unmapped-columns))))
-               
+
 	   ,@(when (member 'mapping-instrumentation-mixin superclasses)
 	       `(:map-function ',map-function-name))
 	   ,@(when (member 'scheduled-instrumentation-mixin superclasses)
 	       `(:scheduler-args ',period))
-			     
+
 	   ,@(when (member 'functional-instrumentation-mixin superclasses)
 	       `(:trigger-events ',(parse-trigger-spec trigger-spec args)))
 	   )
@@ -343,7 +343,7 @@ that will be called to enable, disable, reset and display the clip.
 (defvar *force-subclip-redefine* t)
 
 (defun build-record-children-forms (name components)
-  (append 
+  (append
     (mapcan #'(lambda (kid-name)
 		`((when
                       (or *force-subclip-redefine*
@@ -384,14 +384,14 @@ that will be called to enable, disable, reset and display the clip.
                (atom (first trigger-spec))
 	       (keywordp (second trigger-spec))))
          (setf trigger-spec (list trigger-spec))))
-  
+
   (cond
    ;; A list of function names
    ((every #'atom trigger-spec)
     (loop for spec in trigger-spec
 	  collect  `(,spec :AFTER ,(if clip-args :ARGS-AND-VALUES :NONE))))
    ((consp trigger-spec)
-    (loop for (function . options) in trigger-spec 
+    (loop for (function . options) in trigger-spec
 	  for when = (if (member :BEFORE options) :BEFORE :AFTER)
 	  for predicate = (when (member :PREDICATE options)
 				(second (member :PREDICATE options)))
@@ -439,7 +439,7 @@ that will be called to enable, disable, reset and display the clip.
 				 (set-eq-p subclasses partial-cpl)))
 			   *instrumentation-class*))
 	(no-error-p nil)
-	(t 
+	(t
 	 (error "No instrumentation class with superclasses ~a found." subclasses))))
 
 ;; Note that this will currently not allow super-instrumentation to have parents (parents being composite, that is).
@@ -449,7 +449,7 @@ that will be called to enable, disable, reset and display the clip.
   (cond (class
 	 (setf superclasses
 	       (mapcar #'class-name (inst-cpl (find-class class)))))
-	
+
 	(t
 	 (macrolet ((pc (&rest args) `(setf superclasses (append superclasses ',args))))
 	   (when parent-name
@@ -464,7 +464,7 @@ that will be called to enable, disable, reset and display the clip.
 		   (pc composite-instrumentation-mixin)))
 	   (when time-series
 		 (pc time-series-instrumentation-mixin))
-	   (when trigger-spec 
+	   (when trigger-spec
 		 (pc functional-instrumentation-mixin time-series-instrumentation-mixin)))))
   (values
    (or class
@@ -504,7 +504,7 @@ that will be called to enable, disable, reset and display the clip.
 					   functional-instrumentation)
 					 superclasses))
 		   'composite-child-of-functional-composite-instrumentation)
-		  (t 
+		  (t
 		   (error "invalid superclasses; ~a" superclasses)))
 |#
 

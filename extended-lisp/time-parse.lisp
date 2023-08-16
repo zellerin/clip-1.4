@@ -1,5 +1,5 @@
 ;;;; -*- Mode:Common-Lisp; Package:TIME-PARSER; Base:10 -*-
-;;;; *-* Last-edit: Monday, January 25, 1993  12:05:35; Edited-By: Westy *-* 
+;;;; *-* Last-edit: Monday, January 25, 1993  12:05:35; Edited-By: Westy *-*
 
 
 ;;;                           RESTRICTED RIGHTS LEGEND
@@ -33,7 +33,7 @@
 ;; don't forget about lost days in 1580 or so.
 
 ;;;----------------------------------------------------------------------------
-;;; 
+;;;
 ;;; 12-20-88 DAB Take care of 10:10:20-GMT etc, in decode-time-zone.
 ;;; 12-13-88 DAB Added support to parse +xxxx and -xxxx timezones.
 
@@ -47,7 +47,7 @@
 
 ;;;----------------------------------------------------------------------------
 
-(defun nyi () 
+(defun nyi ()
   (cerror "implement it and go on" "NYI"))
 
 #-Explorer
@@ -191,7 +191,7 @@ if no occurrence of a char not in CHAR-SET is found before there."
     (:FRENCH (FOURTH STRINGS))
     (:GERMAN (FIFTH STRINGS))
     (:ITALIAN (SIXTH STRINGS))    ;; After this, perhaps NDOWSS ?
-    (OTHERWISE (error () "~S is not a known day-of-the-week mode" MODE))))  
+    (OTHERWISE (error () "~S is not a known day-of-the-week mode" MODE))))
 
 
 ;;; Months of the year:  Elements must be (in order):
@@ -226,7 +226,7 @@ if no occurrence of a char not in CHAR-SET is found before there."
     (:ROMAN (FIFTH STRINGS))
     (:GERMAN (SIXTH STRINGS))
     (:ITALIAN (SEVENTH STRINGS))
-    (OTHERWISE (error "~S is not a known month mode" MODE)))) 
+    (OTHERWISE (error "~S is not a known month mode" MODE))))
 
 ;;; One-based lengths of months
 (DEFVAR *MONTH-LENGTHS* '(0 31. 28. 31. 30. 31. 30. 31. 31. 30. 31. 30. 31.)
@@ -330,7 +330,7 @@ Defaults are our own timezone, and DST if it is now in effect."
   ;;so put these things there anyway!!
 ;; where are latitude and longitude anyway???
 ;; they should be in site info.
- 
+
 ;;; Character manipulation primitives that ought to be installed
 ;;; for general use, possibly not under these names.
 
@@ -340,14 +340,14 @@ Defaults are our own timezone, and DST if it is now in effect."
 
 (DEFUN LETTER-CHARACTER-P (CHAR)
   "T if CHAR is a letter."
-  (<= (char-code #\A) (char-code (CHAR-UPCASE CHAR)) (char-code #\Z))) 
+  (<= (char-code #\A) (char-code (CHAR-UPCASE CHAR)) (char-code #\Z)))
 
 
 (DEFUN DELQ-ALL (LIST SYMBOLS)
   "Delete all occurrences of all elements of SYMBOLS from LIST."
   (DOLIST (SYMBOL SYMBOLS)
     (SETQ LIST (DELETE SYMBOL (THE LIST LIST) :TEST #'EQ)))
-  LIST) 
+  LIST)
 
 
 ;;; Lexical analyzer.
@@ -355,7 +355,7 @@ Defaults are our own timezone, and DST if it is now in effect."
 
 (DEFPARAMETER *SPECIAL-CHAR-SYMBOLS*
               '((#\- . -) (#\+ . +) (#\/ . /) (#\: . |:|) (#\, . |,|) (#\. . |.|)
-               (#\; . |;|))) 
+               (#\; . |;|)))
 
 ;;; This function is the lexical analyzer of the parser; it splits a string
 ;;; up into tokens.  It takes a string, and optionally the starting and finishing
@@ -368,7 +368,7 @@ Defaults are our own timezone, and DST if it is now in effect."
 
 (DEFUN LEXICALLY-ANALYZE (STRING &OPTIONAL (START 0) (END (LENGTH STRING)));; Each time around this loop we either skip over some uninteresting text,
  ;; or we cons another token onto the list of tokens.
- 
+
   (DO ((INDEX START)
        (RESULT NIL))
       ((>= INDEX END) (NREVERSE RESULT))
@@ -378,12 +378,12 @@ Defaults are our own timezone, and DST if it is now in effect."
           (SETQ INDEX (1+ INDEX)))
         ((ASSOC CHAR *SPECIAL-CHAR-SYMBOLS* :TEST #'char=);; This is a special character.  Make a new token which is is
          ;; symbol whose name is that character.
-         
+
          (PUSH (CDR (ASSOC CHAR *SPECIAL-CHAR-SYMBOLS* :TEST #'EQ)) RESULT)
          (SETQ INDEX (1+ INDEX)))
         ((DIGIT-CHARACTER-P CHAR);; This is the beginning of a number in decimal.  Make a new token
          ;; which is a fixnum of this number's value.
-         
+
          (DO ((I (1+ INDEX) (1+ I))
               (DIGITS 1 (1+ DIGITS))
               (N 0))
@@ -394,22 +394,22 @@ Defaults are our own timezone, and DST if it is now in effect."
               (PUSH (LIST N DIGITS) RESULT) (SETQ INDEX I) (RETURN ())))))
         ((LETTER-CHARACTER-P CHAR);; This is the beginning of an alphabetic token.  Scan over all contiguous
          ;; letters, upcasing them, and make a new token which is a symbol.
-         
+
          (DO ((I INDEX (1+ I)))
              ((OR (>= I END)
                (LET ((CHAR (AREF STRING I)))
                  (AND
                   (NOT (OR (char= CHAR #\@) (LETTER-CHARACTER-P CHAR)));; This clause is to make "A.M." and "P.M." work, but note
                   ;; that trailing dots are ignored (see below).
-                  
+
                   (NOT (char= CHAR #\.));; If we are inside an alphabetic token and see a hypen followed
                   ;; by a letter, accept this; e.g. "twenty-third".
-                  
+
                   (NOT
                    (AND (char= CHAR #\-) (< (1+ I) END)
                         (LETTER-CHARACTER-P (AREF STRING (1+ I)));; Special kludge: if it is AM- or PM-, break
                         ;; here; some hosts send AM-EDT and such.
-                        
+
                         (NOT
                          (MEMBER (SUBSEQ STRING (MAX 0 (- I 2)) I)
 				 '("AM" "PM" "am" "pm")
@@ -419,7 +419,7 @@ Defaults are our own timezone, and DST if it is now in effect."
              (STRING-UPCASE
               (#+Portable NSUBSTRING #-Portable subseq STRING INDEX;; Strip trailing dots, for "Wed." and "Oct.".
                                  ;; Unfortunately also for "A.M.", see way below.
-                                 
+
                           (IF (CHAR-EQUAL (AREF STRING (1- I)) #\.) (1- I) I)))
              *TIME-PARSER-PACKAGE*)
             RESULT)
@@ -428,23 +428,23 @@ Defaults are our own timezone, and DST if it is now in effect."
          ;; to be equivalent to whitespace, so we ignore this string.  The "Laurel"
          ;; program puts days of the week in parens, but these are redundant so it
          ;; is OK to ignore them.
-         
+
          (DO ((I INDEX (1+ I)))
              ((OR (>= I END) (= (AREF STRING I) #\))) (SETQ INDEX (1+ I)))))
-        (T (BARF "Unknown character ~C" CHAR)))))) 
+        (T (BARF "Unknown character ~C" CHAR))))))
 
 
 (DEFPARAMETER *MONTH-SYMBOLS*
               '(("JAN" . JAN) ("FEB" . FEB) ("MAR" . MAR) ("APR" . APR) ("MAY" . MAY)
                ("JUN" . JUN) ("JUL" . JUL) ("AUG" . AUG) ("SEP" . SEP) ("OCT" . OCT)
-               ("NOV" . NOV) ("DEC" . DEC))) 
+               ("NOV" . NOV) ("DEC" . DEC)))
 
 
 (DEFUN MONTH-INTERN (STRING *PACKAGE*)
   "The same as INTERN, but faster if STRING is a 3-character month name.
 Assumes that the package is the TIME package for them."
   (OR (AND (= (LENGTH STRING) 3) (CDR (ASSOC STRING *MONTH-SYMBOLS* :TEST 'EQUALP)))
-      (INTERN STRING *PACKAGE*))) 
+      (INTERN STRING *PACKAGE*)))
 
 ;;; Defining patterns.
 
@@ -526,7 +526,7 @@ Assumes that the package is the TIME package for them."
       'COMPILE
       (DEFUN ,FUNCTION-NAME ,LAMBDA-LIST
         . ,BODY)
-      (DEFINE-PATTERN ',FROM-STATE ',PATTERN ',TO-STATE ',FUNCTION-NAME T)))) 
+      (DEFINE-PATTERN ',FROM-STATE ',PATTERN ',TO-STATE ',FUNCTION-NAME T))))
 
 
 (DEFMACRO DEFPATTERN-PEEK (FROM-STATE PATTERN TO-STATE LAMBDA-LIST . BODY)
@@ -535,7 +535,7 @@ Assumes that the package is the TIME package for them."
       'COMPILE
       (DEFUN ,FUNCTION-NAME ,LAMBDA-LIST
         . ,BODY)
-      (DEFINE-PATTERN ',FROM-STATE ',PATTERN ',TO-STATE ',FUNCTION-NAME ())))) 
+      (DEFINE-PATTERN ',FROM-STATE ',PATTERN ',TO-STATE ',FUNCTION-NAME ()))))
 
 (DEFVAR *STATES*)  ;Need to check if unbound.
 
@@ -547,14 +547,14 @@ Assumes that the package is the TIME package for them."
   (IF (BOUNDP '*STATES*);; We are reloading.
        (DOLIST (STATE *STATES*)
                             (REMPROP STATE 'PATTERNS)))
-  (SETQ *STATES* ())) 
+  (SETQ *STATES* ()))
 
 ;;; This function runs once at load-time for each DEFPATTERN.  This DEFUN must
 ;;; appear before any calls to DEFPATTERN in this file.
 
 (DEFUN DEFINE-PATTERN (FROM-STATE PATTERN TO-STATE FUNCTION-NAME SKIP-PATTERNS)
   (OR (MEMBER FROM-STATE *STATES* :TEST #'EQ) (PUSH FROM-STATE *STATES*))
-  (PUSH (LIST PATTERN TO-STATE FUNCTION-NAME SKIP-PATTERNS) (GET FROM-STATE 'PATTERNS))) 
+  (PUSH (LIST PATTERN TO-STATE FUNCTION-NAME SKIP-PATTERNS) (GET FROM-STATE 'PATTERNS)))
 
 ;;; This function gets invoked once at load-time after all the patterns
 ;;; are defined.  There must be exactly one top-level call to this
@@ -562,7 +562,7 @@ Assumes that the package is the TIME package for them."
 
 (DEFUN FINISH-PATTERNS ()
   (DOLIST (STATE *STATES*)
-    (SETF (GET STATE 'PATTERNS) (NREVERSE (GET STATE 'PATTERNS))))) 
+    (SETF (GET STATE 'PATTERNS) (NREVERSE (GET STATE 'PATTERNS)))))
 
 ;;; Parser.
 
@@ -575,20 +575,20 @@ Assumes that the package is the TIME package for them."
        (TOKENS TOKEN-LIST))
       ((AND (NULL TOKENS) (GET STATE 'FINAL-STATE)) STATE);; Try matching the first tokens of TOKENS against all the patterns
    ;; associated with STATE.
-   
+
     (DO ((TRIES (GET STATE 'PATTERNS) (CDR TRIES)))
         ((NULL TRIES) (BARF "No pattern matches the tokens ~S in state ~S" TOKENS STATE))
       (LET ((TRY (CAR TRIES)) ignore MATCHED-TOKENS);; TRY represents one of the patterns associated with STATE; it looks
             ;; like (<pattern> <to-state> <function-name> <skip-tokens>).
-            
+
         (COND
           ((MULTIPLE-VALUE-SETQ (ignore MATCHED-TOKENS)
              (PATTERN-MATCH (FIRST TRY) TOKENS));; Found it!  Run the function, advance over the matched tokens,
            ;; go to the new state and continue.
-           
+
            (LET ((RESULT (PATTERN-INVOKE (FIRST TRY) MATCHED-TOKENS (THIRD TRY) (FOURTH TRY))))
              (IF (FOURTH TRY) (SETQ TOKENS RESULT)))
-           (SETQ STATE (SECOND TRY)) (RETURN ()))))))) 
+           (SETQ STATE (SECOND TRY)) (RETURN ())))))))
 
 ;;; Try to match PATTERN against the beginning of TOKEN-LIST.
 ;;; Return possibly altered token list if they match, else NIL.
@@ -597,7 +597,7 @@ Assumes that the package is the TIME package for them."
 #+nil  (DECLARE (VALUES MATCHP EDITED-TOKEN-LIST))
   ;; Check specially for two possible first elements of the pattern
   ;; that are the ones we check for in parsing dates from file servers.
-  
+
   (COND
     ((AND (EQUAL (CAR PATTERN) '(FIXP 1 2)) (CADR PATTERN) (SYMBOLP (CADR PATTERN))
           (not (eq (CADR TOKEN-LIST) (CADR PATTERN))))
@@ -620,9 +620,9 @@ Assumes that the package is the TIME package for them."
          ((NOT
            (MULTIPLE-VALUE-SETQ (ignore TOKEN-LIST EDITED-TOKEN-LIST)
              (MATCH-ELEMENT (CAR PATTERN) TOKEN-LIST ENTIRE-TOKEN-LIST)));; This element does not match, lose.
-          
+
           (RETURN ()))
-         (EDITED-TOKEN-LIST (SETQ ENTIRE-TOKEN-LIST EDITED-TOKEN-LIST))))))) 
+         (EDITED-TOKEN-LIST (SETQ ENTIRE-TOKEN-LIST EDITED-TOKEN-LIST)))))))
 
 ;;; Predicate: Does PATTERN-ELEMENT match the first TOKEN(s) of TOKEN-LIST?
 ;;; Second value the remaining tokens not matched.
@@ -635,15 +635,15 @@ Assumes that the package is the TIME package for them."
           ((SYMBOLP PATTERN-ELEMENT);; The pattern element is a symbol; matching is judged by EQness.
             (EQ PATTERN-ELEMENT TOKEN))
           ((INTEGERP PATTERN-ELEMENT);; Match any fixnum of this value, no matter what its length.
-           
+
            (OR;; Detect multi-token fractions of all sorts, plus noise words.
-            
+
             (MULTIPLE-VALUE-BIND (FLAG REMAINING EDITED-LIST) (MATCH-FRACTION PATTERN-ELEMENT TOKEN-LIST ENTIRE-TOKEN-LIST)
               (IF FLAG (SETQ REMAINING-TOKEN-LIST REMAINING EDITED-TOKEN-LIST EDITED-LIST))
               FLAG);; Next possibility: a number made of digits.
-            
+
             (AND (CONSP TOKEN) (INTEGERP (FIRST TOKEN)) (= (FIRST TOKEN) PATTERN-ELEMENT));; Other possibility: a string number.
-            
+
             (AND (SYMBOLP TOKEN) (GET TOKEN 'FIXNUM-STRING)
                  (= (GET TOKEN 'VALUE) PATTERN-ELEMENT))))
           ((EQ (FIRST PATTERN-ELEMENT) 'FRACTION)
@@ -652,30 +652,30 @@ Assumes that the package is the TIME package for them."
              (IF FLAG (SETQ REMAINING-TOKEN-LIST REMAINING EDITED-TOKEN-LIST EDITED-LIST))
              FLAG))
           ((EQ (FIRST PATTERN-ELEMENT) 'FIXP);; Match certain fixnums.
-           
+
            (OR;; Detect multi-token fractions of all sorts, plus noise words.
-            
+
             (AND (EQUAL PATTERN-ELEMENT '(FIXP))
                  (MULTIPLE-VALUE-BIND (FLAG REMAINING EDITED-LIST) (MATCH-FRACTION PATTERN-ELEMENT TOKEN-LIST ENTIRE-TOKEN-LIST)
                    (IF FLAG (SETQ REMAINING-TOKEN-LIST REMAINING EDITED-TOKEN-LIST EDITED-LIST))
                    FLAG));; Next possibility: a number made of digits.
-            
+
             (AND (CONSP TOKEN) (INTEGERP (FIRST TOKEN))
                  (MATCH-NUMBER PATTERN-ELEMENT (SECOND TOKEN)));; Other possibility: a string number.
-            
+
             (AND (SYMBOLP TOKEN) (GET TOKEN 'FIXNUM-STRING)
                  (MATCH-NUMBER PATTERN-ELEMENT (IF (> (GET TOKEN 'VALUE) 9) 2 1)))))
           ((EQ (FIRST PATTERN-ELEMENT) 'ANY);; Match any token.
             T)
           ((EQ (FIRST PATTERN-ELEMENT) 'ANY-OF);; If the TOKEN is any of these things, match.
-           
+
            (MEMBER TOKEN (CDR PATTERN-ELEMENT) :TEST #'EQ))
           ((EQ (FIRST PATTERN-ELEMENT) 'GET);; If TOKEN is a symbol with this property, match.
-           
+
            (AND (SYMBOLP TOKEN) (GET TOKEN (SECOND PATTERN-ELEMENT))))
           (T;; Not a "special" form.  This is a predicate to apply.
             (FUNCALL (FIRST PATTERN-ELEMENT) TOKEN))))
-  (VALUES MATCHP REMAINING-TOKEN-LIST EDITED-TOKEN-LIST)) 
+  (VALUES MATCHP REMAINING-TOKEN-LIST EDITED-TOKEN-LIST))
 
 
 (DEFUN MATCH-FRACTION (PATTERN-ELEMENT TOKEN-LIST ENTIRE-TOKEN-LIST &OPTIONAL DONT-INCLUDE-FOLLOWING-ARTICLES &AUX
@@ -683,18 +683,18 @@ Assumes that the package is the TIME package for them."
   (NUMBER-OF-TOKENS 1))
 #+nil  (DECLARE (VALUES MATCHP REMAINING-TOKEN-LIST EDITED-TOKEN-LIST))
   (OR;; "2.5"
-   
+
    (AND (CONSP TOKEN) (INTEGERP (CAR TOKEN)) (EQ (SECOND TOKEN-LIST) '|.|)
         (CONSP (THIRD TOKEN-LIST)) (INTEGERP (CAR (THIRD TOKEN-LIST)))
         (SETQ MATCHP
               (READ-FROM-STRING (FORMAT () "~D.~D" (CAR TOKEN) (CAR (THIRD TOKEN-LIST))) T))
         (SETQ NUMBER-OF-TOKENS 3));; ".5"
-   
+
    (AND (EQ TOKEN '|.|) (CONSP (SECOND TOKEN-LIST)) (INTEGERP (CAR (SECOND TOKEN-LIST)))
         (SETQ MATCHP (READ-FROM-STRING (FORMAT () "~D.~D" 0 (CAR (SECOND TOKEN-LIST))) T))
         (SETQ NUMBER-OF-TOKENS 2));; "2 a half", which is what we get from "2 and a half"
    ;; since "and" is a noise word.
-   
+
    (AND (CONSP TOKEN) (INTEGERP (CAR TOKEN))
         (MULTIPLE-VALUE-BIND (FRACTION REMAINING) (MATCH-FRACTION '(FIXP) (CDR TOKEN-LIST) ENTIRE-TOKEN-LIST
                          DONT-INCLUDE-FOLLOWING-ARTICLES)
@@ -702,27 +702,27 @@ Assumes that the package is the TIME package for them."
               (SETQ MATCHP (+ (CAR TOKEN) FRACTION) NUMBER-OF-TOKENS
                     (LENGTH (LDIFF TOKEN-LIST REMAINING)) DONT-INCLUDE-FOLLOWING-ARTICLES T))
           FRACTION));; "A half", etc.
-   
+
    (AND (SYMBOLP TOKEN) (GET TOKEN 'ARTICLE) (SYMBOLP (CADR TOKEN-LIST))
         (GET (CADR TOKEN-LIST) 'FRACTION) (SETQ MATCHP (GET (CADR TOKEN-LIST) 'VALUE))
         (SETQ NUMBER-OF-TOKENS 2));; just "Half".
-   
+
    (AND (SYMBOLP TOKEN) (GET TOKEN 'FRACTION) (SETQ MATCHP (GET TOKEN 'VALUE))))
   (AND (INTEGERP PATTERN-ELEMENT) MATCHP (/= PATTERN-ELEMENT MATCHP) (SETQ MATCHP ()));; Now discard an article or proposition following the fraction, if any.
   ;; "half a", etc.
-  
+
   (COND
     ((NOT DONT-INCLUDE-FOLLOWING-ARTICLES)
      (LET ((TOKEN-AFTER (NTH NUMBER-OF-TOKENS TOKEN-LIST)))
        (AND (EQ TOKEN-AFTER 'OF) (INCF NUMBER-OF-TOKENS)))
      (LET ((TOKEN-AFTER (NTH NUMBER-OF-TOKENS TOKEN-LIST)))
        (AND (SYMBOLP TOKEN-AFTER) (GET TOKEN-AFTER 'ARTICLE) (INCF NUMBER-OF-TOKENS)))));; Now edit out the tokens we want to replace, if more than one.
-  
+
   (IF (/= NUMBER-OF-TOKENS 1)
       (SETQ REMAINING-TOKEN-LIST (NTHCDR NUMBER-OF-TOKENS TOKEN-LIST) EDITED-TOKEN-LIST
             (APPEND (LDIFF ENTIRE-TOKEN-LIST TOKEN-LIST) (LIST (LIST MATCHP))
                     REMAINING-TOKEN-LIST)))
-  (VALUES MATCHP REMAINING-TOKEN-LIST EDITED-TOKEN-LIST)) 
+  (VALUES MATCHP REMAINING-TOKEN-LIST EDITED-TOKEN-LIST))
 
 
 ;;; Internal function of MATCH-ELEMENT for matching numbers.
@@ -731,7 +731,7 @@ Assumes that the package is the TIME package for them."
   (CASE (LENGTH PATTERN-ELEMENT)
     (1 T)
     (2 (= (SECOND PATTERN-ELEMENT) LENGTH))
-    (3 (AND (<= (SECOND PATTERN-ELEMENT) LENGTH) (>= (THIRD PATTERN-ELEMENT) LENGTH))))) 
+    (3 (AND (<= (SECOND PATTERN-ELEMENT) LENGTH) (>= (THIRD PATTERN-ELEMENT) LENGTH)))))
 
 ;;; Call FUNCTION, passing it all the tokens of TOKEN-LIST that were
 ;;; matched by PATTERN, except the constants.
@@ -741,10 +741,10 @@ Assumes that the package is the TIME package for them."
                                #-Explorer arguments)
   (PROG ()
     (IF (NOT PASS-ARGUMENTS) (GO END-LOOP)); Don't give it arguments.
-    
+
     #+Explorer
     (sys:%ASSURE-PDL-ROOM (+ 4 (LENGTH PATTERN))); (Conservative.)
-    
+
     LOOP
     (COND
       ((NULL PATTERN) (GO END-LOOP)))
@@ -754,7 +754,7 @@ Assumes that the package is the TIME package for them."
        (incf arg-count)
        #+Explorer
        (sys:%PUSH (CAR TOKEN-LIST))
-       #-Explorer 
+       #-Explorer
        (push (CAR TOKEN-LIST) arguments)))
 
     (SETQ PATTERN (CDR PATTERN))
@@ -776,7 +776,7 @@ Assumes that the package is the TIME package for them."
                for pattern on pattern
                for pattern-item = (first pattern)
                when (not (atom pattern-item)) collect token into arguments
-               finally 
+               finally
                (format t "~&Calling ~a with ~a" function arguments)
                (apply function arguments)
                (return token-list))))
@@ -790,7 +790,7 @@ Assumes that the package is the TIME package for them."
       (FIRST TOKEN))
     ((AND (SYMBOLP TOKEN) (GET TOKEN 'FIXNUM-STRING));; This is an English ordinal or cardinal.
       (GET TOKEN 'VALUE))
-    (T (error "The token ~S is not a number at all." TOKEN)))) 
+    (T (error "The token ~S is not a number at all." TOKEN))))
 
 
 ;;; Keywords.
@@ -809,16 +809,16 @@ Assumes that the package is the TIME package for them."
       ((NULL REST))
     (DOLIST (STRING (CAR REST))
       (IF (STRINGP STRING); Don't bash plist of NIL.
-          
+
           (LET ((SYMBOL (INTERN (STRING-UPCASE STRING) *TIME-PARSER-PACKAGE*)))
             (SETF (GET SYMBOL 'VALUE) I)
-            (SETF (GET SYMBOL TYPE) T)))))) 
+            (SETF (GET SYMBOL TYPE) T))))))
 
 ;;; NOTE: This file must be loaded after the TIME file.
 
-(ASSIGN-TYPE-AND-VALUES 'DAY-OF-THE-WEEK *DAYS-OF-THE-WEEK* 0) 
+(ASSIGN-TYPE-AND-VALUES 'DAY-OF-THE-WEEK *DAYS-OF-THE-WEEK* 0)
 
-(ASSIGN-TYPE-AND-VALUES 'MONTH *MONTHS* 1) 
+(ASSIGN-TYPE-AND-VALUES 'MONTH *MONTHS* 1)
 
 ;;; Take a list of lists of symbols.  Every symbol gets a <type> property
 ;;; of T and a VALUE property of the first symbol of the list.
@@ -828,19 +828,19 @@ Assumes that the package is the TIME package for them."
     (LET ((FIRST-SYMBOL (FIRST LIST-OF-SYMBOLS)))
       (DOLIST (SYMBOL LIST-OF-SYMBOLS)
         (SETF (GET SYMBOL VALUE-PROP-NAME) FIRST-SYMBOL)
-        (SETF (GET SYMBOL TYPE) T))))) 
+        (SETF (GET SYMBOL TYPE) T)))))
 
 
-(ASSIGN-TYPE-AND-VALUES-SYMBOLS 'HALF-DAY 'VALUE '((NOON N) (MIDNIGHT M))) 
+(ASSIGN-TYPE-AND-VALUES-SYMBOLS 'HALF-DAY 'VALUE '((NOON N) (MIDNIGHT M)))
 
 
 (ASSIGN-TYPE-AND-VALUES-SYMBOLS 'OFFSET 'OFFSET-VALUE
                                 '((YEARS YEAR YR Y) (MONTHS MONTH MO) (WEEKS WEEK WK)
                                  (DAYS DAY DA DY D) (HOURS HOUR HR H)
-                                 (MINUTES MINUTE MINS MIN MN M) (SECONDS SECOND SECS SEC SC S))) 
+                                 (MINUTES MINUTE MINS MIN MN M) (SECONDS SECOND SECS SEC SC S)))
 
 
-(ASSIGN-TYPE-AND-VALUES-SYMBOLS 'MERIDIAN 'VALUE '((AM A.M. A.M) (PM P.M. P.M))) 
+(ASSIGN-TYPE-AND-VALUES-SYMBOLS 'MERIDIAN 'VALUE '((AM A.M. A.M) (PM P.M. P.M)))
 
 ;;6/1/88 CLM - changed to call STRING instead of the DEFF'ed STRING-CHAR (SPR 8136).
 (DEFUN ASSIGN-TIME-ZONES ()
@@ -852,91 +852,91 @@ Assumes that the package is the TIME package for them."
 
 (DEFUN ASSIGN-ZONE (STRING VALUE)
   (IF (STRINGP STRING); Don't bash plist of NIL.
-      
+
       (LET ((SYMBOL (INTERN STRING *TIME-PARSER-PACKAGE*)))
         (SETF (GET SYMBOL 'ZONE-VALUE) VALUE); Can't use VALUE: N and M are half-days too!
-        
-        (SETF (GET SYMBOL 'TIME-ZONE) T)))) 
+
+        (SETF (GET SYMBOL 'TIME-ZONE) T))))
 
 
-(ASSIGN-TIME-ZONES) 
+(ASSIGN-TIME-ZONES)
 
 
-(SETF (GET '- T) 'SIGN) 
+(SETF (GET '- T) 'SIGN)
 
-(SETF (GET '+ T) 'SIGN) 
+(SETF (GET '+ T) 'SIGN)
 
 ;;; Cardinal and ordinal numbers.
 
 (DEFUN ASSIGN-NUMBERS ()
   (DOTIMES (I 31)
     (ASSIGN-NUMBER I (INTERN (STRING-UPCASE (FORMAT () "~:R" I)) *TIME-PARSER-PACKAGE*))
-    (ASSIGN-NUMBER I (INTERN (STRING-UPCASE (FORMAT () "~R" I)) *TIME-PARSER-PACKAGE*)))) 
+    (ASSIGN-NUMBER I (INTERN (STRING-UPCASE (FORMAT () "~R" I)) *TIME-PARSER-PACKAGE*))))
 
 
 (DEFUN ASSIGN-NUMBER (NUMBER SYMBOL)
   (SETF (GET SYMBOL 'FIXNUM-STRING) T)
-  (SETF (GET SYMBOL 'VALUE) NUMBER)) 
+  (SETF (GET SYMBOL 'VALUE) NUMBER))
 
 
-(ASSIGN-NUMBERS) 
+(ASSIGN-NUMBERS)
 
 ;;; Make indefinite articles work, so that "a minute" and "an hour" will be accepted.
 
-(ASSIGN-NUMBER 1 'A) 
+(ASSIGN-NUMBER 1 'A)
 
-(ASSIGN-NUMBER 1 'AN) 
+(ASSIGN-NUMBER 1 'AN)
 
 ;;; Make "a half" and "half a" work in MATCH-ELEMENT.
 
-(DEFPROP A T ARTICLE) 
+(DEFPROP A T ARTICLE)
 
-(DEFPROP AN T ARTICLE) 
+(DEFPROP AN T ARTICLE)
 
-(DEFPROP ONE T ARTICLE) 
+(DEFPROP ONE T ARTICLE)
 
-(DEFPROP HALF T FRACTION) 
+(DEFPROP HALF T FRACTION)
 
-(DEFPROP QUARTER T FRACTION) 
+(DEFPROP QUARTER T FRACTION)
 
-(ASSIGN-NUMBER 0.5 'HALF) 
+(ASSIGN-NUMBER 0.5 'HALF)
 
-(ASSIGN-NUMBER 0.25 'QUARTER) 
+(ASSIGN-NUMBER 0.25 'QUARTER)
 
 ;;; German numbers.
 
 #+Explorer
-(IF (GET :GERMAN 'SI:PRINC-FUNCTION) (ASSIGN-GERMAN-NUMBERS)) 
+(IF (GET :GERMAN 'SI:PRINC-FUNCTION) (ASSIGN-GERMAN-NUMBERS))
 
 
 (DEFUN ASSIGN-GERMAN-NUMBERS ()
   (LET ((*PRINT-BASE* :GERMAN))
     (DOTIMES (I 31)
-      (ASSIGN-NUMBER I (INTERN (STRING-UPCASE (FORMAT () "~S" I)) *TIME-PARSER-PACKAGE*))))) 
+      (ASSIGN-NUMBER I (INTERN (STRING-UPCASE (FORMAT () "~S" I)) *TIME-PARSER-PACKAGE*)))))
 
 ;;; The patterns.
 
 (defvar *last-offset-direction* '- "Set in SET-OFFSET and used in `THE HOUR' parsing.")
 
 ;;; Handle a general time followed by FROM (or something like it) and another time.
-                        
-(defprop from + direction) 
+
+(defprop from + direction)
 
 (defprop after + direction)
 
-(defprop past + direction) 
+(defprop past + direction)
 
-(defprop before - direction) 
+(defprop before - direction)
 
-(defprop till - direction) 
+(defprop till - direction)
 
-(defprop to - direction) 
+(defprop to - direction)
 
 (defprop of - direction)
 
-(DEFPROP OF T OF-OR-TO) 
+(DEFPROP OF T OF-OR-TO)
 
-(DEFPROP TO T OF-OR-TO) 
+(DEFPROP TO T OF-OR-TO)
 
 (START-PATTERNS)
 
@@ -951,39 +951,39 @@ Assumes that the package is the TIME package for them."
 ;;; follows ought to override it.
 
 (defpattern main ((fixp 1 2) - (get month) - (fixp 2)) main (date month year) (set-date date)
-            (set-month-from-name month) (set-year-of-century year)) 
+            (set-month-from-name month) (set-year-of-century year))
 
 ;;; 3/15/80 means March 15, 1980.  15/3/80 means March 15, 1980 to a European.
 ;;; If both the numbers are small, an ambuguity must be dealt with.
 ;;; Put this here so that ITS file servers run fast.
 
 (defpattern main ((fixp 1 2) / (fixp 1 2) / (fixp 2)) main (month date year-of-century)
-            (set-month-and-date month date) (set-year-of-century year-of-century)) 
+            (set-month-and-date month date) (set-year-of-century year-of-century))
 
 ;;; 11:30 means 11 hours and 30 minutes, go look for seconds.
 ;;; This is also used by ITS and Twenex file servers.
 
 (defpattern main ((fixp 1 2) |:| (fixp 2)) second (hour minute) (set-hour hour)
-            (set-minute minute)) 
+            (set-minute minute))
 
 ;;; March 15 means March 15; go look for a year preceeded by a comma.
 
 (defpattern main ((get month) (fixp 1 2)) year-comma (month date) (set-month-from-name month)
-            (set-date date)) 
+            (set-date date))
 
 ;;; 15 March means March 15; go look for a year.
 
 (defpattern main ((fixp 1 2) (get month)) year-comma (date month) (set-date date)
-            (set-month-from-name month)) 
+            (set-month-from-name month))
 
 ;;; 3/15/1980 means March 15, 1980.  Same European problem.
 
 (defpattern main ((fixp 1 2) / (fixp 1 2) / (fixp 4)) main (month date year)
-            (set-month-and-date month date) (set-year year)) 
+            (set-month-and-date month date) (set-year year))
 
 ;;; 3/15 means March 15, year defaults.  Same European problem.
 
-(defpattern main ((fixp 1 2) / (fixp 1 2)) main (month date) (set-month-and-date month date)) 
+(defpattern main ((fixp 1 2) / (fixp 1 2)) main (month date) (set-month-and-date month date))
 
 ;;; Note: GDixon's convert_date_to_binary_.rd believes in YY-MM-DD; the code
 ;;; below believes in MM-DD-YY.  RFC733 does not allow numeric months at all.
@@ -991,102 +991,102 @@ Assumes that the package is the TIME package for them."
 ;;; 3-15-80 means March 15, 1980.  Same European problem.
 
 (defpattern main ((fixp 1 2) - (fixp 1 2) - (fixp 2)) main (month date year-of-century)
-            (set-month-and-date month date) (set-year-of-century year-of-century)) 
+            (set-month-and-date month date) (set-year-of-century year-of-century))
 
 ;;; 3-15-1980 means March 15, 1980.  Same European problem.
 
 (defpattern main ((fixp 1 2) - (fixp 1 2) - (fixp 4)) main (month date year)
-            (set-month-and-date month date) (set-year year)) 
+            (set-month-and-date month date) (set-year year))
 
 ;;; 3-15 means March 15, year defaults.  Same European problem.
 
-(defpattern main ((fixp 1 2) - (fixp 1 2)) main (month date) (set-month-and-date month date)) 
+(defpattern main ((fixp 1 2) - (fixp 1 2)) main (month date) (set-month-and-date month date))
 
 ;;; 3-Jan-1980 means Jan 3, 1980.
 
 (defpattern main ((fixp 1 2) - (get month) - (fixp 4)) main (date month year) (set-date date)
-            (set-month-from-name month) (set-year year)) 
+            (set-month-from-name month) (set-year year))
 
 ;;; Jan-3-80 means Jan 3, 1980.
 
 (defpattern main ((get month) - (fixp 1 2) - (fixp 2)) main (month date year)
-            (set-month-from-name month) (set-date date) (set-year-of-century year)) 
+            (set-month-from-name month) (set-date date) (set-year-of-century year))
 
 ;;; Jan-3-1980 means Jan 3, 1980.
 
 (defpattern main ((get month) - (fixp 1 2) - (fixp 4)) main (month date year)
-            (set-month-from-name month) (set-date date) (set-year year)) 
+            (set-month-from-name month) (set-date date) (set-year year))
 
 ;;; 1130.4 means 11 hours and 30.4 minutes, in Multics internal headers,
 ;;; which Zmail sometimes actually sees.  (I think this happens when
 ;;; a QSEND from Multics turns into mail.)
 
 (defpattern main ((fixp 4) |.| (fixp 1)) main (hhmm tenths-of-minutes) (set-hhmm hhmm)
-            (set-tenths-of-minute tenths-of-minutes)) 
+            (set-tenths-of-minute tenths-of-minutes))
 
 ;;; 1130. means 11 hours and 30 minutes and zero seconds.
 
-(defpattern main ((fixp 4) |.|) main (hhmm) (set-hhmm hhmm)) 
+(defpattern main ((fixp 4) |.|) main (hhmm) (set-hhmm hhmm))
 
 ;;; 1130 means 11 hours and 30 minutes and zero seconds.
 
-(defpattern main ((fixp 4)) main (hhmm) (set-hhmm hhmm)) 
+(defpattern main ((fixp 4)) main (hhmm) (set-hhmm hhmm))
 
 ;;; 113015 means 11 hours, 30 minutes and 15 seconds.
 
-(defpattern main ((fixp 6)) main (hhmmss) (set-hhmmss hhmmss)) 
+(defpattern main ((fixp 6)) main (hhmmss) (set-hhmmss hhmmss))
 
 ;;; Allow the format 11:12:03 1982 which UNIX seems to put in messages.
 
 (defpattern second ((any-of |:| |.|) (fixp 1 2) (fixp 4)) main (ignore second year)
-            ignore (set-year year) (set-second second)) 
+            ignore (set-year year) (set-second second))
 
 ;;; Looking for seconds, :23 means 23 seconds, look for AM/PM.
 ;;; .23 works too; this is a European form.
 
-(defpattern second ((any-of |:| |.|) (fixp 1 2)) meridian (ignore second) 
-  ignore (set-second second)) 
+(defpattern second ((any-of |:| |.|) (fixp 1 2)) meridian (ignore second)
+  ignore (set-second second))
 
 ;;; Looking for seconds, not finding them, look for AM/PM.
 
-(defpattern second () meridian () (set-second '(0 2))) 
+(defpattern second () meridian () (set-second '(0 2)))
 
 ;;; Looking for meridian, AM means AM and PM means PM, go back to main state.
 
-(defpattern meridian ((get meridian)) main (meridian) (set-meridian meridian)) 
+(defpattern meridian ((get meridian)) main (meridian) (set-meridian meridian))
 
 ;;; Looking for meridian, not finding it, go back to main state.
 
-(defpattern meridian () main ()) 
+(defpattern meridian () main ())
 
 ;;; 4 PM means what you would think.
 
 (defpattern main ((fixp 1 2) (get meridian)) main (hour meridian) (set-hour hour)
-            (set-meridian meridian) (set-minute '(0 2)) (set-second '(0 2))) 
+            (set-meridian meridian) (set-minute '(0 2)) (set-second '(0 2)))
 
 ;;; Day of the week, as in "Friday, Jan 5"
 
 (defpattern main ((get day-of-the-week) |,|) main (day-of-the-week)
-            (set-day-of-the-week day-of-the-week)) 
+            (set-day-of-the-week day-of-the-week))
 
 ;;; Day of the week.
 
 (defpattern main ((get day-of-the-week)) main (day-of-the-week)
-            (set-day-of-the-week day-of-the-week)) 
+            (set-day-of-the-week day-of-the-week))
 
 ;;; These patterns inserted by CAL 10/24/80
 
 ;;; "today"
 
-(defpattern main (today) main () (set-today)) 
+(defpattern main (today) main () (set-today))
 
 ;;; "yesterday"
 
-(defpattern main (yesterday) main () (set-yesterday)) 
+(defpattern main (yesterday) main () (set-yesterday))
 
 ;;; "tomorrow"
 
-(defpattern main (tomorrow) main () (set-tomorrow)) 
+(defpattern main (tomorrow) main () (set-tomorrow))
 
 ;;; "now"
 
@@ -1101,7 +1101,7 @@ Assumes that the package is the TIME package for them."
 ;;; "2 days before jan 30"
 
 (defpattern main ((fixp) (get offset) before) main (offset-value offset-units)
-            (set-offset '- offset-value offset-units)) 
+            (set-offset '- offset-value offset-units))
 
 ;;;PHD 2/19/87 Added pattern for "2 days <direction>. jan 30"
 ;;;(fixes a bug where 2 days till christmas is parsed as 27-dec)
@@ -1110,30 +1110,30 @@ Assumes that the package is the TIME package for them."
 ;;; "2 minutes past 3 pm"
 
 (defpattern main ((fixp) (get offset) past) main (offset-value offset-units)
-            (set-offset '+ offset-value offset-units)) 
+            (set-offset '+ offset-value offset-units))
 
 ;;; "half past 3pm"
 
-(defpattern main ((fraction) past) main (hour-value) (set-offset '+ hour-value 'hours)) 
+(defpattern main ((fraction) past) main (hour-value) (set-offset '+ hour-value 'hours))
 
 ;;; "20 past 3 pm"
 
-(defpattern main ((fixp) past) main (minute-value) (set-offset '+ minute-value 'minutes)) 
+(defpattern main ((fixp) past) main (minute-value) (set-offset '+ minute-value 'minutes))
 
 ;;; "2 minutes of 3 pm"
 
 (defpattern main ((fixp) (get offset) (get direction)) main (offset-value ignore offset-units)
-            ignore (set-offset '- offset-value offset-units)) 
+            ignore (set-offset '- offset-value offset-units))
 
 ;;; "a quarter of 3pm"
 
 (defpattern main ((fraction t) (get direction)) main (hour-value ignore)
-            ignore (set-offset '- hour-value 'hours)) 
+            ignore (set-offset '- hour-value 'hours))
 
 ;;; "20 of 3 pm"
 
 (defpattern main ((fixp) (get direction)) main (minute-value ignore)
-            ignore (set-offset '- minute-value 'minutes)) 
+            ignore (set-offset '- minute-value 'minutes))
 
 ;;; "The day before yesterday" or "day before yesterday"
 
@@ -1142,88 +1142,88 @@ Assumes that the package is the TIME package for them."
 ;;; "2 days after jan 15"
 
 (defpattern main ((fixp) (get offset) after) main (offset-value offset-units)
-            (set-offset '+ offset-value offset-units)) 
+            (set-offset '+ offset-value offset-units))
 
 ;;; "The day after jan 15", "day after tomorrow"
 
-(defpattern main ((get offset) after) main (offset-units) (set-offset '+ '(1 1) offset-units)) 
+(defpattern main ((get offset) after) main (offset-units) (set-offset '+ '(1 1) offset-units))
 
 ;;; "5 minutes from now"
 
 (defpattern main ((fixp) (get offset) from) main (offset-value offset-units)
-            (set-offset '+ offset-value offset-units)) 
+            (set-offset '+ offset-value offset-units))
 
 ;;; "3 days ago"
 
 (defpattern main ((fixp) (get offset) ago) main (offset-value offset-units) (set-now)
-            (set-offset '- offset-value offset-units)) 
+            (set-offset '- offset-value offset-units))
 
 ;;; "dlw's birthday"
 
-(defpattern main ((any) s birthday) main (name) (set-birthday name)) 
+(defpattern main ((any) s birthday) main (name) (set-birthday name))
 
 ;;; "my birthday"
 
-(defpattern main (my birthday) main () (set-birthday user-id)) 
+(defpattern main (my birthday) main () (set-birthday user-id))
 
 ;;; 11.30 works like 11:30; this is a European form.
 
 (defpattern main ((fixp 1 2) |.| (fixp 2)) second (hour minute) (set-hour hour)
-            (set-minute minute)) 
+            (set-minute minute))
 
 ;;; Ed says that Agatha Christie books use 11.3 to mean 11:30:00, also.
 
 (defpattern main ((fixp 1 2) |.| (fixp 1)) second (hour tens-of-minutes) (set-hour hour)
-            (set-tens-of-minutes tens-of-minutes)) 
+            (set-tens-of-minutes tens-of-minutes))
 
 ;;; 12 Noon and friends.
 ;;; This must follow "3 minutes from ...", which includes "12 m from ...".
 
-(defpattern main (12 (get half-day)) main (half-day) (set-half-day half-day)) 
+(defpattern main (12 (get half-day)) main (half-day) (set-half-day half-day))
 
 ;;; Noon and friends.
 
-(defpattern main ((get half-day)) main (half-day) (set-half-day half-day)) 
+(defpattern main ((get half-day)) main (half-day) (set-half-day half-day))
 
 ;;; - 3 minutes
 
 (defpattern main ((get sign) (fixp) (get offset)) main (sign offset-value offset-units)
-            (set-offset sign offset-value offset-units)) 
+            (set-offset sign offset-value offset-units))
 
 ;;; 3 minutes
 
 (defpattern main ((fixp) (get offset)) main (offset-value offset-units)
-            (set-offset '+ offset-value offset-units)) 
+            (set-offset '+ offset-value offset-units))
 
 ;;; Time zones
 
-(defpattern main ((get time-zone)) main (time-zone) (set-time-zone time-zone)) 
+(defpattern main ((get time-zone)) main (time-zone) (set-time-zone time-zone))
 
 ;;; Time zones preceeded by a hyphen
 
-(defpattern main (- (get time-zone)) main (time-zone) (set-time-zone time-zone)) 
+(defpattern main (- (get time-zone)) main (time-zone) (set-time-zone time-zone))
 
 ;; These patterns added by Hdt 8/23/82
 
 
-(defpattern main (christmas) main () (set-christmas)) 
+(defpattern main (christmas) main () (set-christmas))
 
 
-(defpattern main (halloween) main () (set-halloween)) 
+(defpattern main (halloween) main () (set-halloween))
 
 
-(defpattern main (new years) main () (set-new-years)) 
+(defpattern main (new years) main () (set-new-years))
 
 
-(defpattern main (new years day) main () (set-new-years)) 
+(defpattern main (new years day) main () (set-new-years))
 
 ;;; If we encounter random commas in MAIN state, we have to just ignore them
 ;;; in order to win in such cases as "Thursday, 21 May 1981, 00:27-EDT"
 
-(defpattern main (|,|) main ()) 
+(defpattern main (|,|) main ())
 
 (defpattern main ((get direction)) main (direction)
-            (move-abs-to-offset (get direction 'direction))) 
+            (move-abs-to-offset (get direction 'direction)))
 
 ;;; Time zones preceeded by a + ,which means offset relative to GMT.
 
@@ -1240,24 +1240,24 @@ Assumes that the package is the TIME package for them."
 (defpattern main (the) main ())
 
 (defpattern main ((any)) main (token)
-            (barf "Unrecognized date/time format, starting with token ~A." token)) 
+            (barf "Unrecognized date/time format, starting with token ~A." token))
 
 ;;; If nothing is left and we are in MAIN state, that is the end.
 
-(setf (get 'main 'final-state) 't) 
+(setf (get 'main 'final-state) 't)
 
 ;;; We just saw "Jan 23", look for a comma followed by a year, e.g. "Jan 23, 80"
 
 (defpattern year-comma (|,| (fixp 2)) main (year-of-century)
-            (set-year-of-century year-of-century)) 
+            (set-year-of-century year-of-century))
 
 ;;; We just saw "Jan 23", look for a comma followed by a year, e.g. "Jan 23, 1980"
 
-(defpattern year-comma (|,| (fixp 4)) main (year) (set-year year)) 
+(defpattern year-comma (|,| (fixp 4)) main (year) (set-year year))
 
 ;;; If there isn't a comma, go look for the regular kinds of years.
 
-(defpattern year-comma () year ()) 
+(defpattern year-comma () year ())
 
 ;many of the fixed dates would best be implimented setting up
 ;an array to be searched...
@@ -1269,40 +1269,40 @@ Assumes that the package is the TIME package for them."
 ;;; the main state if any of them are happening.  Otherwise, a number
 ;;; gets interpreted as a year in this context.
 
-(defpattern-peek year ((fixp) |.|) main ()) 
+(defpattern-peek year ((fixp) |.|) main ())
 
 
-(defpattern-peek year ((fixp) /) main ()) 
+(defpattern-peek year ((fixp) /) main ())
 
 
-(defpattern-peek year ((fixp) |:|) main ()) 
+(defpattern-peek year ((fixp) |:|) main ())
 
 
-(defpattern-peek year ((fixp) (get meridian)) main ()) 
+(defpattern-peek year ((fixp) (get meridian)) main ())
 
 
-(defpattern-peek year (12 (get half-day)) main ()) 
+(defpattern-peek year (12 (get half-day)) main ())
 
 
-(defpattern-peek year ((get sign) (fixp) (get offset)) main ()) 
+(defpattern-peek year ((get sign) (fixp) (get offset)) main ())
 
 
-(defpattern-peek year ((fixp) (get offset)) main ()) 
+(defpattern-peek year ((fixp) (get offset)) main ())
 
 
 (defpattern-peek year ((fixp) (get month)) main ()
-                 (barf "Date and month seen where year expected.")) 
+                 (barf "Date and month seen where year expected."))
 
 
 
 ;;; Finally, there is no other way to interpret the number.  If there
 ;;; is a number it must be a year.
 
-(defpattern year ((fixp)) main (year) (set-year year)) 
+(defpattern year ((fixp)) main (year) (set-year year))
 
 ;;; Not a number at all.
 
-(defpattern year () main ()) 
+(defpattern year () main ())
 
 ;;; This is the end of the patterns.  Don't add new ones after this!
 
@@ -1317,55 +1317,55 @@ Assumes that the package is the TIME package for them."
 
 ;;; Absolute values.
 
-(DEFVAR *ABS-YEAR*) 
+(DEFVAR *ABS-YEAR*)
 
-(DEFVAR *ABS-MONTH*) 
+(DEFVAR *ABS-MONTH*)
 
-(DEFVAR *ABS-DATE*) 
+(DEFVAR *ABS-DATE*)
 
-(DEFVAR *ABS-HOUR*) 
+(DEFVAR *ABS-HOUR*)
 
-(DEFVAR *ABS-MINUTE*) 
+(DEFVAR *ABS-MINUTE*)
 
-(DEFVAR *ABS-SECOND*) 
+(DEFVAR *ABS-SECOND*)
 
-(DEFVAR *ABS-DAY-OF-THE-WEEK*) 
+(DEFVAR *ABS-DAY-OF-THE-WEEK*)
 
-(DEFVAR *ABS-TIME-ZONE*) 
+(DEFVAR *ABS-TIME-ZONE*)
 
 ;;; Relative values, from offsets.
 
-(DEFVAR *REL-YEAR*) 
+(DEFVAR *REL-YEAR*)
 
-(DEFVAR *REL-MONTH*) 
+(DEFVAR *REL-MONTH*)
 
-(DEFVAR *REL-DATE*) 
+(DEFVAR *REL-DATE*)
 
-(DEFVAR *REL-HOUR*) 
+(DEFVAR *REL-HOUR*)
 
-(DEFVAR *REL-MINUTE*) 
+(DEFVAR *REL-MINUTE*)
 
-(DEFVAR *REL-SECOND*) 
+(DEFVAR *REL-SECOND*)
 
-(DEFVAR *REL-DAY-OF-THE-WEEK*) 
+(DEFVAR *REL-DAY-OF-THE-WEEK*)
 ;(DEFVAR *REL-TIME-ZONE*)
 
 ;;; Values of the "base" time.
 
-(DEFVAR *BASE-YEAR*) 
+(DEFVAR *BASE-YEAR*)
 
-(DEFVAR *BASE-MONTH*) 
+(DEFVAR *BASE-MONTH*)
 
-(DEFVAR *BASE-DATE*) 
+(DEFVAR *BASE-DATE*)
 
-(DEFVAR *BASE-HOUR*) 
+(DEFVAR *BASE-HOUR*)
 
-(DEFVAR *BASE-MINUTE*) 
+(DEFVAR *BASE-MINUTE*)
 
-(DEFVAR *BASE-SECOND*) 
+(DEFVAR *BASE-SECOND*)
 
 
-(DEFVAR *RELATIVE-P*) 
+(DEFVAR *RELATIVE-P*)
 
 ;;; Action functions.
 
@@ -1398,17 +1398,17 @@ Assumes that the package is the TIME package for them."
 
 (DEFUN SET-MONTH-FROM-NAME (MONTH)
   (IF (NOT (NULL *ABS-MONTH*)) (BARF "Month specified twice."))
-  (SETQ *ABS-MONTH* (GET MONTH 'VALUE))) 
+  (SETQ *ABS-MONTH* (GET MONTH 'VALUE)))
 
 
 (DEFUN SET-MONTH (MONTH)
   (IF (NOT (NULL *ABS-MONTH*)) (BARF "Month specified twice."))
-  (SETQ *ABS-MONTH* (NUMBER-VALUE MONTH))) 
+  (SETQ *ABS-MONTH* (NUMBER-VALUE MONTH)))
 
 
 (DEFUN SET-DATE (DATE)
   (IF (NOT (NULL *ABS-DATE*)) (BARF "Date specified twice."))
-  (SETQ *ABS-DATE* (NUMBER-VALUE DATE))) 
+  (SETQ *ABS-DATE* (NUMBER-VALUE DATE)))
 
 ;;; Here we have to deal with the incompatibility betweeen U.S. and European
 ;;; date format.  If either number is greater than 12., then that number
@@ -1422,20 +1422,20 @@ Assumes that the package is the TIME package for them."
     ((> SECOND 12) (SETQ *ABS-MONTH* FIRST *ABS-DATE* SECOND))
     ((MEMBER *TIMEZONE* '(1 0 -1 -2 -3 -4 -5) :TEST #'EQ);; Europe, kind of.  (Soneone should check a map, and find out
      ;; how the Soviet write dates, when we enter that market...)
-     
+
      (SETQ *ABS-MONTH* SECOND *ABS-DATE* FIRST))
     (T;; Patriotic American date format.
-      (SETQ *ABS-MONTH* FIRST *ABS-DATE* SECOND)))) 
+      (SETQ *ABS-MONTH* FIRST *ABS-DATE* SECOND))))
 
 ;;; This version takes a fixnum, rather than a two-list.
 
 (DEFUN SET-YEAR-INTERNAL (YEAR)
   (IF (NOT (NULL *ABS-YEAR*)) (BARF "Year specified twice."))
-  (SETQ *ABS-YEAR* YEAR)) 
+  (SETQ *ABS-YEAR* YEAR))
 
 
 (DEFUN SET-YEAR (YEAR)
-  (SET-YEAR-INTERNAL (NUMBER-VALUE YEAR))) 
+  (SET-YEAR-INTERNAL (NUMBER-VALUE YEAR)))
 
 
 (DEFUN SET-YEAR-OF-CENTURY (YEAR-OF-CENTURY)
@@ -1446,7 +1446,7 @@ Assumes that the package is the TIME package for them."
   (IF (NOT (NULL *ABS-HOUR*)) (BARF "Hour specified twice."))
   (IF (NOT (NULL *ABS-MINUTE*)) (BARF "Minute specified twice."))
   (SETQ TIME (NUMBER-VALUE TIME) *ABS-HOUR* (FLOOR TIME 100) *ABS-MINUTE*
-        (REM (VALUES (FLOOR TIME)) 100))) 
+        (REM (VALUES (FLOOR TIME)) 100)))
 
 
 (DEFUN SET-HHMMSS (TIME)
@@ -1455,32 +1455,32 @@ Assumes that the package is the TIME package for them."
   (IF (NOT (NULL *ABS-SECOND*)) (BARF "Second specified twice."))
   (SETQ TIME (NUMBER-VALUE TIME) *ABS-HOUR* (FLOOR TIME 10000) TIME
         (- TIME (* *ABS-HOUR* 10000)) *ABS-MINUTE* (FLOOR TIME 100) *ABS-SECOND*
-        (REM (VALUES (FLOOR TIME)) 100))) 
+        (REM (VALUES (FLOOR TIME)) 100)))
 
 
 (DEFUN SET-HOUR (HOUR)
   (IF (NOT (NULL *ABS-HOUR*)) (BARF "Hour specified twice."))
-  (SETQ *ABS-HOUR* (NUMBER-VALUE HOUR))) 
+  (SETQ *ABS-HOUR* (NUMBER-VALUE HOUR)))
 
 
 (DEFUN SET-MINUTE (MINUTE)
   (IF (NOT (NULL *ABS-MINUTE*)) (BARF "Minute specified twice."))
-  (SETQ *ABS-MINUTE* (NUMBER-VALUE MINUTE))) 
+  (SETQ *ABS-MINUTE* (NUMBER-VALUE MINUTE)))
 
 
 (DEFUN SET-TENS-OF-MINUTES (TENS-OF-MINUTES)
   (IF (NOT (NULL *ABS-MINUTE*)) (BARF "Minute specified twice."))
-  (SETQ *ABS-MINUTE* (* 10 (NUMBER-VALUE TENS-OF-MINUTES)))) 
+  (SETQ *ABS-MINUTE* (* 10 (NUMBER-VALUE TENS-OF-MINUTES))))
 
 
 (DEFUN SET-SECOND (SECOND)
   (IF (NOT (NULL *ABS-SECOND*)) (BARF "Second specified twice."))
-  (SETQ *ABS-SECOND* (NUMBER-VALUE SECOND))) 
+  (SETQ *ABS-SECOND* (NUMBER-VALUE SECOND)))
 
 
 (DEFUN SET-TENTHS-OF-MINUTE (TENTHS)
   (IF (NOT (NULL *ABS-SECOND*)) (BARF "Second specified twice."))
-  (SETQ *ABS-SECOND* (* 6 (NUMBER-VALUE TENTHS)))) 
+  (SETQ *ABS-SECOND* (* 6 (NUMBER-VALUE TENTHS))))
 
 
 (DEFUN SET-MERIDIAN (MERIDIAN)
@@ -1488,7 +1488,7 @@ Assumes that the package is the TIME package for them."
       (BARF "Meridian value ~A seen in bad context." MERIDIAN))
   (SETQ *ABS-HOUR*
         (IF (EQ (GET MERIDIAN 'VALUE) 'PM) (IF (= *ABS-HOUR* 12) 12 (+ *ABS-HOUR* 12))
-            (IF (= *ABS-HOUR* 12) 0 *ABS-HOUR*)))) 
+            (IF (= *ABS-HOUR* 12) 0 *ABS-HOUR*))))
 
 
 (DEFUN SET-HALF-DAY (HALF-DAY)
@@ -1498,17 +1498,17 @@ Assumes that the package is the TIME package for them."
       (BARF "Hour specified twice, by the half-day value \"~A\"." HALF-DAY))
   (IF (NOT (NULL *ABS-MINUTE*))
       (BARF "Minute specified twice, by the half-day value \"~A\"." HALF-DAY))
-  (SETQ *ABS-HOUR* (IF (EQ (GET HALF-DAY 'VALUE) 'NOON) 12 0) *ABS-MINUTE* 0 *ABS-SECOND* 0)) 
+  (SETQ *ABS-HOUR* (IF (EQ (GET HALF-DAY 'VALUE) 'NOON) 12 0) *ABS-MINUTE* 0 *ABS-SECOND* 0))
 
 
 (DEFUN SET-DAY-OF-THE-WEEK (DAY-OF-THE-WEEK)
   (IF (NOT (NULL *ABS-DAY-OF-THE-WEEK*)) (BARF "Day of the week specified twice."))
-  (SETQ *ABS-DAY-OF-THE-WEEK* (GET DAY-OF-THE-WEEK 'VALUE))) 
+  (SETQ *ABS-DAY-OF-THE-WEEK* (GET DAY-OF-THE-WEEK 'VALUE)))
 
 
 (DEFUN SET-TIME-ZONE (TIME-ZONE)
   (IF (NOT (NULL *ABS-TIME-ZONE*)) (BARF "Time zone specified twice."))
-  (SETQ *ABS-TIME-ZONE* (GET TIME-ZONE 'ZONE-VALUE))) 
+  (SETQ *ABS-TIME-ZONE* (GET TIME-ZONE 'ZONE-VALUE)))
 
 (defun set-offset (sign value units)
   (setf *last-offset-direction* sign) ;; Added this to help in `THE HOUR' parsing. - WESTY
@@ -1533,7 +1533,7 @@ Assumes that the package is the TIME package for them."
 ;      (HOURS (SETQ *REL-HOUR* (+ *REL-HOUR* VALUE)))
 ;      (MINUTES (SETQ *REL-MINUTE* (+ *REL-MINUTE* VALUE)))
 ;      (SECONDS (SETQ *REL-SECOND* (+ *REL-SECOND* VALUE)))
-;      (OTHERWISE (BARF "Bad units" UNITS))))) 
+;      (OTHERWISE (BARF "Bad units" UNITS)))))
 
 ;; Used in "half past the hour" or "20 minutes before the hour" - WESTY
 (defun set-past-hour ()
@@ -1563,14 +1563,14 @@ Assumes that the package is the TIME package for them."
   (AND *ABS-MINUTE* (SETQ *REL-MINUTE* (FUNCALL SIGN (OR *REL-MINUTE* 0) *ABS-MINUTE*)))
   (AND *ABS-SECOND* (SETQ *REL-SECOND* (FUNCALL SIGN (OR *REL-SECOND* 0) *ABS-SECOND*)))
   (SETQ *ABS-YEAR* () *ABS-MONTH* () *ABS-DATE* () *ABS-HOUR* () *ABS-MINUTE* () *ABS-SECOND* ())
-  (SETQ *RELATIVE-P* :RELAVTIVE)) 
+  (SETQ *RELATIVE-P* :RELAVTIVE))
 
 
 (DEFUN SET-TODAY ()
   (SETQ *ABS-DATE* *BASE-DATE*)
   (SETQ *ABS-MONTH* *BASE-MONTH*)
   (SETQ *ABS-YEAR* *BASE-YEAR*)
-  (SETQ *RELATIVE-P* :RELATIVE)) 
+  (SETQ *RELATIVE-P* :RELATIVE))
 
 
 (DEFUN SET-YESTERDAY ()
@@ -1578,7 +1578,7 @@ Assumes that the package is the TIME package for them."
   (SETQ *REL-DATE* (1- *REL-DATE*))
   (SETQ *ABS-MONTH* *BASE-MONTH*)
   (SETQ *ABS-YEAR* *BASE-YEAR*)
-  (SETQ *RELATIVE-P* :RELATIVE)) 
+  (SETQ *RELATIVE-P* :RELATIVE))
 
 
 (DEFUN SET-TOMORROW ()
@@ -1586,7 +1586,7 @@ Assumes that the package is the TIME package for them."
   (SETQ *REL-DATE* (1+ *REL-DATE*))
   (SETQ *ABS-MONTH* *BASE-MONTH*)
   (SETQ *ABS-YEAR* *BASE-YEAR*)
-  (SETQ *RELATIVE-P* :RELATIVE)) 
+  (SETQ *RELATIVE-P* :RELATIVE))
 
 
 
@@ -1597,7 +1597,7 @@ Assumes that the package is the TIME package for them."
   (SETQ *ABS-DATE* *BASE-DATE*)
   (SETQ *ABS-MONTH* *BASE-MONTH*)
   (SETQ *ABS-YEAR* *BASE-YEAR*)
-  (SETQ *RELATIVE-P* :RELATIVE)) 
+  (SETQ *RELATIVE-P* :RELATIVE))
 
 (DEFUN SET-CHRISTMAS ()
   (SETQ *ABS-SECOND* 0)
@@ -1609,7 +1609,7 @@ Assumes that the package is the TIME package for them."
         (COND
           ((AND (= *BASE-MONTH* 12) (> *BASE-DATE* 25)) (1+ *BASE-YEAR*))
           (T *BASE-YEAR*)));if after December 25, then next year
-  ) 
+  )
 
 (defun set-halloween ()
   (setq *abs-second* 0)
@@ -1633,14 +1633,14 @@ Assumes that the package is the TIME package for them."
   (SETQ *ABS-DATE* *BASE-DATE*)
   (SETQ *ABS-MONTH* *BASE-MONTH*)
   (SETQ *ABS-YEAR* *BASE-YEAR*)
-  (SETQ *RELATIVE-P* :RELATIVE)) 
+  (SETQ *RELATIVE-P* :RELATIVE))
 
 (DEFUN SET-BIRTHDAY (USER-ID)
   (PARSE-1
    (LEXICALLY-ANALYZE
     "7/1/64")
    'MAIN))
-  
+
 
 ;;; Top level.
 
@@ -1655,7 +1655,7 @@ Assumes that the package is the TIME package for them."
 
 (DEFMACRO CHECK-RANGE (VARIABLE LOWER UPPER STRING)
   `(IF (OR (< ,VARIABLE ,LOWER) (> ,VARIABLE ,UPPER))
-     (BARF "~D is ~:[more~;less~] than the number of ~A." ,VARIABLE (< ,VARIABLE ,LOWER) ,STRING))) 
+     (BARF "~D is ~:[more~;less~] than the number of ~A." ,VARIABLE (< ,VARIABLE ,LOWER) ,STRING)))
 
 
 (DEFUN PARSE (STRING &OPTIONAL (START 0) END (FUTUREP T) BASE-TIME MUST-HAVE-TIME DATE-MUST-HAVE-YEAR
@@ -1665,7 +1665,7 @@ Assumes that the package is the TIME package for them."
   (MULTIPLE-VALUE-BIND (ANSWER RELATIVE-P) (PARSE-UNIVERSAL-TIME STRING START END FUTUREP BASE-TIME MUST-HAVE-TIME DATE-MUST-HAVE-YEAR
                          TIME-MUST-HAVE-SECOND DAY-MUST-BE-VALID)
     (MULTIPLE-VALUE-BIND (SECS MINUTES HOURS DAY MONTH YEAR DAY-OF-THE-WEEK DAYLIGHT-SAVINGS-P) (DECODE-UNIVERSAL-TIME ANSWER)
-      (VALUES SECS MINUTES HOURS DAY MONTH YEAR DAY-OF-THE-WEEK DAYLIGHT-SAVINGS-P RELATIVE-P)))) 
+      (VALUES SECS MINUTES HOURS DAY MONTH YEAR DAY-OF-THE-WEEK DAYLIGHT-SAVINGS-P RELATIVE-P))))
 
 ;; Copied from SYS:PATCH.SYSTEM;PATCH-6-45
 
@@ -1696,23 +1696,23 @@ DAY-MUST-BE-VALID if NIL means allow things like February 29
                                                               *BASE-YEAR*
             *BASE-MONTH* *BASE-DATE* *BASE-HOUR* *BASE-MINUTE* *BASE-SECOND* *RELATIVE-P*
             );; Compute the "base" time: the time to which the string is relative.
-            
+
         (COND
           ((NULL BASE-TIME);; Time is relative to right now.
-           
+
            (MULTIPLE-VALUE-SETQ (*BASE-SECOND* *BASE-MINUTE* *BASE-HOUR* *BASE-DATE* *BASE-MONTH* *BASE-YEAR*)
              (get-decoded-time));; If the time is not known, assume a default base time so that we
            ;; can still parse fully-specified date/times (e.g. in the file system)
-           
+
            (IF (NULL *BASE-SECOND*)
                (SETQ *BASE-SECOND* 0 *BASE-MINUTE* 0 *BASE-HOUR* 0 *BASE-DATE* 1 *BASE-MONTH* 1
                      *BASE-YEAR* 0)))
           (T;; Time is relative to a specified time.
-           
+
            (MULTIPLE-VALUE-SETQ (*BASE-SECOND* *BASE-MINUTE* *BASE-HOUR* *BASE-DATE* *BASE-MONTH* *BASE-YEAR*)
              (DECODE-UNIVERSAL-TIME BASE-TIME))));; Do the parse, calling the action routines, which work by setting the
         ;; ABS and REL special variables bound above.
-        
+
         (PARSE-1 (DELQ-ALL (LEXICALLY-ANALYZE STRING START END) *NOISE-WORDS*) 'MAIN)
         (IF (AND DATE-MUST-HAVE-YEAR (NULL *ABS-YEAR*)) (BARF "no year supplied"))
         (IF (AND TIME-MUST-HAVE-SECOND (NULL *ABS-SECOND*)) (BARF "no seconds supplied"));; Now apply lots of defaults.
@@ -1723,11 +1723,11 @@ DAY-MUST-BE-VALID if NIL means allow things like February 29
         ;; Time zones and days of the week are handled specially.
         ;; First, the following code allows a day of the week to be used to
         ;; specify a year, month, and date, when it is supposed to.
-        
+
         (IF
          (AND (NULL *ABS-YEAR*) (NULL *ABS-MONTH*) (NULL *ABS-DATE*)
               (NOT (NULL *ABS-DAY-OF-THE-WEEK*)));; Day of week specified the year, month, and date.
-         
+
          (LET ((UT (ENCODE-UNIVERSAL-TIME 0 0 0 *BASE-DATE* *BASE-MONTH* *BASE-YEAR*)))
            (MULTIPLE-VALUE-BIND (ignore1 ignore2 ignore3 ignore4 ignore5 ignore6 BASE-DAY-OF-THE-WEEK)
                                 (DECODE-UNIVERSAL-TIME UT)
@@ -1745,11 +1745,11 @@ DAY-MUST-BE-VALID if NIL means allow things like February 29
                ; since I can not get declarations to work.
                ignore-h ignore-m ignore-s))));; If everything was specified (as in a date read from a file server)
         ;; then skip worrying about defaulting.
-        
+
         (OR
          (AND *ABS-YEAR* *ABS-MONTH* *ABS-DATE* *ABS-HOUR* *ABS-MINUTE* *ABS-SECOND*);; Non-specified low-order terms get set to zero (or the moral equivalent
          ;; of zero), up to the first speicified term.
-         
+
          (DO ((TERMS '(*ABS-SECOND* *ABS-MINUTE* *ABS-HOUR* *ABS-DATE* *ABS-MONTH* *ABS-YEAR*)
                (CDR TERMS))
               (BASE-TERMS
@@ -1768,7 +1768,7 @@ DAY-MUST-BE-VALID if NIL means allow things like February 29
                (DEFAULT-LOW-TERMS;; Non-specified low-order terms get set to default values, which
                 ;; are zero or one depending on whether the quantity is zero-based
                 ;; or one-based.
-                
+
                 (COND
                   ((NULL TERM-VALUE);; Term is non-specified, default it.
                     (SET (CAR TERMS) (CAR LOWEST)))
@@ -1776,10 +1776,10 @@ DAY-MUST-BE-VALID if NIL means allow things like February 29
                     (SETQ STATE 'SKIP-OVER-SPECIFIED) (GO RESTART))))
                (SKIP-OVER-SPECIFIED;; Now we are moving over the contiguous subsequence of values
                 ;; specified by the user.
-                
+
                 (COND
                   ((NOT (NULL TERM-VALUE));; This value was specified by the user.
-                   
+
                    (COND
                      ((> TERM-VALUE BASE-TERM-VALUE);; Specified time is later than the base time.
                        (SETQ COMPARISON 'LATER))
@@ -1789,7 +1789,7 @@ DAY-MUST-BE-VALID if NIL means allow things like February 29
                      ))
                   (T;; Term is not specified; go to the next state and try again.
                    ;; This SETQ is documented at the next state.
-                   
+
                    (SETQ OPERATION
                          (CASE COMPARISON
                            (EQUAL;; The specified and base times are equal, do nothing.
@@ -1804,42 +1804,42 @@ DAY-MUST-BE-VALID if NIL means allow things like February 29
                 ;; on FUTUREP and COMPARISON, which requires propagating carry or
                 ;; borrow.  This information is encoded in OPERATION, which is SETQed
                 ;; above (so that we don't do it each time around the loop!).
-                
+
                 (IF (NOT (NULL TERM-VALUE));; Foo, the rest of the high-order terms have to be unspecified.
                      (BARF "Unrecognized pattern of defaulting."))
                 (CASE OPERATION
                   (EQUAL;; We are just copying base time into abs time.  Keep doing it.
                     (SET (CAR TERMS) BASE-TERM-VALUE))
                   (ADD1;; Set this term one higher than it is in the base time.
-                   
+
                    (LET ((HIGHEST-VALUE;; Compute the highest legal value for this term.
-                          
+
                           (IF (EQ (CAR TERMS) '*ABS-DATE*);; Highest possible value for dates depends on
                               ;; which month this is.
 			      (MONTH-LENGTH *BASE-MONTH* *BASE-YEAR*);; Other highest values are just constants.
 			      (CAR HIGHEST))))
                      (COND
                        ((< BASE-TERM-VALUE HIGHEST-VALUE);; No carry.  Just add one, and copy the rest.
-                        
+
                         (SET (CAR TERMS) (1+ BASE-TERM-VALUE)) (SETQ OPERATION 'EQUAL))
                        (T;; Carry into next term.
                          (SET (CAR TERMS) (CAR LOWEST))))))
                   (SUB1;; Set this term one lower than it is in the base time.
-                   
+
                    (COND
                      ((> BASE-TERM-VALUE (CAR LOWEST));; No borrow.  Just subtract one, and copy the rest.
                        (SET (CAR TERMS) (1- BASE-TERM-VALUE))
                       (SETQ OPERATION 'EQUAL))
                      (T;; Borrow from the next term.
-                      
+
                       (SET (CAR TERMS)
                            (IF (EQ (CAR TERMS) '*ABS-DATE*);; Highest possible value for dates depends on
                                ;; which month this is.
-                               
+
                                (MONTH-LENGTH
 				 (if (eq *base-date* 1)
 				     ;;DAB 12-01-89 This case occurs when time is in previous day. The Month-lenght
-                                     ;;needs to depend upon last month. [10827] 
+                                     ;;needs to depend upon last month. [10827]
 				     (let ((val (1- *BASE-MONTH*)))	;; may 01/04/91 wrap 0 to 12 after subtraction
 				       (if (zerop val) 12. val))
 				     *BASE-MONTH*)
@@ -1852,17 +1852,17 @@ DAY-MUST-BE-VALID if NIL means allow things like February 29
         ;        ))
         ;(SETQ *REL-TIME-ZONE* *ABS-TIME-ZONE*)
         ;; Check ranges.
-        
+
         (CHECK-RANGE *ABS-SECOND* 0 59 "seconds in a minute")
         (CHECK-RANGE *ABS-MINUTE* 0 59 "minutes in an hour")
         (CHECK-RANGE *ABS-HOUR* 0 23 "hours in a day");Check this before MONTH-STRING call!
-        
+
         (CHECK-RANGE *ABS-MONTH* 1 12 "months in a year")
         (CHECK-RANGE *ABS-DATE* 1 (MONTH-LENGTH *ABS-MONTH* *ABS-YEAR*)
                      (FORMAT () "days in ~A" (MONTH-STRING *ABS-MONTH*)))
         (IF (AND DAY-MUST-BE-VALID (NOT (NULL *ABS-DAY-OF-THE-WEEK*)))
             (VERIFY-DATE *ABS-DATE* *ABS-MONTH* *ABS-YEAR* *ABS-DAY-OF-THE-WEEK*));; Now put it together.
-        
+
         (MULTIPLE-VALUE-SETQ (*ABS-SECOND* *ABS-MINUTE* *ABS-HOUR* *ABS-DATE* *ABS-MONTH* *ABS-YEAR*)
           (COMPUTE-RELATIVE (+ *ABS-SECOND* *REL-SECOND*) (+ *ABS-MINUTE* *REL-MINUTE*)
                             (+ *ABS-HOUR* *REL-HOUR*) (+ *ABS-DATE* *REL-DATE*)
@@ -1903,7 +1903,7 @@ DAY-MUST-BE-VALID if NIL means allow things like February 29
        (COND
          ((= MONTH 0) (SETQ MONTH 12) (SETQ YEAR (1- YEAR))))
        (SETQ DATE (+ (MONTH-LENGTH MONTH YEAR) DATE)) (GO L1)))
-    (RETURN (VALUES SECOND MINUTE HOUR DATE MONTH YEAR)))) 
+    (RETURN (VALUES SECOND MINUTE HOUR DATE MONTH YEAR))))
 
 
 
@@ -1926,7 +1926,7 @@ return the universal time for it.  Otherwise, return NIL."
     (OR (EQ IDX (STRING-SEARCH-NOT-SET "0123456789" STRING START END)) (RETURN ()))
     (SETQ DATE (PARSE-NUMBER STRING START IDX))
     (SETQ START (1+ IDX));; Now the month name.
-    
+
     (SETQ IDX
           (SEARCH (THE STRING (STRING #\-)) (THE STRING (STRING STRING)) :START2 START :END2 END
                   :TEST #'CHAR-EQUAL))
@@ -1938,7 +1938,7 @@ return the universal time for it.  Otherwise, return NIL."
                      :TEST #'EQ)))
     (OR MONTH (RETURN ()))
     (SETQ START (1+ IDX));; Now the year.
-    
+
     (SETQ IDX
           (SEARCH (THE STRING (STRING #\SPACE)) (THE STRING (STRING STRING)) :START2 START :END2
                   END :TEST #'CHAR-EQUAL))
@@ -1946,7 +1946,7 @@ return the universal time for it.  Otherwise, return NIL."
     (OR (EQ IDX (STRING-SEARCH-NOT-SET "0123456789" STRING START END)) (RETURN ()))
     (SETQ YEAR (PARSE-NUMBER STRING START IDX))
     (SETQ START (1+ IDX));; Now the hour
-    
+
     (SETQ IDX
           (SEARCH (THE STRING (STRING #\:)) (THE STRING (STRING STRING)) :START2 START :END2 END
                   :TEST #'CHAR-EQUAL))
@@ -1954,7 +1954,7 @@ return the universal time for it.  Otherwise, return NIL."
     (OR (EQ IDX (STRING-SEARCH-NOT-SET "0123456789" STRING START END)) (RETURN ()))
     (SETQ HOUR (PARSE-NUMBER STRING START IDX))
     (SETQ START (1+ IDX));; Now the minute
-    
+
     (SETQ IDX
           (SEARCH (THE STRING (STRING #\:)) (THE STRING (STRING STRING)) :START2 START :END2 END
                   :TEST #'CHAR-EQUAL))
@@ -1962,10 +1962,10 @@ return the universal time for it.  Otherwise, return NIL."
     (OR (EQ IDX (STRING-SEARCH-NOT-SET "0123456789" STRING START END)) (RETURN ()))
     (SETQ MINUTE (PARSE-NUMBER STRING START IDX))
     (SETQ START (1+ IDX));; Now the second
-    
+
     (OR (EQ END (OR (STRING-SEARCH-NOT-SET "0123456789" STRING START END) END)) (RETURN ()))
     (SETQ SECOND (PARSE-NUMBER STRING START END))
-    (RETURN (ENCODE-UNIVERSAL-TIME SECOND MINUTE HOUR DATE MONTH YEAR *TIMEZONE*)))) 
+    (RETURN (ENCODE-UNIVERSAL-TIME SECOND MINUTE HOUR DATE MONTH YEAR *TIMEZONE*))))
 
 
 (DEFUN FIND-BIRTHDAY (STRING &AUX X)
@@ -1974,14 +1974,14 @@ return the universal time for it.  Otherwise, return NIL."
   (IF (NULL X) (BARF "Cannot find \"BIRTHDAY\"."))
   (SUBSEQ STRING (+ 9 X)
              (SEARCH (THE STRING (STRING ";")) (THE STRING (STRING STRING)) :START2 (+ 9 X)
-                     :TEST #'CHAR-EQUAL))) 
+                     :TEST #'CHAR-EQUAL)))
 
 
 #+Explorer
-(DEFPROP BARF T :ERROR-REPORTER) 
+(DEFPROP BARF T :ERROR-REPORTER)
 
 #+Explorer
-(DEFPROP BARF T :ERROR-REPORTER) 
+(DEFPROP BARF T :ERROR-REPORTER)
 
 (DEFUN BARF (STRING &REST ARGS)
   (error "PARSE-ERROR: ~?" STRING ARGS))
@@ -1997,11 +1997,11 @@ return the universal time for it.  Otherwise, return NIL."
       #-Explorer
       (multiple-value-bind (VAL RELATIVE-P)
 	  (PARSE-UNIVERSAL-TIME S 0 () T NOW)
-	(FORMAT T "~15A ~A" 
-		(OR RELATIVE-P "Absolute") 
+	(FORMAT T "~15A ~A"
+		(OR RELATIVE-P "Absolute")
 		(print-universal-date val nil)))
     (TERPRI)
-    (TERPRI))) 
+    (TERPRI)))
 
 ;;; This function should be run whenever you make a major change to the
 ;;; parser.  It has an exhaustive set of test cases, all of which should
@@ -2014,7 +2014,7 @@ return the universal time for it.  Otherwise, return NIL."
                "11:30:17" "11:30 pm" "11:30 AM" "1130" "113000" "11.30" "11.30.00" "11.3"
                "11 pm" "12 noon" "midnight" "m" "Friday, March 15, 1980" "6:00 gmt" "3:00 pdt"
                ;; Added these to test DAB patches of 12/88. - Westy
-               "Fri, 5 Apr 91 15:18:28 -0500" "10:10:20-GMT" "10:10:20+0000" 
+               "Fri, 5 Apr 91 15:18:28 -0500" "10:10:20-GMT" "10:10:20+0000"
                "15 March 85" "15 march 85 seconds" "Fifteen March 85"
                "The Fifteenth of March, 1985;" "Thursday, 21 May 1981, 00:27-EDT"
                "One minute after March 3, 1985" "Three days ago" "5 hours ago"
@@ -2043,19 +2043,19 @@ return the universal time for it.  Otherwise, return NIL."
 	  #-Explorer
 	  (multiple-value-bind (VAL RELATIVE-P)
 	      (PARSE-UNIVERSAL-TIME CASE)
-	    (FORMAT T "~15A ~A" 
-		    (OR RELATIVE-P "Absolute") 
+	    (FORMAT T "~15A ~A"
+		    (OR RELATIVE-P "Absolute")
 		    (print-universal-date val nil)))
 	  (TERPRI)))
-      
+
 
 
 ;;; Time interval stuff.
 
-(DEFVAR TIME-INTERVAL-ARRAY (MAKE-ARRAY '(50 2))) 
+(DEFVAR TIME-INTERVAL-ARRAY (MAKE-ARRAY '(50 2)))
 
 
-(DEFVAR TIME-INTERVAL-UNIT-TYPES 0) 
+(DEFVAR TIME-INTERVAL-UNIT-TYPES 0)
 
 
 (DEFUN TIME-INTERVAL-TO-SECONDS (STRING &AUX (TOTAL 0))
@@ -2072,7 +2072,7 @@ and the second is a string describing the problem."
           (LET* ((TOKEN-END
                   (POSITION #\SPACE (THE STRING (STRING STRING)) :START TOKEN-START :TEST
                             #'CHAR-EQUAL));;works even if end nil!
-                 
+
                  (UNITS (PARSE-NUMBER STRING TOKEN-START TOKEN-END)))
             (IF (NULL UNITS)
                 (RETURN
@@ -2096,15 +2096,15 @@ and the second is a string describing the problem."
                 (IF UVAL
                     (PROGN
                       (IF (CHAR-EQUAL #\y (AREF STRING TOKEN-START));years?
-                          
+
                           (IF (> UNITS 3);good till 1999.
-                              
+
                               (INCF TOTAL (* (FLOOR UNITS 4) (TIME-INTERVAL-TO-SECONDS "1 day")))))
                       (INCF TOTAL (* UVAL UNITS)))
                     (RETURN
                      (VALUES ()
                              (FORMAT () "Unknown time spec: ~A"
-                                     (SUBSEQ STRING TOKEN-START IX)))))))))))) 
+                                     (SUBSEQ STRING TOKEN-START IX))))))))))))
 
 
 (DEFUN INIT-TIME-INTERVAL-ARRAY ()
@@ -2119,10 +2119,10 @@ and the second is a string describing the problem."
       (DOLIST (NEWNAME (CDR L))
         (SETF (AREF TIME-INTERVAL-ARRAY TIME-INTERVAL-UNIT-TYPES 0) NEWNAME)
         (SETF (AREF TIME-INTERVAL-ARRAY TIME-INTERVAL-UNIT-TYPES 1) VALUE)
-        (INCF TIME-INTERVAL-UNIT-TYPES))))) 
+        (INCF TIME-INTERVAL-UNIT-TYPES)))))
 
 
-(INIT-TIME-INTERVAL-ARRAY) 
+(INIT-TIME-INTERVAL-ARRAY)
 
 
 (DEFUN SECONDS-TO-INTERVAL-STRING (SECS)
@@ -2136,12 +2136,12 @@ and the second is a string describing the problem."
             (IF
              (OR (NULL LAST)
                  (NOT (= (AREF TIME-INTERVAL-ARRAY I 1) (AREF TIME-INTERVAL-ARRAY LAST 1))))
-             (SETQ LAST I)))))) 
+             (SETQ LAST I))))))
 
 
-(DEFVAR *FOUR-YEAR-CYCLE* (TIME-INTERVAL-TO-SECONDS "4 Years")) 
+(DEFVAR *FOUR-YEAR-CYCLE* (TIME-INTERVAL-TO-SECONDS "4 Years"))
 
-(DEFVAR *SECONDS-IN-DAY* (TIME-INTERVAL-TO-SECONDS "1 day")) 
+(DEFVAR *SECONDS-IN-DAY* (TIME-INTERVAL-TO-SECONDS "1 day"))
 
 
 (DEFUN SECONDS-TO-INTERVAL-STRING-1 (INDEX SECS)
@@ -2151,7 +2151,7 @@ and the second is a string describing the problem."
         (REM (REM SECS (AREF TIME-INTERVAL-ARRAY INDEX 1))))
     (IF (ZEROP REM) (FORMAT () "~D ~A~P" QUO (AREF TIME-INTERVAL-ARRAY INDEX 0) QUO)
         (FORMAT () "~D ~A~P ~A" QUO (AREF TIME-INTERVAL-ARRAY INDEX 0) QUO
-                (SECONDS-TO-INTERVAL-STRING REM))))) 
+                (SECONDS-TO-INTERVAL-STRING REM)))))
 
 
 ;; Maybe add a CLIM equivalent here.
@@ -2159,7 +2159,7 @@ and the second is a string describing the problem."
 (DEFPROP :TIME-INTERVAL-OR-NEVER
          (PRINT-INTERVAL-OR-NEVER READ-INTERVAL-OR-NEVER () () ()
                                   "Click left to input a time interval or \"never\".")
-         TV:CHOOSE-VARIABLE-VALUES-KEYWORD) 
+         TV:CHOOSE-VARIABLE-VALUES-KEYWORD)
 
 
 (DEFUN PARSE-INTERVAL-OR-NEVER (STRING &OPTIONAL FROM TO)
@@ -2173,12 +2173,12 @@ For \"never\" or variations, NIL is returned."
                            (IF (NULL (OR FROM TO)) STRING (SUBSEQ STRING FROM TO))))
         (IF (MEMBER STRING '("none" "no" "" "never" "not ever" "nil" "()") :TEST 'EQUALP) ()
             (MULTIPLE-VALUE-BIND (VAL ERR) (TIME-INTERVAL-TO-SECONDS STRING)
-              (IF ERR (error "~A: ~A" STRING ERR) VAL)))))) 
+              (IF ERR (error "~A: ~A" STRING ERR) VAL))))))
 
 
 (DEFUN READ-INTERVAL-OR-NEVER (&OPTIONAL (STREAM *STANDARD-INPUT*))
   "Read a line from STREAM and parse into time interval or NIL for never."
-  (PARSE-INTERVAL-OR-NEVER (READ-LINE STREAM))) 
+  (PARSE-INTERVAL-OR-NEVER (READ-LINE STREAM)))
 
 (DEFUN PRINT-INTERVAL-OR-NEVER (VAL &OPTIONAL (STREAM T))
   "Print the interval-or-never VAL on STREAM.
@@ -2210,14 +2210,14 @@ If STREAM is NIL, construct and return a string."
 
 
 ;;;(setf (symbol-function 'RTC-GET-UNIVERSAL-TIME) #'FALSE)  ; ***temp to keep from using SDU clock
-  
+
 
 ;;AB 8/5/87.  Remove this.  INIT-THE-TIME (defined in MICRO-TIME) does the same thing.
 ;;(ADD-INITIALIZATION "Initialize Timebase"
 ;;                    '(PROGN
 ;;                      (SETQ LAST-BOOT-TIME (TIME) WAS-NEGATIVE () HIGH-TIME-BITS 0)
 ;;                      (INITIALIZE-TIMEBASE))
-;;                    '(:WARM :NOW)) 
+;;                    '(:WARM :NOW))
 
 ;;; Now that the time parser is loaded, we can fix up times remembered as strings by
 ;;; the system generator.
@@ -2234,5 +2234,4 @@ If STREAM is NIL, construct and return a string."
    FS:*PATHNAME-HASH-TABLE*))
 
 #+Explorer
-(ADD-INITIALIZATION "TIME-PARSER-LOADED" '(CANONICALIZE-COLD-LOADED-TIMES) '(:ONCE)) 
-
+(ADD-INITIALIZATION "TIME-PARSER-LOADED" '(CANONICALIZE-COLD-LOADED-TIMES) '(:ONCE))

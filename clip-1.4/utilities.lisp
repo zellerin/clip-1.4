@@ -1,6 +1,6 @@
 ;;;; -*- Mode:Common-Lisp; Package:CLIP; Base:10; Fonts:(MEDFNT) -*-
 ;;;; *-* File: Titanic: /usr/users/eksl/mac-files/clip/utilities.lisp *-*
-;;;; *-* Last-edit: Tuesday, January 19, 1993  17:03:32; Edited-By: Westy *-* 
+;;;; *-* Last-edit: Tuesday, January 19, 1993  17:03:32; Edited-By: Westy *-*
 ;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
 ;;;; *-* Software: TI Common Lisp System 6.49 *-*
 ;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
@@ -101,14 +101,14 @@
 ;;; ----------------------------------------------------------------------------
 
 (defun DATE-AND-TIME (&OPTIONAL (time (get-universal-time)))
-  
+
   "DATE-AND-TIME [universal-time]
 
 Returns formatted date/time string."
-  
+
   (multiple-value-bind (second minute hour date month year day)
                        (decode-universal-time time)
-    (format nil 
+    (format nil
             "~a, ~a ~a, ~a  ~2,'0d:~2,'0d:~2,'0d"
             (nth day
                  '("Monday" "Tuesday" "Wednesday" "Thursday"
@@ -126,7 +126,7 @@ Returns formatted date/time string."
 ;;;----------------------------------------------------------------------------
 
 (DEFUN xor (&rest args)
-  "Takes any number of arguments and returns T if an odd number of its arguments are non-NIL, 
+  "Takes any number of arguments and returns T if an odd number of its arguments are non-NIL,
 otherwise returns NIL."
   (LET ((flag nil))
     (DOLIST (form args flag)
@@ -143,8 +143,6 @@ otherwise returns NIL."
   (if (eq (first (first body)) 'declare)
     (values (list (first body)) (rest body))
     (values nil body)))
-                         
+
 ;;; ***************************************************************************
 ;;; EOF
-
-

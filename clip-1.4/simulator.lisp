@@ -1,5 +1,5 @@
 ;;;;-*- Mode:Common-Lisp; Package:CLIP; Base:10 -*-
-;;;; *-* Last-edit: Tuesday, October 5, 1993  16:32:26; Edited-By: Westy *-* 
+;;;; *-* Last-edit: Tuesday, October 5, 1993  16:32:26; Edited-By: Westy *-*
 
 ;;;; **************************************************************************
 ;;;; **************************************************************************
@@ -58,19 +58,19 @@
    (timestamp-function :initform nil :initarg :timestamp-function))
   (:metaclass named-class))
 
-(defmacro define-simulator (name &key 
-		     system-name  
-		     system-version 
-		     reset-system   
-		     start-system   
-		     stop-system   
-		     schedule-function 
-		     deactivate-scheduled-function 
+(defmacro define-simulator (name &key
+		     system-name
+		     system-version
+		     reset-system
+		     start-system
+		     stop-system
+		     schedule-function
+		     deactivate-scheduled-function
 		     seconds-per-time-unit
 		     timestamp)
   "Define the interface to a simulation. The following args are recognized:
 :SYSTEM-NAME system-name
-:SYSTEM-VERSION function or form that handles same args as :BEFORE-EXPERIMENT 
+:SYSTEM-VERSION function or form that handles same args as :BEFORE-EXPERIMENT
 :START-SYSTEM   function or form that handles same args as :BEFORE-TRIAL
 :RESET-SYSTEM   function or form that handles same args as :BEFORE-TRIAL
 :STOP-SYSTEM    function or form that handles same args as :BEFORE-TRIAL
@@ -90,13 +90,13 @@
            (make-instance 'simulator
              :name ',name
              :system-name ',(if system-name system-name name)
-             :system-version-hook ',system-version 
-             :reset-system-hook ',reset-system   
-             :start-system-hook ',start-system   
-             :stop-system-hook ',stop-system   
+             :system-version-hook ',system-version
+             :reset-system-hook ',reset-system
+             :start-system-hook ',start-system
+             :stop-system-hook ',stop-system
              :schedule-function-hook ',schedule-function
-             :deactivate-scheduled-function-hook ',deactivate-scheduled-function 
-             :seconds-per-time-unit ',seconds-per-time-unit 
+             :deactivate-scheduled-function-hook ',deactivate-scheduled-function
+             :seconds-per-time-unit ',seconds-per-time-unit
              :timestamp-function ',timestamp))
      ',name))
 

@@ -1,6 +1,6 @@
 ;;;; -*- Mode:Common-Lisp; Package:CLIP; Fonts:(MEDFNT); Base:10 -*-
 ;;;; *-* File: Titanic: /usr/users/eksl/mac-files/clip/intrinsic-mixins.lisp *-*
-;;;; *-* Last-edit: Tuesday, January 19, 1993  16:29:07; Edited-By: Westy *-* 
+;;;; *-* Last-edit: Tuesday, January 19, 1993  16:29:07; Edited-By: Westy *-*
 ;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
 ;;;; *-* Software: TI Common Lisp System 6.49 *-*
 ;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
@@ -56,12 +56,12 @@
 ;;;----------------------------------------------------------------------------
 ;;; NAMED-OBJECTS have a NAME and a DESCRIPTION slot. They store themselves on the
 ;;; :OBJECT property of their name so that they can be accessed by the NAME.
-;;; Note that the names of named objects define a name-space. 
+;;; Note that the names of named objects define a name-space.
 ;;; They also store themselves under the class-name property of their name symbol.
 
 (defclass named-object-mixin ()
-     ((name :initform nil :type symbol :initarg :name :accessor name)
-      (description :initform nil :initarg :description :accessor description))
+  ((name :initform nil :type symbol :initarg :name :accessor name)
+   (description :initform nil :initarg :description :accessor description))
   (:metaclass named-class)
   (:documentation "Allows each instance to have a name.  One is generated for it if not provided.
                    The name is always a symbol.
@@ -85,7 +85,7 @@
     (when (or (not name) (not (symbolp (name the-object))))
       (setf (name the-object) (or name (make-name the-object)))))
 
-  
+
   (setf (get (name the-object) :object) the-object)
 
   ;; Put a name property on the object for each superclass whose Meta class is
@@ -200,7 +200,7 @@
 (defvar *killing-class* nil)
 
 (defmethod forget-instance ((the-object remember-instances))
-  (unless (or *killing-everything* 
+  (unless (or *killing-everything*
               (class-built-on-class (class-of the-object) *killing-class*)
               ;(eq *killing-class* (class-of the-object))
             )
@@ -209,7 +209,7 @@
                   ;; There was a bug (that you will not believe until you see it)
                   ;; where (eq <object-1> <object-1>) was returning nil. I didn't
                   ;; track it down, but this gets around it.
-                  :test #'(lambda (a b) 
+                  :test #'(lambda (a b)
                             (eq (name a) (name b)))))))
 
 ;;; Note that we remove them one-by-one.
@@ -337,15 +337,15 @@
 		      :key #'find-class
 		      :predicate #'(lambda (class)
 				     (and (not (eq (class-name class) 'remember-instances))
-					  (class-built-on-class 
-					    class 
+					  (class-built-on-class
+					    class
 					    (find-class 'remember-instances))
 					  (not
-					    (class-built-on-class 
-					      class 
+					    (class-built-on-class
+					      class
 					      (find-class 'persistent-instances))))))
     (clrhash *killed-objects-table*))
-  
+
   (if (and verbose report-stream) (terpri report-stream)))
 
 ;;;----------------------------------------------------------------------------
@@ -373,4 +373,3 @@
 
 ;;; ***************************************************************************
 ;;; EOF
-

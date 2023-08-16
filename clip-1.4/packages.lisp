@@ -1,6 +1,6 @@
 ;;;; -*- Mode:Common-Lisp; Package:USER; Fonts:(MEDFNT); Base:10 -*-
 ;;;; *-* File: Titanic: /usr/users/eksl/mac-files/clip/development/packages.lisp *-*
-;;;; *-* Last-edit: Wednesday, July 21, 1993  17:25:00; Edited-By: WESTY *-* 
+;;;; *-* Last-edit: Wednesday, July 21, 1993  17:25:00; Edited-By: WESTY *-*
 ;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
 ;;;; *-* Software: TI Common Lisp System 6.49 *-*
 ;;;; *-* Lisp: TI Common Lisp System 6.49  *-*

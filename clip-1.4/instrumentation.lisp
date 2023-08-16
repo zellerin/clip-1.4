@@ -1,6 +1,6 @@
 ;;;; -*- Mode:Lisp; Package:CLIP; Fonts:(MEDFNT); Base:10 -*-
 ;;;; *-* File: Titanic: /usr/users/eksl/systems/clip/development/instrumentation.lisp *-*
-;;;; *-* Last-edit: Tuesday, December 7, 1993  14:58:50; Edited-By: File Server *-* 
+;;;; *-* Last-edit: Tuesday, December 7, 1993  14:58:50; Edited-By: File Server *-*
 ;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
 ;;;; *-* Software: TI Common Lisp System 6.49 *-*
 ;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
@@ -45,13 +45,13 @@
 ;;;           and added `periodic-instrumentation' defclass.
 ;;;           Also added `find-instrumentation' and made `execute-action'
 ;;;           handle arguments (sort of).
-;;;           Also added :after methods for enable and disable for 
+;;;           Also added :after methods for enable and disable for
 ;;;           `periodic-instrumentation'.
 ;;;           And, last (and foremost), rewrote `defclip' to
 ;;;           use some of these new features.  (Westy)
 ;;;  11-15-90 Changed syntax of `defclip' to allow a body of
 ;;;           code at the end and got rid of :collection-form arg. Made other
-;;;           changes to allow `super-instrumentation' class to work better. 
+;;;           changes to allow `super-instrumentation' class to work better.
 ;;;           (Westy)
 ;;;  11-28-90 Made nested instrumentations print their data in one row for
 ;;;           each trial.  (Westy)
@@ -97,7 +97,7 @@
   (declare (ignore arguments))
   (let ((*call-tree-report* (cons the-instrumentation *call-tree-report*)))
     (call-next-method)))
-  
+
 ;; If this ever changes to something besides nil we will have to rewrite some code.
 (defparameter *uncollected-value* nil)
 
@@ -196,7 +196,7 @@ instead of signalling an error."
   (call-safe (slot-value the-instrumentation 'report-function)
              the-instrumentation
              *instrumentation-report-stream*
-	     extracter 
+	     extracter
              arguments))
 
 (defmethod collect ((the-instrumentation instrumentation) &rest arguments)
@@ -211,7 +211,7 @@ instead of signalling an error."
 ;; multiple parents.
 ;; If it is NIL only the arguments passed in will be used.
 
-(defvar *use-new-lookup?* t)  
+(defvar *use-new-lookup?* t)
 
 ;; Used exclusively in collect methods
 (defmethod update-number-of-samples ((the-instrumentation instrumentation) arguments)
@@ -228,7 +228,7 @@ instead of signalling an error."
   (when *use-new-lookup?*
     (setf arguments (append (rest *call-tree-report*) arguments)))
   (lookup-equal (slot-value the-instrumentation 'value) arguments))
-  
+
 ;; Used exclusively in collect methods
 (defmethod update-number-of-samples-internal ((the-instrumentation instrumentation) arguments)
   (when *use-new-lookup?*
@@ -236,7 +236,7 @@ instead of signalling an error."
   (with-slots (number-of-samples) the-instrumentation
     (if (null (lookup-equal number-of-samples arguments))
       (setf-lookup-equal number-of-samples arguments 1)
-      (setf-lookup-equal number-of-samples arguments 
+      (setf-lookup-equal number-of-samples arguments
                          (1+ (lookup-equal number-of-samples arguments))))))
 
 ;; Used exclusively in collect methods
@@ -267,7 +267,7 @@ instead of signalling an error."
     (let ((extracter (or extracter default-extracter))
           (value (lookup-value the-instrumentation args))
           (number-of-samples (lookup-number-of-samples the-instrumentation args)))
-      (standard-value-printer 
+      (standard-value-printer
        (etypecase extracter
          (number (elt value extracter))
          (function (funcall extracter value number-of-samples))
@@ -303,7 +303,7 @@ instead of signalling an error."
      (write-char *data-separator-character* stream))))
 
 (defmethod instr.report-key ((the-instrumentation instrumentation))
-  (with-slots (report-key) the-instrumentation 
+  (with-slots (report-key) the-instrumentation
     (if (consp report-key)
 	(ecase  *output-format*
 	  (:CLASP
@@ -338,7 +338,7 @@ instead of signalling an error."
 		   period
 		   nil
 		   (if (consp scheduler-args) scheduler-args nil))))))
-       
+
 (defmethod disable :after ((the-scheduled-instrumentation-mixin scheduled-instrumentation-mixin))
   (with-slots (collection-event) the-scheduled-instrumentation-mixin
     (when collection-event
@@ -370,7 +370,7 @@ instead of signalling an error."
   ;; Do the implicit-clips...
   (when (time-series-p the-instrumentation)
     (when *current-experiment*
-      (with-slots (timestamp-clip) *current-experiment* 
+      (with-slots (timestamp-clip) *current-experiment*
 	(apply #'collect-internal timestamp-clip combiner nil))))
   (dolist (column (slot-value the-instrumentation 'unmapped-columns))
     (apply #'collect-internal (find-instrumentation column) combiner nil))
@@ -381,7 +381,7 @@ instead of signalling an error."
                                       (extracter t) &rest arguments)
   (declare (ignore arguments))
   (when (time-series-p the-instrumentation)
-    (when *current-experiment* 
+    (when *current-experiment*
       (report-internal-implicit-clips *current-experiment*  stream extracter t)))
   (dolist (column (slot-value the-instrumentation 'unmapped-columns))
     (apply #'report-internal (find-instrumentation column) stream extracter nil)))
@@ -389,7 +389,7 @@ instead of signalling an error."
 (defmethod report-internal-implicit-clips ((the-experiment experiment) stream extracter include-timestamp)
   ;; Write trial-number, IVS and timestamp
   (apply #'report-internal (find-instrumentation 'trial-number) stream extracter nil)
-  (with-slots (timestamp-clip ivs) *current-experiment* 
+  (with-slots (timestamp-clip ivs) *current-experiment*
     (dolist (iv ivs)
       (apply #'report-internal (find-instrumentation iv) stream extracter nil))
     (when (and include-timestamp timestamp-clip)
@@ -427,16 +427,16 @@ instead of signalling an error."
 (defmethod report-components ((the-mapping-instrumentation-mixin mapping-instrumentation-mixin) stream (extracter t)
                               &rest arguments)
   (with-slots (report-function (default-extracter extracter) map-function components lowest?)
-	      the-mapping-instrumentation-mixin 
+	      the-mapping-instrumentation-mixin
     (let ((map-values (apply map-function arguments)))
       (dolist (component components)
         (dolist (value map-values)
           (let ((*not-top-level-in-report* t))
-            ;; ignore the passed in extracter for now 
+            ;; ignore the passed in extracter for now
 	    ;; WE SHOULD BE PASSING THE `ARGUMENTS' TO THE LOWER LEVEL CLIP
             (report-internal (find-instrumentation component) stream
                              (or extracter default-extracter) value)))))))
-  
+
 (defmethod collect-internal ((the-mapping-instrumentation-mixin mapping-instrumentation-mixin) (combiner t) &rest arguments)
   ;; record the fact that we have collected this instrumentation
   (update-value :collected the-mapping-instrumentation-mixin arguments nil)
@@ -460,8 +460,8 @@ instead of signalling an error."
                            arguments)))
     (dolist (component (slot-value the-mapping-instrumentation-mixin 'components))
       (loop for value in map-values
-	    with prefix = (format nil (if (eq *output-format* :CLASP) 
-					  "~@[~a~]~{~a ~}" 
+	    with prefix = (format nil (if (eq *output-format* :CLASP)
+					  "~@[~a~]~{~a ~}"
 					  "~@[~a~]~{~a-~}")
 				  prefix
 				  arguments)
@@ -480,7 +480,7 @@ instead of signalling an error."
 
 (defclip bunch-of-delays ()
   (:components (overall-delay number-of-delays))
-  
+
   (loop with number-of-delays = 0
         and total-delay-time = 0
         and local-delay-time = 0
@@ -524,7 +524,7 @@ instead of signalling an error."
 	        ;; This calls collect internal
 	        (collect-internal (find-instrumentation component)
 			          (or combiner default-combiner) value))
-        
+
         (loop for component in (slot-value the-instrumentation 'components) do
 	      ;; This calls collect internal
 	      (collect-internal (find-instrumentation component)
@@ -592,7 +592,7 @@ instead of signalling an error."
 ;; Both of these are of dubious benefit.
 
 ;; Special case this method to not pass the arguments through? Is this necessary?
-(defmethod collect-internal ((the-instrumentation composite-child-of-composite-instrumentation) 
+(defmethod collect-internal ((the-instrumentation composite-child-of-composite-instrumentation)
                              (combiner t)
 			     &rest arguments)
   (apply #'call-next-method the-instrumentation combiner nil))
@@ -636,12 +636,12 @@ instead of signalling an error."
        ,@forms))
   #+lispworks
   `(macrolet ((call-next-advice ()
-                '(apply #'lispworks:call-next-advice .args.))                
+                '(apply #'lispworks:call-next-advice .args.))
 	     (advice-arglist ()
                 '.args.))
     (lispworks:defadvice (,function ,name :around) (&rest .args.)
        ,@forms))
-  #+MCL 
+  #+MCL
   `(macrolet ((call-next-advice ()
                 '(:DO-IT))
 	      (advice-arglist ()
@@ -670,7 +670,7 @@ instead of signalling an error."
     (values-list vals)))
 
 (defmethod enable :after ((the-instrumentation functional-instrumentation-mixin))
-  (with-slots (trigger-events) the-instrumentation 
+  (with-slots (trigger-events) the-instrumentation
     (loop for (function when args-from predicate) in trigger-events do
           (initialize-trigger-event the-instrumentation function when args-from predicate))))
 
@@ -714,14 +714,14 @@ instead of signalling an error."
   (eval
    `(lispworks:delete-advice ,function ,name))
   #+MCL
-  (eval 
+  (eval
    `(ccl:unadvise ,function :when :around :name ,name))
   #+Explorer
-  (eval 
+  (eval
    `(ticl::unadvise ,function :around ,name)))
 
 (defmethod disable :after ((the-instrumentation functional-instrumentation-mixin))
-  (with-slots (trigger-events) the-instrumentation 
+  (with-slots (trigger-events) the-instrumentation
     (loop for (function when args-from predicate) in trigger-events do
           (remove-around-advice function (name the-instrumentation)))))
 
@@ -746,7 +746,7 @@ instead of signalling an error."
   ;; time series never do this
   (declare (ignore args))
   )
-  
+
 
 (defmethod report-internal ((the-instrumentation time-series-instrumentation-mixin)
                             stream extracter
@@ -758,7 +758,7 @@ instead of signalling an error."
       (when number-of-samples ;; time series sometimes have no values
         (loop for cnt from (1- number-of-samples) downto 0 do
               (with-output-as-clasp-row (stream)
-		;; It looks like we are assumming that all time-series clips have 
+		;; It looks like we are assumming that all time-series clips have
 		;; components. This is probably a bad assumption.
                 (report-components the-instrumentation stream cnt))))
       (call-next-method))))
@@ -774,7 +774,7 @@ instead of signalling an error."
                    stream))
       (apply #'call-next-method the-instrumentation stream extracter arguments))
     (call-next-method)))
-    
+
 ;;;----------------------------------------------------------------------------
 
 (defun push-value-combiner (old-value  new-value)

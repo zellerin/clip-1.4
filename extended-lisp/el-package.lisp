@@ -1,6 +1,6 @@
 ;;;; -*- Mode:Common-Lisp; Package:COMMON-LISP-USER; Fonts:(MEDFNT); Base:10 -*-
 ;;;; *-* File: Titanic: /usr/users/eksl/mac-files/transsim/development/packages.lisp *-*
-;;;; *-* Last-edit: Tuesday, November 24, 1992  01:55:16; Edited-By: WESTY *-* 
+;;;; *-* Last-edit: Tuesday, November 24, 1992  01:55:16; Edited-By: WESTY *-*
 ;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
 ;;;; *-* Software: TI Common Lisp System 6.49 *-*
 ;;;; *-* Lisp: TI Common Lisp System 6.49  *-*

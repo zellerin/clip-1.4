@@ -1,6 +1,6 @@
 ;;;; -*- Mode:Common-Lisp; Package:EXTENDED-LISP; Base:10; Syntax:COMMON-LISP; Fonts:(MEDFNT) -*-
 ;;;; *-* File: Titanic: /usr/users/eksl/systems/extended-lisp/lisp-extensions.lisp *-*
-;;;; *-* Last-edit: Thursday, September 23, 1993  19:59:53; Edited-By: Westy *-* 
+;;;; *-* Last-edit: Thursday, September 23, 1993  19:59:53; Edited-By: Westy *-*
 ;;;; *-* Edited-By: Westy *-*
 ;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
 ;;;; *-* Software: TI Common Lisp System 6.49 *-*
@@ -68,7 +68,7 @@ values in temporary variables, and use those from then on.
 Example:
 \(DEFMACRO DOUBLE (ARG) `(+ ,ARG ,ARG)) expands into code that computes ARG twice.
 \(DEFMACRO DOUBLE (ARG) (ONCE-ONLY (ARG) `(+ ,ARG ,ARG))) will not."
-  
+
   (dolist (variable variable-list)
     (if (not (symbolp variable))
 	(error "~S is not a variable" variable)))
@@ -82,7 +82,7 @@ Example:
 			       collect `(if (let ((variable ,variable))
 					      (loop
 						(when (atom variable) (return t))
-						(when (or (eq (car variable) 'quote) 
+						(when (or (eq (car variable) 'quote)
 							  (eq (car variable) 'function))
 						  (return t))
 						(if  (eq (car variable) 'the)
@@ -100,20 +100,20 @@ Example:
 
 (defmacro NYI (&optional function-string)
   `(error "~@[~a ~]not yet written for ~A ~A on ~A."
-          ,function-string 
+          ,function-string
           (lisp-implementation-type) (lisp-implementation-version) (machine-type)))
 
 ;;;----------------------------------------------------------------------------
 
 ;; Much better than doing (= (length x) 1).
-(defun length-1-list-p (x) 
+(defun length-1-list-p (x)
   "Is x a list of length 1?"
   (and (consp x) (null (cdr x))))
 
 ;;;----------------------------------------------------------------------------
 
 (defun mapappend (fun &rest args)
-  (if (some #'null args) 
+  (if (some #'null args)
       ()
       (append (apply fun (mapcar #'car args))
 	      (apply #'mapappend  fun (mapcar #'cdr args)))))
@@ -169,7 +169,7 @@ Arguments are passed through to nordered-adjoin."
 
 #-Explorer
 (defmacro push-end (value place)
-  "Like PUSH, except that the value goes on the end of the PLACE list.  
+  "Like PUSH, except that the value goes on the end of the PLACE list.
 If PLACE is (), then (value) is returned."
   (let ((place-to-setf place))
     (once-only (place value)
@@ -180,14 +180,14 @@ If PLACE is (), then (value) is returned."
            (setf ,place-to-setf (cons ,value nil))))))
 
 (defmacro pushnew-end (value place &rest test-keywords)
-  "Like PUSHNEW, except that the value goes on the end of the PLACE list.  
+  "Like PUSHNEW, except that the value goes on the end of the PLACE list.
 If PLACE is (), then (value) is returned.  The normal test keywords are
 allowed: :TEST :TEST-NOT and :KEY, as in PUSHNEW."
   (let ((place-to-setf place))
     (once-only (place value)
       `(if ,place
            (progn
-             (or (member ,value ,place ,@test-keywords)		 
+             (or (member ,value ,place ,@test-keywords)
                  (setf (cdr (last ,place)) (cons ,value nil)))
              ,place)
            (setf ,place-to-setf (cons ,value nil))))))
@@ -254,7 +254,7 @@ This macro modifies SEQUENCE (like PUSH-END)."
 
   "PUSH-ACONS place key datum
 
-Pushes an ACONS of key and datum onto the place alist (whether or not 
+Pushes an ACONS of key and datum onto the place alist (whether or not
 a matching key exists in the place alist.  Returns the updated alist.")
 
 
@@ -268,7 +268,7 @@ a matching key exists in the place alist.  Returns the updated alist.")
 
   "PUSHNEW-ACONS place key datum  &KEYS :TEST :TEST-NOT
 
-Performs an PUSH-ACONS of place, key, and datum only if ASSOC of 
+Performs an PUSH-ACONS of place, key, and datum only if ASSOC of
 key and place returns NIL.  Otherwise, datum replaces the old
 datum of key.  In either case, PUSHNEW-ACONS returns the modified
 alist.")
@@ -288,18 +288,18 @@ alist.")
 ;;;----------------------------------------------------------------------------
 
 (defmacro docount ((count &optional (result nil resultp)) &body body)
-  
+
   "DOCOUNT (countform [resultform]) {declaration}* {tag | statement}*
 
 This macro provides a simple iteration over a sequence of integers. First the
 countform is evaluated to produce an integer.  The body is then executed
 countform times.  Finally, the resultform is evaluated and returned (defaulting
 to NIL).  The entire construct is surrounded by an implicit block
-named NIL, so that RETURN may be used to exit the loop at any point. 
- 
+named NIL, so that RETURN may be used to exit the loop at any point.
+
 The internal counter can be declared using the THE special form in
 countform."
-  
+
   (let ((var-sym (gensym)))
     `(dotimes (,var-sym ,count ,@(when resultp `(,result)))
        ,@(when (and (consp count)
@@ -341,7 +341,7 @@ to key and value"
 
   ;; This could be coded as follows but if body is large the
   ;; space penalty is significant.
-  ;; 
+  ;;
   ;; (if ,test-form
   ;;     (dolist (,var ,possilble-list) ,@body)
   ;;     (let ((,var ,possible-list)) ,@body))
@@ -366,7 +366,7 @@ to key and value"
 ;;; Sometimes it's nice to have your gensyms mean something when
 ;;; you're reading the macroexpansion of some form.  The problem
 ;;; is that if you give a prefix to GENSYM it remains the prefix
-;;; until you change it.  
+;;; until you change it.
 
 (eval-when (compile load eval)
 
@@ -459,14 +459,14 @@ gensyms/gentemps.
 
 (defmacro with-conditional-open-file ((stream filename &rest options)
                                          &body body)
-  
+
   "A slightly modified version of the Common Lisp standard.
 
 Executes `form's with the all `stream' variables bound to a stream for the
 corresponding file `filename'.  `Filename' is opened using `options', which
 are the same as for the OPEN function.  If `filename' is nil, the OPEN is
 bypassed and nil is bound to `stream'."
-  
+
   (declare (arglist stream filename [{option}*] {form}*))
   (once-only (filename)
     (let ((close? (newsym 'close?)))
@@ -485,14 +485,14 @@ bypassed and nil is bound to `stream'."
 	     (close ,stream)))))))
 
 (defmacro with-conditional-open-files (streams &body body)
-  
+
   "A handy version of WITH-CONDITIONAL-OPEN-FILE for nested opens.
 
 Executes `form's with the all `stream' variables bound to a stream for the
 corresponding file `filename'.  `Filename' is opened using `options', which
 are the same as for the OPEN function.  If `filename' is nil, the OPEN is
 bypassed and nil is bound to `stream'."
-  
+
   (declare (arglist {(stream filename [{option}*])}* {form}*))
   (cond ((endp streams) `(progn ,@body))
         (t `(with-conditional-open-file ,(first streams)
@@ -575,12 +575,12 @@ bypassed and nil is bound to `stream'."
 	     ((null ,keyvar))
 	   (case (first ,keyvar)
 	     ,@(mapcar #'(lambda (key-spec)
-                           (multiple-value-bind 
+                           (multiple-value-bind
                              (variable key)
-                             (cond ((symbolp key-spec) 
-                                    (values key-spec 
+                             (cond ((symbolp key-spec)
+                                    (values key-spec
                                             (form-keyword key-spec)))
-                                   ((symbolp (first key-spec)) 
+                                   ((symbolp (first key-spec))
                                     (values (first key-spec)
                                             (form-keyword (first key-spec))))
                                    ((every #'keywordp (rest (first key-spec)))
@@ -599,7 +599,7 @@ bypassed and nil is bound to `stream'."
               ,@(or otherwise
                     `((error ,error-msg (first ,keyvar))))))))
        ,@body)))
-  
+
 ;;;----------------------------------------------------------------------------
 
 ;;; ---------------------------------------------------------------------------
@@ -680,7 +680,7 @@ given the type (symbol) of the structure."
   (mapcar #'first (rest (aref (get-defstruct-description type) 1)))
   #+PICCL
   (let ((dsd (get-defstruct-description type)))
-    (mapcar #'piccl::ssd-%name (piccl::sd-slots dsd))) 
+    (mapcar #'piccl::ssd-%name (piccl::sd-slots dsd)))
   )
 
 ;;; ---------------------------------------------------------------------------
@@ -746,7 +746,7 @@ given the type (symbol) of the structure."
 
   ;; Returns the index of the slot or signals an error
   ;; if the slot doesn't exist.
-  
+
   (or (structure-slot-index-1 type slot)
       (error "~S is not a slot in ~S." slot type)))
 
@@ -761,10 +761,10 @@ given the type (symbol) of the structure."
   "GET-STRUCTURE-SLOT-ACCESSOR-FUNCTION type slot
 
 Returns the accessor function for ``slot'' in structures of type ``type''."
-  
+
   slot type
   #-(or DEC LISPM)
-  (nyi "GET-STRUCTURE-SLOT-ACCESSOR-FUNCTION") 
+  (nyi "GET-STRUCTURE-SLOT-ACCESSOR-FUNCTION")
   #+(or DEC LISPM)
   (let* ((description (get-defstruct-description type)))
 
@@ -838,7 +838,7 @@ This function may be used as a place form for SETF."
   ;;
   ;; Sets the value of a slot in a structure
   ;; given the name of the slot.
-  
+
   #+DEC
   (let ((type (type-of object)))
     (%sp-structset type object (structure-slot-index type slot) value))
@@ -885,7 +885,7 @@ names a structure type."
     (if (si:defstruct-description-conc-name description)
       (string (si:defstruct-description-conc-name description))
       ""))
-  
+
   #+PICCL
   (let ((dsd (getstruct structure)))
     (sys::sd-conc-name dsd))
@@ -898,11 +898,3 @@ names a structure type."
 ;;; ---------------------------------------------------------------------------
 ;;;				  End of File
 ;;; ---------------------------------------------------------------------------
-
-
-
-
-
-
-
-
