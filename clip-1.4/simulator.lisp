@@ -82,7 +82,7 @@
   to system event unscheduling mechanism
 :TIMESTAMP a function that returns the current simulation time
 "
-  `(eval-when (load compile eval)
+  `(eval-when (:load-toplevel :compile-toplevel :execute)
      ,@(when seconds-per-time-unit
 	 `((when ',seconds-per-time-unit
 	     (setf (seconds-per-time-unit) ',seconds-per-time-unit))))

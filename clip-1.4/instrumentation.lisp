@@ -66,7 +66,7 @@
 ;;; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ;;; --*--
 
-(in-package #+CLTL2 CLIP #-CLTL2 'CLIP)
+(in-package CLIP)
 
 ;;; --*--
 ;;; ***************************************************************************
@@ -112,7 +112,7 @@
 (defvar *instrumentation-class* (find-class 'instrumentation))
 
 (defvar *all-instrumentation-classes*
-  (list* *instrumentation-class* (class-direct-subclasses *instrumentation-class*)))
+  (list* *instrumentation-class* (c2mop:class-direct-subclasses *instrumentation-class*)))
 
 (defun find-instrumentation (instrumentation-spec &optional no-error-p type)
   "Given a instrumentation specifier this returns the instrumentation instance.

@@ -43,7 +43,7 @@
 ;;; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ;;; --*--
 
-(in-package #+CLTL2 CLIP #-CLTL2 'CLIP)
+(in-package CLIP)
 
 ;;; --*--
 ;;; ***************************************************************************
@@ -92,7 +92,7 @@
   ;; named-object.
   (loop with named-class-instance = (find-class 'named-class)
 	with object-name = (name the-object)
-	for class in (class-precedence-list (class-of the-object)) do
+	for class in (c2mop:class-precedence-list (class-of the-object)) do
 	(when (eq (class-of class) named-class-instance)
 	  (setf (get object-name (class-name class)) the-object))))
 
@@ -173,7 +173,7 @@
 (defmethod find-instances ((class standard-class))
   (let ((subclasses-examined-so-far nil))
     (labels ((grab-instances (class)
-	       (let ((subclasses (class-direct-subclasses
+	       (let ((subclasses (c2mop:class-direct-subclasses
                                   class)))
 		 (unless (member class subclasses-examined-so-far)
 		   (push class subclasses-examined-so-far)

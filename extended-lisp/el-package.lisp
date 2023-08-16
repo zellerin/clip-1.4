@@ -49,13 +49,15 @@
 ;;; ***************************************************************************
 
 
-(defpackage extended-lisp (:nicknames el))
+(defpackage extended-lisp
+  (:nicknames el)
+  (:use :cl))
 
-;; I refer to all the time stuff using `time-parser::' as the package prefix.
 #+Explorer
 (si::alter-package "TIME" :nicknames "TIME-PARSER")
 #-Explorer
-(defpackage time-parser)
+(defpackage time-parser
+  (:use :cl))
 
 ;;; ***************************************************************************
 ;;; EOF

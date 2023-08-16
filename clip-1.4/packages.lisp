@@ -43,13 +43,13 @@
 ;;; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ;;; --*--
 
-(in-package #+CLTL2 COMMON-LISP-USER #-CLTL2 'USER)
+(in-package common-lisp)
 
 ;;; --*--
 ;;; ***************************************************************************
 
 (defpackage CLIP
-  (:use COMMON-LISP #+(or allegro Explorer lcl4.0) CLOS)
+  (:use COMMON-LISP)
   (:export "DEFCLIP" "DEFINE-EXPERIMENT" "DEFINE-SIMULATOR"
 	   "WRITE-CURRENT-EXPERIMENT-DATA"
            "TRIAL-NUMBER" "TIMESTAMP" "RUN-EXPERIMENT"
@@ -77,14 +77,7 @@
   )
 
 (defpackage CLIP-USER
-  (:use #+CLTL2 COMMON-LISP #-CLTL2 LISP
-        #+CLTL2 COMMON-LISP-USER #-CLTL2 USER
-        CLIP
-	#+Explorer TICL #+EXplorer TICLOS
-        #+(or allegro Explorer lcl4.0) CLOS))
+  (:use COMMON-LISP  CLIP))
 
 ;;; ***************************************************************************
 ;;; EOF
-
-
-

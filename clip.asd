@@ -1,0 +1,25 @@
+(asdf:defsystem clip/extended-lisp
+  :depends-on ("closer-mop")
+  :pathname "extended-lisp"
+  :components ((:file "el-package")
+               (:file "lisp-extensions")
+               (:file "time-parse")))
+
+(asdf:defsystem clip
+  :depends-on ("closer-mop" "clip/extended-lisp")
+  :pathname"clip-1.4"
+  :version "1.4"
+  :components ((:file "packages")
+               (:file "utilities")
+               (:file "super-intrinsic-mixins")
+               (:file "time-definitions")
+               (:file "macros")
+               (:file "parameters")
+               (:file "intrinsic-mixins")
+               (:file "class-defs")
+               (:file "instrumentation")
+               (:file "defclip")
+               (:file "simulator")
+               (:file "experiment-runner")
+               (:file "standard-clips")
+               (:file "define-experiment")))

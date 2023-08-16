@@ -43,7 +43,7 @@
 ;;; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ;;; --*--
 
-(in-package #+CLTL2 CLIP #-CLTL2 'CLIP)
+(in-package CLIP)
 
 ;;; --*--
 ;;; ***************************************************************************
@@ -74,13 +74,10 @@
 
 (defun class-built-on-class (class potential-superclass)
   (member potential-superclass
-          #-MCL
 	  (if #+Explorer (ticlos::class-composed-p class)
-              #-Explorer (class-finalized-p class)
-	      (class-precedence-list class)
-	      (class-direct-superclasses class))
-          #+MCL
-          (class-precedence-list class)
+              #-Explorer (c2mop:class-finalized-p class)
+	      (c2mop:class-precedence-list class)
+	      (c2mop:class-direct-superclasses class))
 	  :test #'eq))
 
 ;;; ----------------------------------------------------------------------------

@@ -43,7 +43,7 @@
 ;;; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ;;; --*--
 
-(in-package #+CLTL2 CLIP #-CLTL2 'CLIP)
+(in-package CLIP)
 
 ;;; --*--
 ;;; ***************************************************************************
@@ -63,7 +63,6 @@
   ())
 
 (defmethod initialize-instance :after ((the-named-class named-class) &key)
-  #-lcl4.0 ; punt in lucid since the night grows long
   (eval `(defmethod ,(class-name the-named-class) ((name symbol))
 	   (get name ',(class-name the-named-class)))))
 
@@ -75,15 +74,15 @@
 
 ;; This indicates that it is OK to build a class that has `named-class' as its
 ;; meta-class and includes classes built on `basic-class' in its superclasses.
-(defmethod validate-superclass
+(defmethod c2mop:validate-superclass
 	   ((class-prototype named-class) (superclass basic-class))
   t)
 
-(defmethod validate-superclass
+(defmethod c2mop:validate-superclass
 	   ((class-prototype named-class) (superclass standard-class))
   t)
 
-(defmethod validate-superclass
+(defmethod c2mop:validate-superclass
 	   ((class-prototype basic-class) (superclass standard-class))
   t)
 

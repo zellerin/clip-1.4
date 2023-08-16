@@ -45,11 +45,6 @@
 
 ;;;----------------------------------------------------------------------------
 
-#-lcl4.0
-(declaim (declaration values))
-#+lcl4.0
-(proclaim '(declaration values))
-
 ;;;----------------------------------------------------------------------------
 
 (defun nyi () 
@@ -599,7 +594,7 @@ Assumes that the package is the TIME package for them."
 ;;; Return possibly altered token list if they match, else NIL.
 
 (DEFUN PATTERN-MATCH (PATTERN TOKEN-LIST)
-  (DECLARE (VALUES MATCHP EDITED-TOKEN-LIST))
+#+nil  (DECLARE (VALUES MATCHP EDITED-TOKEN-LIST))
   ;; Check specially for two possible first elements of the pattern
   ;; that are the ones we check for in parsing dates from file servers.
   
@@ -634,7 +629,7 @@ Assumes that the package is the TIME package for them."
 
 (DEFUN MATCH-ELEMENT (PATTERN-ELEMENT TOKEN-LIST ENTIRE-TOKEN-LIST &AUX (TOKEN (CAR TOKEN-LIST))
   (REMAINING-TOKEN-LIST (CDR TOKEN-LIST)) EDITED-TOKEN-LIST MATCHP)
-  (DECLARE (VALUES MATCHP REMAINING-TOKENS EDITED-TOKEN-LIST))
+#+nil  (DECLARE (VALUES MATCHP REMAINING-TOKENS EDITED-TOKEN-LIST))
   (SETQ MATCHP
         (COND
           ((SYMBOLP PATTERN-ELEMENT);; The pattern element is a symbol; matching is judged by EQness.
@@ -686,7 +681,7 @@ Assumes that the package is the TIME package for them."
 (DEFUN MATCH-FRACTION (PATTERN-ELEMENT TOKEN-LIST ENTIRE-TOKEN-LIST &OPTIONAL DONT-INCLUDE-FOLLOWING-ARTICLES &AUX
   (TOKEN (CAR TOKEN-LIST)) (REMAINING-TOKEN-LIST (CDR TOKEN-LIST)) EDITED-TOKEN-LIST MATCHP
   (NUMBER-OF-TOKENS 1))
-  (DECLARE (VALUES MATCHP REMAINING-TOKEN-LIST EDITED-TOKEN-LIST))
+#+nil  (DECLARE (VALUES MATCHP REMAINING-TOKEN-LIST EDITED-TOKEN-LIST))
   (OR;; "2.5"
    
    (AND (CONSP TOKEN) (INTEGERP (CAR TOKEN)) (EQ (SECOND TOKEN-LIST) '|.|)
@@ -1687,7 +1682,7 @@ TIME-MUST-HAVE-SECOND if T means error if time doesn't
  include a number of seconds.
 DAY-MUST-BE-VALID if NIL means allow things like February 29
  (which equals March 1 or March 2)."
-  (DECLARE (VALUES UNIVERSAL-TIME RELATIVE-P))
+#+nil  (DECLARE (VALUES UNIVERSAL-TIME RELATIVE-P))
   (BLOCK ()
     (BLOCK KLUDGE
       (IF (AND MUST-HAVE-TIME (EQUAL STRING ""))

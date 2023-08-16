@@ -411,7 +411,7 @@ that will be called to enable, disable, reset and display the clip.
 	       (unless (member class subclasses-examined-so-far)
 		 (when (funcall pred class)
 		       (return-from find-subclass-if class))
-                 (let ((subclasses (class-direct-subclasses class)))
+                 (let ((subclasses (c2mop:class-direct-subclasses class)))
 		   (push class subclasses-examined-so-far)
 		   (when subclasses
 			 (loop for subclass in subclasses do
@@ -430,8 +430,8 @@ that will be called to enable, disable, reset and display the clip.
   (unless (class-finalized-p x)
     (finalize-inheritance x))
   (remove x
-	  (set-difference (class-precedence-list x)
-			  (class-precedence-list *instrumentation-class*))))
+	  (set-difference (c2mop:class-precedence-list x)
+			  (c2mop:class-precedence-list *instrumentation-class*))))
 
 (defun find-instrumentation-class (subclasses &optional no-error-p)
   (cond ((find-subclass-if #'(lambda (x)
