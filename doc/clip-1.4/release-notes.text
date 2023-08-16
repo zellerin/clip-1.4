@@ -1,0 +1,150 @@
+
+
+
+                                     Release Notes
+                                        for CLIP 1.4
+
+
+         1     Platform
+
+         This release requires Common Lisp and CLOS.
+
+             CLIP runs on all of the following platforms:
+           Hardware            Lisp
+           Sun SparcStation    Lucid 4.1
+           Sun SparcStation    Allegro 4.2b¨
+           DEC Alpha           Lispworks 3.1
+           DEC Alpha           Lispworks 3.2b
+           TI Explorer         TICL 6.1
+           Macintosh           MCL 2.0.1¨
+           DecStation          Allegro CL 4.1¨
+           DecStation          Lucid 4.0¨
+         ________________________________________
+            ¨We currently do not provide support for this platform.
+
+         2     Support
+
+         If you have any problems, questions, or suggestions, contact us at:
+
+                                 clasp-support@cs.umass.edu
+
+
+         3     Getting CLIP
+
+         CLIP is available via anonymous ftp from ftp.cs.umass.edu. It is in the direc-
+         tory pub/eksl/clip. The sources, manual and release notes are included in this
+         distribution.
+
+
+         4     Installation
+
+            1. Uncompress and unpack the tar file using the Unix uncompress and tar
+               facilities:
+               uncompress clip-1.4.tar.Z
+               tar -xvf clip-1.4.tar
+
+            2. Edit the file load-utils.lisp and change the values of *clip-root-pathname*
+               and *extended-lisp-root-pathname* to point to the correct directories.
+
+            3. From lisp, load the file compile-c1ip. That will compile CLIP.
+
+
+
+            4. From lisp, load the file load-clip. This will load CLIP.
+
+
+
+         5     Major changes from version 1.2
+
+            1. trial-number, timestamp and independent variables are now implic-
+               itly included in the data files.  They do not need to be included in the
+               :instrumentation list of an experiment.
+
+            2. The bug that occured when the both the :starting-trial-number and
+               :repetitions keywords are supplied to run-experiment has been fixed.
+
+            3. Changed name of defclip option :period to :schedule which can be a
+               list of options like :period and :start-time.
+
+            4. Changed name of defclip option :ivs to :variables.
+
+            5. Enhanced defclip :event-trigger option to allow :before and :after
+               (when to execute), :args and :args-and-values (what to call with),
+               :predicate (whether to execute).
+
+
+         6     Major changes from version 1.3
+
+            1. The :output-file option to defclip can now be a function of one arg.
+               It is called with the name of the clip and should return a value suitable
+               for use as the first argument to merge-pathnames.
+
+
+         7     Known Problems
+
+            1. The components of a composite clip must be defined after their parent in
+               order to work correctly. Composite clips are those that have :components,
+               but do not use a :map-function.
+
+            2. Components of mapping clips currently are only called with one arg - the
+               mapped value from the direct ancestor.  This prevents the components
+               from getting the map values from two levels or more up. The workaround
+               is to bind a global variable to the argument from the parent.
+
+            3. The :map-function option to defclip should be a function that returns
+               exactly the same values each time it is invoked. If this restriction is vio-
+               lated the results are undefined.
+
+            4. Currently, a mapping clip cannot b2 a component of a composite clip.
+               The workaround is to define all the components as mapping clips that
+               map over the same list.
+
+
+
+            5. The components of a composite clip cannot be specified in the :instrumentation
+               list of a define-experiment. When the top-level is specified all the com-
+               ponents will be collected and reported.
+
+            6. When a define-simulator definition is compiled all the define-experiment
+               definitions that use it must be recompiled in order for any changes to be
+               propagated.
+
+            7. If there are no post-hoc clips and multiple time-series clips a bogus main
+               data file is written.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                3
+

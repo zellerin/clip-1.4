@@ -1,0 +1,114 @@
+
+"
+*************************************************************************************************************
+****                                                                                                     ****
+**** Experiment: Agent-Experiment                                                                        ****
+**** Machine: Unknown                                                                                    ****
+**** AGENT-SIM version: Unknown                                                                          ****
+**** Date: 1/31/94 10:40                                                                                 ****
+**** Scenario: None                                                                                      ****
+**** Script-name: None                                                                                   ****
+**** First trial number: 1                                                                               ****
+**** Last trial number: 6                                                                                ****
+**** Number of trials: 6                                                                                 ****
+**** Max trial length: 8.333333333333334 hours                                                           ****
+*************************************************************************************************************
+
+                     
+The key follows:"
+"Trial"
+"Transition-Probability"
+"Cost-Factor"
+"Timestamp"
+"Pebbles"
+"Bam-Bam"
+"Dino"
+"The-Cat"
+
+(1 0.01 1 48 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 55 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 162 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 164 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 195 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 204 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 205 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 266 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 310 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 329 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 343 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 395 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 397 PEBBLES BAM-BAM DINO THE-CAT )
+(1 0.01 1 426 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 4 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 21 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 52 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 85 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 92 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 107 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 119 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 137 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 154 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 201 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 219 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 278 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 327 PEBBLES BAM-BAM DINO THE-CAT )
+(2 0.01 3 328 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 92 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 101 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 122 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 147 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 172 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 184 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 212 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 248 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 284 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 297 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 361 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 387 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 407 PEBBLES BAM-BAM DINO THE-CAT )
+(3 0.01 5 455 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 0 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 2 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 6 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 7 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 16 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 16 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 28 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 28 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 31 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 31 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 33 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 35 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 47 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 48 PEBBLES BAM-BAM DINO THE-CAT )
+(4 0.1 1 52 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 0 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 8 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 11 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 15 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 18 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 21 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 22 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 26 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 27 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 36 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 44 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 47 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 56 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 68 PEBBLES BAM-BAM DINO THE-CAT )
+(5 0.1 3 69 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 4 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 5 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 8 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 11 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 13 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 20 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 22 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 22 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 26 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 28 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 29 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 33 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 34 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 61 PEBBLES BAM-BAM DINO THE-CAT )
+(6 0.1 5 70 PEBBLES BAM-BAM DINO THE-CAT )

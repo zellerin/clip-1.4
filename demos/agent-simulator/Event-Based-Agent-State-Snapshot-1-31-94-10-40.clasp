@@ -1,0 +1,113 @@
+
+"
+*************************************************************************************************************
+****                                                                                                     ****
+**** Experiment: Agent-Experiment                                                                        ****
+**** Machine: Unknown                                                                                    ****
+**** AGENT-SIM version: Unknown                                                                          ****
+**** Date: 1/31/94 10:40                                                                                 ****
+**** Scenario: None                                                                                      ****
+**** Script-name: None                                                                                   ****
+**** First trial number: 1                                                                               ****
+**** Last trial number: 6                                                                                ****
+**** Number of trials: 6                                                                                 ****
+**** Max trial length: 8.333333333333334 hours                                                           ****
+*************************************************************************************************************
+
+                     
+The key follows:"
+"Trial"
+"Transition-Probability"
+"Cost-Factor"
+"Timestamp"
+"Each-Agent-State-Snapshot AGENT-3"
+"Each-Agent-State-Snapshot AGENT-2"
+"Each-Agent-State-Snapshot AGENT-1"
+
+(1 0.01 1 48 STATE2 STATE1 STATE1 )
+(1 0.01 1 55 STATE2 STATE2 STATE1 )
+(1 0.01 1 162 STATE2 STATE2 STATE2 )
+(1 0.01 1 164 STATE2 STATE2 STATE3 )
+(1 0.01 1 195 STATE2 STATE3 STATE3 )
+(1 0.01 1 204 STATE2 STATE4 STATE3 )
+(1 0.01 1 205 STATE3 STATE4 STATE3 )
+(1 0.01 1 266 STATE4 STATE4 STATE3 )
+(1 0.01 1 310 STATE5 STATE4 STATE3 )
+(1 0.01 1 329 STATE5 STATE4 STATE4 )
+(1 0.01 1 343 STATE6 STATE4 STATE4 )
+(1 0.01 1 395 STATE6 STATE5 STATE4 )
+(1 0.01 1 397 STATE6 STATE6 STATE4 )
+(1 0.01 1 426 STATE6 STATE6 STATE5 )
+(2 0.01 3 4 STATE1 STATE1 STATE2 )
+(2 0.01 3 21 STATE1 STATE2 STATE2 )
+(2 0.01 3 52 STATE1 STATE3 STATE2 )
+(2 0.01 3 85 STATE1 STATE4 STATE2 )
+(2 0.01 3 92 STATE1 STATE4 STATE3 )
+(2 0.01 3 107 STATE1 STATE4 STATE4 )
+(2 0.01 3 119 STATE2 STATE4 STATE4 )
+(2 0.01 3 137 STATE2 STATE4 STATE5 )
+(2 0.01 3 154 STATE2 STATE5 STATE5 )
+(2 0.01 3 201 STATE2 STATE6 STATE5 )
+(2 0.01 3 219 STATE2 STATE6 STATE6 )
+(2 0.01 3 278 STATE3 STATE6 STATE6 )
+(2 0.01 3 327 STATE4 STATE6 STATE6 )
+(2 0.01 3 328 STATE5 STATE6 STATE6 )
+(3 0.01 5 92 STATE2 STATE1 STATE1 )
+(3 0.01 5 101 STATE2 STATE1 STATE2 )
+(3 0.01 5 122 STATE2 STATE1 STATE3 )
+(3 0.01 5 147 STATE2 STATE2 STATE3 )
+(3 0.01 5 172 STATE2 STATE2 STATE4 )
+(3 0.01 5 184 STATE3 STATE2 STATE4 )
+(3 0.01 5 212 STATE3 STATE3 STATE4 )
+(3 0.01 5 248 STATE4 STATE3 STATE4 )
+(3 0.01 5 284 STATE4 STATE3 STATE5 )
+(3 0.01 5 297 STATE5 STATE3 STATE5 )
+(3 0.01 5 361 STATE6 STATE3 STATE5 )
+(3 0.01 5 387 STATE6 STATE4 STATE5 )
+(3 0.01 5 407 STATE6 STATE5 STATE5 )
+(3 0.01 5 455 STATE6 STATE5 STATE6 )
+(4 0.1 1 0 STATE2 STATE1 STATE1 )
+(4 0.1 1 2 STATE2 STATE1 STATE2 )
+(4 0.1 1 6 STATE2 STATE1 STATE3 )
+(4 0.1 1 7 STATE2 STATE2 STATE3 )
+(4 0.1 1 16 STATE2 STATE2 STATE4 )
+(4 0.1 1 16 STATE3 STATE2 STATE4 )
+(4 0.1 1 28 STATE3 STATE2 STATE5 )
+(4 0.1 1 28 STATE3 STATE3 STATE5 )
+(4 0.1 1 31 STATE3 STATE3 STATE6 )
+(4 0.1 1 31 STATE3 STATE4 STATE6 )
+(4 0.1 1 33 STATE3 STATE5 STATE6 )
+(4 0.1 1 35 STATE4 STATE5 STATE6 )
+(4 0.1 1 47 STATE4 STATE6 STATE6 )
+(4 0.1 1 48 STATE5 STATE6 STATE6 )
+(4 0.1 1 52 STATE6 STATE6 STATE6 )
+(5 0.1 3 0 STATE1 STATE2 STATE1 )
+(5 0.1 3 8 STATE1 STATE3 STATE1 )
+(5 0.1 3 11 STATE2 STATE3 STATE1 )
+(5 0.1 3 15 STATE2 STATE4 STATE1 )
+(5 0.1 3 18 STATE2 STATE5 STATE1 )
+(5 0.1 3 21 STATE2 STATE5 STATE2 )
+(5 0.1 3 22 STATE3 STATE5 STATE2 )
+(5 0.1 3 26 STATE3 STATE5 STATE3 )
+(5 0.1 3 27 STATE3 STATE6 STATE3 )
+(5 0.1 3 36 STATE3 STATE6 STATE4 )
+(5 0.1 3 44 STATE3 STATE6 STATE5 )
+(5 0.1 3 47 STATE3 STATE6 STATE6 )
+(5 0.1 3 56 STATE4 STATE6 STATE6 )
+(5 0.1 3 68 STATE5 STATE6 STATE6 )
+(5 0.1 3 69 STATE6 STATE6 STATE6 )
+(6 0.1 5 4 STATE1 STATE1 STATE2 )
+(6 0.1 5 5 STATE1 STATE1 STATE3 )
+(6 0.1 5 8 STATE1 STATE1 STATE4 )
+(6 0.1 5 11 STATE1 STATE1 STATE5 )
+(6 0.1 5 13 STATE2 STATE1 STATE5 )
+(6 0.1 5 20 STATE3 STATE1 STATE5 )
+(6 0.1 5 22 STATE3 STATE2 STATE5 )
+(6 0.1 5 22 STATE4 STATE2 STATE5 )
+(6 0.1 5 26 STATE5 STATE2 STATE5 )
+(6 0.1 5 28 STATE5 STATE2 STATE6 )
+(6 0.1 5 29 STATE5 STATE3 STATE6 )
+(6 0.1 5 33 STATE6 STATE3 STATE6 )
+(6 0.1 5 34 STATE6 STATE4 STATE6 )
+(6 0.1 5 61 STATE6 STATE5 STATE6 )
+(6 0.1 5 70 STATE6 STATE6 STATE6 )

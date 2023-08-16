@@ -1,0 +1,112 @@
+
+"
+*************************************************************************************************************
+****                                                                                                     ****
+**** Experiment: Agent-Experiment                                                                        ****
+**** Machine: Unknown                                                                                    ****
+**** AGENT-SIM version: Unknown                                                                          ****
+**** Date: 1/31/94 10:40                                                                                 ****
+**** Scenario: None                                                                                      ****
+**** Script-name: None                                                                                   ****
+**** First trial number: 1                                                                               ****
+**** Last trial number: 6                                                                                ****
+**** Number of trials: 6                                                                                 ****
+**** Max trial length: 8.333333333333334 hours                                                           ****
+*************************************************************************************************************
+
+                     
+The key follows:"
+"Trial"
+"Transition-Probability"
+"Cost-Factor"
+"Timestamp"
+"New-State"
+"Agent-Name"
+
+(1 0.01 1 48 STATE2 AGENT-3 )
+(1 0.01 1 55 STATE2 AGENT-2 )
+(1 0.01 1 162 STATE2 AGENT-1 )
+(1 0.01 1 164 STATE3 AGENT-1 )
+(1 0.01 1 195 STATE3 AGENT-2 )
+(1 0.01 1 204 STATE4 AGENT-2 )
+(1 0.01 1 205 STATE3 AGENT-3 )
+(1 0.01 1 266 STATE4 AGENT-3 )
+(1 0.01 1 310 STATE5 AGENT-3 )
+(1 0.01 1 329 STATE4 AGENT-1 )
+(1 0.01 1 343 STATE6 AGENT-3 )
+(1 0.01 1 395 STATE5 AGENT-2 )
+(1 0.01 1 397 STATE6 AGENT-2 )
+(1 0.01 1 426 STATE5 AGENT-1 )
+(2 0.01 3 4 STATE2 AGENT-1 )
+(2 0.01 3 21 STATE2 AGENT-2 )
+(2 0.01 3 52 STATE3 AGENT-2 )
+(2 0.01 3 85 STATE4 AGENT-2 )
+(2 0.01 3 92 STATE3 AGENT-1 )
+(2 0.01 3 107 STATE4 AGENT-1 )
+(2 0.01 3 119 STATE2 AGENT-3 )
+(2 0.01 3 137 STATE5 AGENT-1 )
+(2 0.01 3 154 STATE5 AGENT-2 )
+(2 0.01 3 201 STATE6 AGENT-2 )
+(2 0.01 3 219 STATE6 AGENT-1 )
+(2 0.01 3 278 STATE3 AGENT-3 )
+(2 0.01 3 327 STATE4 AGENT-3 )
+(2 0.01 3 328 STATE5 AGENT-3 )
+(3 0.01 5 92 STATE2 AGENT-3 )
+(3 0.01 5 101 STATE2 AGENT-1 )
+(3 0.01 5 122 STATE3 AGENT-1 )
+(3 0.01 5 147 STATE2 AGENT-2 )
+(3 0.01 5 172 STATE4 AGENT-1 )
+(3 0.01 5 184 STATE3 AGENT-3 )
+(3 0.01 5 212 STATE3 AGENT-2 )
+(3 0.01 5 248 STATE4 AGENT-3 )
+(3 0.01 5 284 STATE5 AGENT-1 )
+(3 0.01 5 297 STATE5 AGENT-3 )
+(3 0.01 5 361 STATE6 AGENT-3 )
+(3 0.01 5 387 STATE4 AGENT-2 )
+(3 0.01 5 407 STATE5 AGENT-2 )
+(3 0.01 5 455 STATE6 AGENT-1 )
+(4 0.1 1 0 STATE2 AGENT-3 )
+(4 0.1 1 2 STATE2 AGENT-1 )
+(4 0.1 1 6 STATE3 AGENT-1 )
+(4 0.1 1 7 STATE2 AGENT-2 )
+(4 0.1 1 16 STATE4 AGENT-1 )
+(4 0.1 1 16 STATE3 AGENT-3 )
+(4 0.1 1 28 STATE5 AGENT-1 )
+(4 0.1 1 28 STATE3 AGENT-2 )
+(4 0.1 1 31 STATE6 AGENT-1 )
+(4 0.1 1 31 STATE4 AGENT-2 )
+(4 0.1 1 33 STATE5 AGENT-2 )
+(4 0.1 1 35 STATE4 AGENT-3 )
+(4 0.1 1 47 STATE6 AGENT-2 )
+(4 0.1 1 48 STATE5 AGENT-3 )
+(4 0.1 1 52 STATE6 AGENT-3 )
+(5 0.1 3 0 STATE2 AGENT-2 )
+(5 0.1 3 8 STATE3 AGENT-2 )
+(5 0.1 3 11 STATE2 AGENT-3 )
+(5 0.1 3 15 STATE4 AGENT-2 )
+(5 0.1 3 18 STATE5 AGENT-2 )
+(5 0.1 3 21 STATE2 AGENT-1 )
+(5 0.1 3 22 STATE3 AGENT-3 )
+(5 0.1 3 26 STATE3 AGENT-1 )
+(5 0.1 3 27 STATE6 AGENT-2 )
+(5 0.1 3 36 STATE4 AGENT-1 )
+(5 0.1 3 44 STATE5 AGENT-1 )
+(5 0.1 3 47 STATE6 AGENT-1 )
+(5 0.1 3 56 STATE4 AGENT-3 )
+(5 0.1 3 68 STATE5 AGENT-3 )
+(5 0.1 3 69 STATE6 AGENT-3 )
+(6 0.1 5 4 STATE2 AGENT-1 )
+(6 0.1 5 5 STATE3 AGENT-1 )
+(6 0.1 5 8 STATE4 AGENT-1 )
+(6 0.1 5 11 STATE5 AGENT-1 )
+(6 0.1 5 13 STATE2 AGENT-3 )
+(6 0.1 5 20 STATE3 AGENT-3 )
+(6 0.1 5 22 STATE2 AGENT-2 )
+(6 0.1 5 22 STATE4 AGENT-3 )
+(6 0.1 5 26 STATE5 AGENT-3 )
+(6 0.1 5 28 STATE6 AGENT-1 )
+(6 0.1 5 29 STATE3 AGENT-2 )
+(6 0.1 5 33 STATE6 AGENT-3 )
+(6 0.1 5 34 STATE4 AGENT-2 )
+(6 0.1 5 61 STATE5 AGENT-2 )
+(6 0.1 5 70 STATE6 AGENT-2 )

@@ -1,0 +1,38 @@
+
+"
+*************************************************************************************************************
+****                                                                                                     ****
+**** Experiment: Agent-Experiment                                                                        ****
+**** Machine: Unknown                                                                                    ****
+**** AGENT-SIM version: Unknown                                                                          ****
+**** Date: 1/31/94 10:40                                                                                 ****
+**** Scenario: None                                                                                      ****
+**** Script-name: None                                                                                   ****
+**** First trial number: 1                                                                               ****
+**** Last trial number: 6                                                                                ****
+**** Number of trials: 6                                                                                 ****
+**** Max trial length: 8.333333333333334 hours                                                           ****
+*************************************************************************************************************
+
+                     
+The key follows:"
+"Trial"
+"Transition-Probability"
+"Cost-Factor"
+"Agents-Cost"
+"Each-Agent-Cost AGENT-3"
+"Each-Agent-Cost AGENT-2"
+"Each-Agent-Cost AGENT-1"
+"Completion-Time"
+"Highest-State"
+"Highest-Agent"
+"Each-Agent-State-Snapshot AGENT-3"
+"Each-Agent-State-Snapshot AGENT-2"
+"Each-Agent-State-Snapshot AGENT-1"
+
+(1 0.01 1 740 343 397 0 500 STATE6 AGENT-3 STATE6 STATE6 STATE5 )
+(2 0.01 3 1260 0 603 657 500 STATE6 AGENT-2 STATE5 STATE6 STATE6 )
+(3 0.01 5 4080 1805 0 2275 500 STATE6 AGENT-3 STATE6 STATE5 STATE6 )
+(4 0.1 1 130 52 47 31 52 STATE6 AGENT-3 STATE6 STATE6 STATE6 )
+(5 0.1 3 429 207 81 141 69 STATE6 AGENT-3 STATE6 STATE6 STATE6 )
+(6 0.1 5 655 165 350 140 70 STATE6 AGENT-3 STATE6 STATE6 STATE6 )

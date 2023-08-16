@@ -1,0 +1,69 @@
+
+"
+*************************************************************************************************************
+****                                                                                                     ****
+**** Experiment: Agent-Experiment                                                                        ****
+**** Machine: Unknown                                                                                    ****
+**** AGENT-SIM version: Unknown                                                                          ****
+**** Date: 1/31/94 10:40                                                                                 ****
+**** Scenario: None                                                                                      ****
+**** Script-name: None                                                                                   ****
+**** First trial number: 1                                                                               ****
+**** Last trial number: 6                                                                                ****
+**** Number of trials: 6                                                                                 ****
+**** Max trial length: 8.333333333333334 hours                                                           ****
+*************************************************************************************************************
+
+                     
+The key follows:"
+"Trial"
+"Transition-Probability"
+"Cost-Factor"
+"Timestamp"
+"Fred"
+"Barney"
+
+(2 0.01 3 4 FRED BARNEY )
+(2 0.01 3 21 FRED BARNEY )
+(2 0.01 3 52 FRED BARNEY )
+(2 0.01 3 85 FRED BARNEY )
+(2 0.01 3 92 FRED BARNEY )
+(2 0.01 3 107 FRED BARNEY )
+(2 0.01 3 119 FRED BARNEY )
+(2 0.01 3 137 FRED BARNEY )
+(2 0.01 3 154 FRED BARNEY )
+(2 0.01 3 201 FRED BARNEY )
+(2 0.01 3 219 FRED BARNEY )
+(2 0.01 3 278 FRED BARNEY )
+(2 0.01 3 327 FRED BARNEY )
+(2 0.01 3 328 FRED BARNEY )
+(4 0.1 1 0 FRED BARNEY )
+(4 0.1 1 2 FRED BARNEY )
+(4 0.1 1 6 FRED BARNEY )
+(4 0.1 1 7 FRED BARNEY )
+(4 0.1 1 16 FRED BARNEY )
+(4 0.1 1 16 FRED BARNEY )
+(4 0.1 1 28 FRED BARNEY )
+(4 0.1 1 28 FRED BARNEY )
+(4 0.1 1 31 FRED BARNEY )
+(4 0.1 1 31 FRED BARNEY )
+(4 0.1 1 33 FRED BARNEY )
+(4 0.1 1 35 FRED BARNEY )
+(4 0.1 1 47 FRED BARNEY )
+(4 0.1 1 48 FRED BARNEY )
+(4 0.1 1 52 FRED BARNEY )
+(6 0.1 5 4 FRED BARNEY )
+(6 0.1 5 5 FRED BARNEY )
+(6 0.1 5 8 FRED BARNEY )
+(6 0.1 5 11 FRED BARNEY )
+(6 0.1 5 13 FRED BARNEY )
+(6 0.1 5 20 FRED BARNEY )
+(6 0.1 5 22 FRED BARNEY )
+(6 0.1 5 22 FRED BARNEY )
+(6 0.1 5 26 FRED BARNEY )
+(6 0.1 5 28 FRED BARNEY )
+(6 0.1 5 29 FRED BARNEY )
+(6 0.1 5 33 FRED BARNEY )
+(6 0.1 5 34 FRED BARNEY )
+(6 0.1 5 61 FRED BARNEY )
+(6 0.1 5 70 FRED BARNEY )
