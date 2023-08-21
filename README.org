@@ -14,9 +14,17 @@ Not to be confused with Clips, Clisp.
 Originally designed to be used with Clasp (statistics package, not the new CL
 implementation), but output files work with any modern systems (e.g., R) as well.
 
+** What does it do
+See [[file:doc/manual.pdf][manual]]. Basically, define separately
+- a system that needs to be observed/measured, aka simulation
+- collection of measurements that can be done, aka clips, as in alligator clips (e.g., values of variables). These can be run once per trial, on a trigger, or on a schedule
+- a set of experiments on the simulation that use clips to do measurements of individual trials under varying conditions
+and then run the experiments and report results to the file
+
 ** Known bugs
 See [[file:doc/clip-1.4/release-notes.text][release notes]], plus:
 - not Y2K compliant
+- newer CL implementations (such as sbcl) need to be told how to advice functions if you want to use trigger based clips
 
 ** Motivation
 I recalled the package when I had an aligned need (separate experiment
