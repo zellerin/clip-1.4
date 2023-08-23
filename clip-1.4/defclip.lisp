@@ -418,12 +418,10 @@ that will be called to enable, disable, reset and display the clip.
        (subsetp s2 s1 :test #'eq)))
 
 (defun inst-cpl (x)
-  #+Explorer
-  (unless (class-finalized-p *instrumentation-class*)
-    (finalize-inheritance *instrumentation-class*))
-  #+Explorer
-  (unless (class-finalized-p x)
-    (finalize-inheritance x))
+  (unless (c2mop:class-finalized-p *instrumentation-class*)
+    (c2mop:finalize-inheritance *instrumentation-class*))
+  (unless (c2mop:class-finalized-p x)
+    (c2mop:finalize-inheritance x))
   (remove x
 	  (set-difference (c2mop:class-precedence-list x)
 			  (c2mop:class-precedence-list *instrumentation-class*))))
