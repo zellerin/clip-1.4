@@ -1,9 +1,4 @@
 ;;;; -*- Mode:Common-Lisp; Package:CLIP; Base:10; Fonts:(MEDFNT) -*-
-;;;; *-* File: Titanic: /usr/users/eksl/mac-files/clip/utilities.lisp *-*
-;;;; *-* Last-edit: Tuesday, January 19, 1993  17:03:32; Edited-By: Westy *-*
-;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
-;;;; *-* Software: TI Common Lisp System 6.49 *-*
-;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
 
 ;;;; **************************************************************************
 ;;;; **************************************************************************

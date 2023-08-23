@@ -1,9 +1,4 @@
-;;;; -*- Mode:Lisp; Package:CLIP; Fonts:(MEDFNT); Base:10 -*-
-;;;; *-* File: Titanic: /usr/users/eksl/systems/clip/development/instrumentation.lisp *-*
-;;;; *-* Last-edit: Tuesday, December 7, 1993  14:58:50; Edited-By: File Server *-*
-;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
-;;;; *-* Software: TI Common Lisp System 6.49 *-*
-;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
+;;;; -*- Mode:Lisp; Package:CLIP; Base:10 -*-
 
 ;;;; **************************************************************************
 ;;;; **************************************************************************

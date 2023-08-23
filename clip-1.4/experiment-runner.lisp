@@ -1,9 +1,4 @@
-;;;; -*- Mode:Common-Lisp; Package:CLIP; Fonts:(MEDFNT); Base:10 -*-
-;;;; *-* File: Titanic: /usr/users/eksl/systems/clip/development/experiment-runner.lisp *-*
-;;;; *-* Last-edit: Monday, January 31, 1994  10:22:37; Edited-By: Westy *-* 
-;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
-;;;; *-* Software: TI Common Lisp System 6.49 *-*
-;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
+;;;; -*- Mode:Common-Lisp; Package:CLIP; Base:10 -*-
 
 ;;;; **************************************************************************
 ;;;; **************************************************************************

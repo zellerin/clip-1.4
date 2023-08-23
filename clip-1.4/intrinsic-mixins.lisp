@@ -1,9 +1,4 @@
-;;;; -*- Mode:Common-Lisp; Package:CLIP; Fonts:(MEDFNT); Base:10 -*-
-;;;; *-* File: Titanic: /usr/users/eksl/mac-files/clip/intrinsic-mixins.lisp *-*
-;;;; *-* Last-edit: Tuesday, January 19, 1993  16:29:07; Edited-By: Westy *-*
-;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
-;;;; *-* Software: TI Common Lisp System 6.49 *-*
-;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
+;;;; -*- Mode:Common-Lisp; Package:CLIP; Base:10 -*-
 
 ;;;; **************************************************************************
 ;;;; **************************************************************************

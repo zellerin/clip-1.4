@@ -1,9 +1,4 @@
-;;;; -*- Mode:Common-Lisp; Package:CLIP; Fonts:(MEDFNT); Base:10 -*-
-;;;; *-* File: Titanic: /usr/users/eksl/mac-files/clip/development/time-definitions.lisp *-*
-;;;; *-* Last-edit: Friday, July 23, 1993  15:00:10; Edited-By: WESTY *-*
-;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
-;;;; *-* Software: TI Common Lisp System 6.49 *-*
-;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
+;;;; -*- Mode:Common-Lisp; Package:CLIP; Base:10 -*-
 
 ;;;; **************************************************************************
 ;;;; **************************************************************************

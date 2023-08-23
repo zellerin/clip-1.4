@@ -1,9 +1,4 @@
-;;;; -*- Mode:Common-Lisp; Fonts:(MEDFNT); Base:10; Patch-file:T -*-
-;;;; *-* File: Titanic: /usr/users/eksl/mac-files/clasp/clasp/development/patches.lisp *-*
-;;;; *-* Last-edit: Wednesday, March 24, 1993  14:03:50; Edited-By: Westy *-* 
-;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
-;;;; *-* Software: TI Common Lisp System 6.49 *-*
-;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
+;;;; -*- Mode:Common-Lisp; Base:10; Patch-file:T -*-
 
 ;;;; **************************************************************************
 ;;;; **************************************************************************

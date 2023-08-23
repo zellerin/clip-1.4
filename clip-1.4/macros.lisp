@@ -1,9 +1,4 @@
-;;;; -*- Mode:Common-Lisp; Package:CLIP; Fonts:(MEDFNT); Base:10 -*-
-;;;; *-* File: Titanic: /usr/users/eksl/systems/clip/development/macros.lisp *-*
-;;;; *-* Last-edit: Friday, September 24, 1993  10:15:55; Edited-By: Westy *-*
-;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
-;;;; *-* Software: TI Common Lisp System 6.49 *-*
-;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
+;;;; -*- Mode:Common-Lisp; Package:CLIP; Base:10 -*-
 
 ;;;; **************************************************************************
 ;;;; **************************************************************************
