@@ -611,8 +611,14 @@ instead of signalling an error."
 ;;; Functional instrumentation
 
 (defmacro define-around-advice (function name &rest forms)
-  #-(or Explorer MCL lispworks lucid allegro)
+  #-(or Explorer MCL lispworks lucid allegro use-cl-advice)
   (el::nyi)
+  #+use-cl-advice
+  `(cl-advice:add-advice :around ',function
+                         (lambda (next &rest args)
+                           (flet ((call-next-advice () (apply next args))
+                                  (advice-arglist () args))
+                             ,@forms)))
   #+allegro
   `(let ((excl::*compile-advice* t))
      (excl::advise-1
@@ -698,8 +704,10 @@ instead of signalling an error."
 	   (call-next-advice)))))))
 
 (defun remove-around-advice (function name)
-  #-(or Explorer MCL lispworks Lucid allegro)
+  #-(or Explorer MCL lispworks Lucid allegro use-cl-advice)
   (el::nyi)
+  #+use-cl-advice
+  (cl-advice:remove-advice :around function :all)
   #+allegro
   (when (member function (excl::advised-functions))
     (excl::unadvise-1 function :around name))
