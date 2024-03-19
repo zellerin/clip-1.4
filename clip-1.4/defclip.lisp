@@ -216,7 +216,7 @@ that will be called to enable, disable, reset and display the clip.
       ;; now how to make themselves.
       (update-parents-children name (and (not map-function) components))
 
-      `(progn
+      `(eval-when (:compile-toplevel :load-toplevel :execute)
          ;; Define the functional interface to this instrumentation.
          (defun ,name ,args
            ,(format nil "Functional interface to `~(~a~)' ~(~a~).~@[~%~a~]"

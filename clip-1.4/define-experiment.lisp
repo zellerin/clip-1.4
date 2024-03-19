@@ -295,8 +295,8 @@ The way things work:
 		 `(,@arguments)))
 	     (script-setup-function
 	       (build-code-call name 'script-setup (process-script-specs name script))))
-	
-        `(progn
+
+        `(eval-when (:load-toplevel :compile-toplevel :execute)
            ;; Create the experiment instance.
            ,@(mapcar #'build-iv-defclip-form ivs-vars)
            ,(build-timestamp-defclip-form (if (consp timestamp) 
