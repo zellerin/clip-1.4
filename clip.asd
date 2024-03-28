@@ -1,4 +1,4 @@
-(asdf:defsystem clip/extended-lisp
+(asdf:defsystem clip-1994/extended-lisp
   :depends-on ("closer-mop")
   :pathname "extended-lisp"
   :components ((:file "el-package")
@@ -9,11 +9,11 @@
 ;;;; actually, sbcl might better use trace macro
 #+(or sbcl) (push :use-cl-advice *features*)
 
-(asdf:defsystem clip
+(asdf:defsystem clip-1994
   :depends-on ("closer-mop" "clip/extended-lisp"
                             #+use-cl-advice "cl-advice")
   :pathname"clip-1.4"
-  :version "1.4"
+  :version "1.4.1"
   :components ((:file "packages")
                (:file "utilities")
                (:file "super-intrinsic-mixins")
