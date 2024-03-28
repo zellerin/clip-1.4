@@ -10,7 +10,7 @@
 #+(or sbcl) (push :use-cl-advice *features*)
 
 (asdf:defsystem clip-1994
-  :depends-on ("closer-mop" "clip/extended-lisp"
+  :depends-on ("closer-mop" "clip-1994/extended-lisp"
                             #+use-cl-advice "cl-advice")
   :pathname"clip-1.4"
   :version "1.4.1"
@@ -28,3 +28,10 @@
                (:file "experiment-runner")
                (:file "standard-clips")
                (:file "define-experiment")))
+
+(asdf:defsystem clip-1994/loader
+  :depends-on ("lisp-stat")
+  :pathname"new-code"
+  :version "1.4.1"
+  :components ((:file "package")
+               (:file "frame-loader")))
