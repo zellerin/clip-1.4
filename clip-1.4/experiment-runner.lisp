@@ -36,7 +36,7 @@
 ;;;  10-17-89 Original Phoenix instrumentation package started.  (Westy)
 ;;;  11-01-90 Added instrumentation features.  (Westy)
 ;;;  ...      Loads of undocumented changes.  (Westy)
-;;;  02-05-91 Added or altered `shutdown-experiment', 
+;;;  02-05-91 Added or altered `shutdown-experiment',
 ;;;           `shutdown-and-go-to-next-trial' and `shutdown-and-rerun-trial
 ;;;           to provide a more consistent interface. A command level
 ;;;           interface is being considered.  (Westy)
@@ -47,7 +47,7 @@
 ;;;  01-19-93 Began portable implementation (CLIP). (Westy)
 ;;;  01-29-93 Added iv and local support and finally used cross-product code.
 ;;;           (Westy)
-;;;  02-19-93 Added support for lambda-list-keywords.  
+;;;  02-19-93 Added support for lambda-list-keywords.
 ;;;           Modified:  define-experiment, run, startup-trial, shutdown-trial
 ;;;           (Rubinstein)
 ;;;  07-21-93 Added code to deal with *data-separator-character* and
@@ -55,7 +55,7 @@
 ;;;  12-06-93 Added Scott's changes to make it work with Phoenix again. The major
 ;;;           change is the use of the `status' slot to indicate what action
 ;;;           to take after a trial.  (Westy)
-;;;  01-13-94 Rewrote `shutdown-trial-of-current-experiment' and friends 
+;;;  01-13-94 Rewrote `shutdown-trial-of-current-experiment' and friends
 ;;;           to use restarts. (Westy)
 ;;;
 ;;; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -82,26 +82,26 @@
   (get-value the-experiment symbol))
 
 (defsetf get-local store-local)
-         
+
 (defmethod init-ivs-values-for-trial ((the-experiment experiment))
   (with-slots (trial-number ivs ivs-elements) the-experiment
     (when ivs
-      (mapc #'store-local 
+      (mapc #'store-local
             (el::circular-list the-experiment)
             ivs
             (apply #'nth-elt-of-cross-product (1- trial-number) ivs-elements))))
   (values))
 
 (defmethod compute-ending-trial-number ((the-experiment experiment) repetitions)
-  (with-slots (ivs-elements first-trial-number) the-experiment 
-    (* (if ivs-elements 
+  (with-slots (ivs-elements first-trial-number) the-experiment
+    (* (if ivs-elements
 	   (reduce #'* ivs-elements  :key #'length)
 	   1)
        repetitions)))
 
 (defmethod get-ivs-values ((the-experiment experiment))
   (when (slot-value the-experiment 'ivs)
-    (mapcar #'get-local 
+    (mapcar #'get-local
             (el::circular-list the-experiment)
             (slot-value the-experiment 'ivs))))
 
@@ -148,8 +148,8 @@ need to direct debugging info to another stream, or use ``notifications'' or som
     (store-arg-values the-experiment arg-list)
     (store-ivs-elements the-experiment arg-list)
     (init-local-values the-experiment arg-list)
-    (unless last-trial-number 
-      (setf last-trial-number 
+    (unless last-trial-number
+      (setf last-trial-number
 	    (or (compute-ending-trial-number the-experiment repetitions)
 		(error "you have to supply :NUMBER-OF-TRIALS"))))
     (when before-experiment-function
@@ -167,7 +167,7 @@ need to direct debugging info to another stream, or use ``notifications'' or som
     (when-debugging-format experiment-runner "Running :BEFORE-TRIAL code")
     (setf status :initializing-trial)
     (init-ivs-values-for-trial the-experiment)
-    (setf ivs-and-args (append (get-ivs-values the-experiment) 
+    (setf ivs-and-args (append (get-ivs-values the-experiment)
 			       (get-arg-values the-experiment)))
     (when before-trial-function
       (apply before-trial-function ivs-and-args))
@@ -231,7 +231,7 @@ running the after-experiment code)."
 
 (defmethod process-instrumentation-names ((the-experiment experiment)) ()
   (when-debugging-format experiment-runner "Processing instrumentation names")
-  (with-slots (instrumentation instrumentation-names) the-experiment 
+  (with-slots (instrumentation instrumentation-names) the-experiment
     ;; Insure that the latest version of each instrumentation is used.
     (setf instrumentation
           (mapcar #'find-instrumentation instrumentation-names))
@@ -257,13 +257,13 @@ running the after-experiment code)."
       (enable timestamp-clip))
     (dolist (in instrumentation)
       (reset in)
-      (enable in))))  
+      (enable in))))
 
 ; From the users point of view this is how things work.
 ; Run :BEFORE-EXPERIMENT code
 ; LOOP
 ;   Run :BEFORE-TRIAL code
-;   Call :RESET-SYSTEM function	
+;   Call :RESET-SYSTEM function
 ;   Reset and Enable all the instrumentation
 ;   Call :START-SYSTEM function
 ;   Run :AFTER-TRIAL code
@@ -287,9 +287,9 @@ running the after-experiment code)."
 		 *suppress-headers*
 		 *output-format*
 		 starting-trial-number)
-  
+
   (declare (ignore error-stream))
-  
+
   (with-slots (status first-trial-number last-trial-number trial-number
 		      end-of-trial-time script-setup-function scenario
 		      script-name output-file-name error-file-name
@@ -303,24 +303,24 @@ running the after-experiment code)."
 	    "too ~:[few~;many~] arguments given.  There are ~s:  ~s"
 	    (> (length args) (length arguments))
 	    (length arguments) arguments)
-    
+
     (setf first-trial-number starting-trial-number
-          last-trial-number ending-trial-number 
+          last-trial-number ending-trial-number
           end-of-trial-time end-time
           trial-number starting-trial-number
           output-file-name output-file
           error-file-name error-file
           extra-header-string extra-header
           headers-output-already nil)
-    
+
     (process-instrumentation-names the-experiment)
     ;; Explicitly set timestamp-clip to nil, otherwise it's unbound.  SDA
     (if timestamp-clip-name
 	(setf timestamp-clip (find-instrumentation timestamp-clip-name))
 	(setf timestamp-clip nil))
     (startup-experiment the-experiment args repetitions)
-    
-    (loop 
+
+    (loop
       (startup-trial the-experiment)
       (when script-setup-function
 	(funcall script-setup-function))
@@ -346,7 +346,7 @@ running the after-experiment code)."
 	;; Stop looping unless more trials
 	(unless (<= (incf trial-number) last-trial-number)
 	  (return))))
-    
+
     ;; After experiment code is after the loop
     (when-debugging-format experiment-runner "Running :AFTER-EXPERIMENT code")
     (setf status :after-experiment)
@@ -363,7 +363,7 @@ running the after-experiment code)."
 ;;; The top-level experiment interface function.
 
 (defun run-experiment (experiment-name
-                         &key 
+                         &key
                          args
 			 (repetitions 1)
 			 number-of-trials length-of-trial
@@ -372,7 +372,7 @@ running the after-experiment code)."
 			 (suppress-headers *suppress-headers*)
 			 (output-format *output-format*)
                          (starting-trial-number 1))
-                         
+
   "Run the experiment named `experiment-name'.  `output-file' is
 optional, but must be specified if `write-current-experiment-data' is
 called from within your experiment.  `error-stream' can be used to direct
@@ -386,7 +386,7 @@ calculated so as to vary all the independent variables across all their
 values `repetitions' (default 1) times.
 "
 
-  (run (setf *current-experiment* (find-experiment experiment-name))     
+  (run (setf *current-experiment* (find-experiment experiment-name))
        args
        (when number-of-trials
          (1- (+ number-of-trials starting-trial-number)))
@@ -398,7 +398,7 @@ values `repetitions' (default 1) times.
        suppress-headers
        output-format
        starting-trial-number))
-          
+
 ;;;----------------------------------------------------------------------------
 
 (defun schedule-function (function time period name &rest options)
@@ -412,7 +412,7 @@ values `repetitions' (default 1) times.
   (with-slots (deactivate-scheduled-function-hook) *current-experiment*
     (when deactivate-scheduled-function-hook
       (funcall deactivate-scheduled-function-hook scheduled-function))))
-  
+
 (defun system-version (args)
   (assert *current-experiment* () "there is no experiment currently running.")
   (with-slots (system-version-hook) *current-experiment*
@@ -542,7 +542,7 @@ values `repetitions' (default 1) times.
 		#+BAD
 		scenario
 ;              (when scenario
-;                (mapcar #'(lambda (agent) (list (ad.number agent) (ad.type agent))) 
+;                (mapcar #'(lambda (agent) (list (ad.number agent) (ad.type agent)))
 ;                        (get-agents-from-scenario scenario)))
 		;; added this arg, to go with the ~a.  SDA 12/2/93
 		(or extra-header-string "")
@@ -552,7 +552,7 @@ values `repetitions' (default 1) times.
 		     (tv:break-string-into-lines extra-header-string)
 		     #-Explorer
 		     (list extra-header-string))))
-      
+
       (let ((instrumentations (or (parse-instrumentation specific-instrumentations nil) instrumentation)))
 	(print-report-key-implicit-clips the-experiment stream (some #'time-series-p instrumentations))
 	(dolist (inst instrumentations)
@@ -571,7 +571,7 @@ values `repetitions' (default 1) times.
 		       extra-header-string
 		       string))))
 
-(defun write-current-experiment-data (&key 
+(defun write-current-experiment-data (&key
 				      (separator *data-separator-character*)
 				      (format *output-format*)
 				      instrumentation
@@ -603,7 +603,7 @@ specify a subset of the experiments instrumentation to write to the data file."
 	(assert output-file-name () "filename not specified")
         (let* ((instrumentations-to-other-files
                 (remove-if-not #'output-file-name instrumentations))
-	       (instrumentations-to-main-file 
+	       (instrumentations-to-main-file
                 (remove-if #'output-file-name instrumentations))
 	       (time-series-instrumentations
                 (remove-if-not #'time-series-p instrumentations)))
@@ -631,11 +631,11 @@ specify a subset of the experiments instrumentation to write to the data file."
 		  (if (listp instrumentation)
 		      instrumentation
 		      (list instrumentation)))))
-    (when error-p 
+    (when error-p
       (assert *current-experiment* () "there is no experiment currently running.")
-      (assert (not (set-difference parsed-instrumentation 
+      (assert (not (set-difference parsed-instrumentation
 				   (slot-value *current-experiment* 'instrumentation)))))
-    
+
     (values parsed-instrumentation)))
 
 (defun test-instrumentation-report (instrumentation-name[s] &key (stream *standard-output*) map-list)
@@ -785,7 +785,7 @@ return nil if there is no such experiment, instead of signalling an error."
     (call-next-method))
   )
 
-(defmethod report-internal :around ((the-instrumentation simple-instrumentation) stream 
+(defmethod report-internal :around ((the-instrumentation simple-instrumentation) stream
                                     (extracter t) &rest arguments)
   (declare (ignore arguments))
   (let ((*collecting-simple-instrumentation-ok* t))
@@ -803,7 +803,7 @@ return nil if there is no such experiment, instead of signalling an error."
 (defmethod standard-report-function ((the-instrumentation simple-instrumentation)
 				   stream extracter &rest args)
   (declare (ignore extracter args))
-  (with-slots (value number-of-samples) the-instrumentation 
+  (with-slots (value number-of-samples) the-instrumentation
     (assert (= number-of-samples 1))
     (standard-value-printer (first value) stream)
     (write-char *data-separator-character* stream))
@@ -859,5 +859,3 @@ return nil if there is no such experiment, instead of signalling an error."
 
 ;;; ***************************************************************************
 ;;; EOF
-
-
