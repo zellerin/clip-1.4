@@ -56,7 +56,7 @@ these should be a form that refers to the arguments or a function that handles
 the correct number of arguments.
 
 :INSTRUMENTATION is a list of names defined with `defclip' which will be
-enabled during the experiment.  Use `write-current-experiment-data' in the    
+enabled during the experiment.  Use `write-current-experiment-data' in the
 after-trial code to write the data to the appropriate output files.
 
 :IVS    ({(var exp) | (var <loop-for-clause>)}*) - define independent variables
@@ -83,7 +83,7 @@ The way things work:
  END LOOP when all trials completed
  Run :AFTER-EXPERIMENT code with args
 "
-  
+
   #+Explorer
   (declare (arglist name arguments [documentation]
                     &key
@@ -178,7 +178,7 @@ The way things work:
                                  (error "improper script element specification; ~s" element))))
                       specs))))
 
-      
+
       ;; Attempt to default values from simulation object
       (let ((sim (and simulator (find-instance-by-name simulator 'simulator))))
 	(when sim
@@ -187,20 +187,20 @@ The way things work:
 	    (get-from-sim system-name system-name)
 	    (get-from-sim system-version system-version-hook)
 	    (get-from-sim reset-system reset-system-hook)
-	    (get-from-sim start-system start-system-hook) 
+	    (get-from-sim start-system start-system-hook)
 	    (get-from-sim stop-system stop-system-hook)
 	    (get-from-sim schedule-function schedule-function-hook)
 	    (get-from-sim deactivate-scheduled-function deactivate-scheduled-function-hook)
 	    (get-from-sim seconds-per-time-unit seconds-per-time-unit)
 	    (get-from-sim timestamp timestamp-function))))
 
-      
+
       (let* ((ivs-vars     (mapcar #'first  ivs))
              (ivs-elements (mapcar #'rest ivs))
 	     (local-symbols      (mapcar #'(lambda (item) (if (consp item) (first item) item)) locals))
 	     (local-init-values  (mapcar #'(lambda (item) (when (consp item) (second item))) locals))
 	     (local-values-init-function
-	       (build-code-call 
+	       (build-code-call
                 name
 		 'init-local-values
 		 `(progn
@@ -209,76 +209,76 @@ The way things work:
 			      local-symbols
 			      local-init-values))
 		 `(,@arguments)))
-             (before-experiment-function 
-	       (build-code-call 
+             (before-experiment-function
+	       (build-code-call
                 name
                 'before-experiment (build-locals-accessor-code-wrapper
-						     local-symbols             
+						     local-symbols
 						     before-experiment)
 				`(,@arguments)))
-             (before-trial-function      
+             (before-trial-function
 	       (build-code-call
                  name
                 'before-trial (build-locals-accessor-code-wrapper
-						local-symbols             
+						local-symbols
 						before-trial)
                                 ;; Reversed order because of lambda-list-keywords. (Rubinstein)
 				`(,@ivs-vars ,@arguments)))
-	     (stop-system-function 
+	     (stop-system-function
 	       (build-code-call
                  name
-                'stop-system    
+                'stop-system
 				(build-locals-accessor-code-wrapper
-				  local-symbols       
+				  local-symbols
 				  stop-system)
 				`(,@ivs-vars ,@arguments)))
-	     (reset-system-function 
+	     (reset-system-function
 	       (build-code-call
                  name
-                'reset-system 
+                'reset-system
 				(build-locals-accessor-code-wrapper
-				  local-symbols       
+				  local-symbols
 				  reset-system)
 				`(,@ivs-vars ,@arguments)))
-	     (start-system-function 
-	       (build-code-call 
+	     (start-system-function
+	       (build-code-call
                 name
-		 'start-system 
+		 'start-system
 		 (build-locals-accessor-code-wrapper
-		   local-symbols       
+		   local-symbols
 		   start-system)
 		 `(,@ivs-vars ,@arguments)))
-	     (system-version-function 
-	       (build-code-call 
+	     (system-version-function
+	       (build-code-call
                  name
-		 'system-version 
+		 'system-version
 		 (build-locals-accessor-code-wrapper
-		   local-symbols       
+		   local-symbols
 		   system-version)
 		 `(,@arguments)))
-	     (after-trial-function       
-	       (build-code-call 
+	     (after-trial-function
+	       (build-code-call
                  name
                 'after-trial (build-locals-accessor-code-wrapper
-					       local-symbols             
+					       local-symbols
 					       after-trial)
                                 ;; Reversed order because of lambda-list-keywords. (Rubinstein)
 				`(,@ivs-vars ,@arguments)))
-	     (after-experiment-function  
+	     (after-experiment-function
 	       (build-code-call
                  name
                 'after-experiment (build-locals-accessor-code-wrapper
-						    local-symbols             
+						    local-symbols
 						    after-experiment)
 				`(,@arguments)))
-	     (ivs-elements-init-function 
-	       (build-code-call 
+	     (ivs-elements-init-function
+	       (build-code-call
                  name
 		 'init-ivs-elements
 		 `(progn
 		    (setf (slot-value *current-experiment* 'ivs-elements)
 			  (list ,@(mapcar #'(lambda (element-list)
-					      (if (intersection '(from downfrom upfrom in) element-list 
+					      (if (intersection '(from downfrom upfrom in) element-list
 								:key #'(lambda (item)
 									 (if (symbolp item)
 									     (symbol-name item)
@@ -299,7 +299,7 @@ The way things work:
         `(eval-when (:load-toplevel :compile-toplevel :execute)
            ;; Create the experiment instance.
            ,@(mapcar #'build-iv-defclip-form ivs-vars)
-           ,(build-timestamp-defclip-form (if (consp timestamp) 
+           ,(build-timestamp-defclip-form (if (consp timestamp)
                                            (second timestamp)
                                            'timestamp))
            (make-instance
@@ -308,7 +308,7 @@ The way things work:
              :description ,(string documentation)
              :arguments ',arguments
              :ivs ',ivs-vars
-             :ivs-element-init-function ,ivs-elements-init-function 
+             :ivs-element-init-function ,ivs-elements-init-function
              :locals ',local-symbols
 	     :locals-init-function ,local-values-init-function
              :before-experiment-function ,before-experiment-function
@@ -322,7 +322,7 @@ The way things work:
              :start-system-hook   ,start-system-function
              :reset-system-hook   ,reset-system-function
              :stop-system-hook    ,stop-system-function
-             :schedule-function-hook ,(build-code-call 
+             :schedule-function-hook ,(build-code-call
                                        name
                                        'schedule-function schedule-function
                                        '(function time period name))
@@ -332,13 +332,12 @@ The way things work:
                                                    deactivate-scheduled-function
                                                    '(event))
 	     :seconds-per-time-unit ,(or seconds-per-time-unit 1)
-             :timestamp-function ',(if (consp timestamp) 
+             :timestamp-function ',(if (consp timestamp)
                                      (first timestamp)
                                      timestamp)
-             :timestamp-clip-name ',(if (consp timestamp) 
+             :timestamp-clip-name ',(if (consp timestamp)
                                      (second timestamp)
-                                     'timestamp)
-             )
+                                     'timestamp))
            ',name)))))
 
 (defun build-iv-defclip-form (iv)
