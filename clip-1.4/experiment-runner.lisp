@@ -508,7 +508,7 @@ values `repetitions' (default 1) times.
                      ~4,,,'*<~>~1@T~99@<Experiment: ~:(~a~)~>~1@T~4,,,'*<~>~%~
                      ~4,,,'*<~>~1@T~99@<Machine: ~a~>~1@T~4,,,'*<~>~%~
                      ~4,,,'*<~>~1@T~99@<~a version: ~a~>~1@T~4,,,'*<~>~%~
-                     ~4,,,'*<~>~1@T~99@<Date: ~d/~d/~d ~d:~d~>~1@T~4,,,'*<~>~%~
+                     ~4,,,'*<~>~1@T~99@<Date: ~d-~2,'0d-~2,'0d ~2,'0d:~2,'0d~>~1@T~4,,,'*<~>~%~
                      ~4,,,'*<~>~1@T~99@<Scenario: ~:(~a~)~>~1@T~4,,,'*<~>~%~
                      ~4,,,'*<~>~1@T~99@<Script-name: ~:(~a~)~>~1@T~4,,,'*<~>~%~
                      ~4,,,'*<~>~1@T~99@<First trial number: ~d~>~1@T~4,,,'*<~>~%~
@@ -528,10 +528,10 @@ values `repetitions' (default 1) times.
 		#+Explorer
 		net:local-pretty-host-name
 		#-Explorer
-		"Unknown"
+		(machine-instance)
 		system-name
 		(system-version (slot-value the-experiment 'argument-values))
-		month date (- year 1900) hour min
+		year month date hour min
 		(if scenario (name scenario) "None")
 		(or script-name "None")
 		first-trial-number
