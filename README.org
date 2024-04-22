@@ -5,9 +5,8 @@ modern systems:
 - Added README and .ps converted to .pdf
 - CLTL2 is not bleeding edge any more, actually, there is a new standard there
 - Use closer-mop for access to MOP
-- I am sure that bundled portable-defsystem was nice, but asdf is more standard now
+- I am sure that bundled portable-defsystem was nice, but asdf is standard now
 - Apparently, it used to be possible to declare named VALUES
-
 
 Not to be confused with Clips, Clisp.
 
@@ -23,8 +22,7 @@ and then run the experiments and report results to the file
 
 ** Known bugs
 See [[file:doc/clip-1.4/release-notes.text][release notes]], plus:
-- not Y2K compliant
-- newer CL implementations (such as sbcl) need to be told how to advice functions if you want to use trigger based clips
+- newer CL implementations (such as sbcl) need to be told how to advice functions if you want to use trigger based clips. It might be more portable to use [[file:after-2020/notes.org][callbacks in a variable]], though.
 
 ** Motivation
 I recalled the package when I had an aligned need (separate experiment
@@ -32,8 +30,12 @@ definition from main code), and I am not aware of modern alternative.
 
 Also, the software is no longer available on the original location - actually, the hardest part was to find the original source.
 
+** Added to the original
+- asdf system definition (clip-1994)
+- there is a reader of CLASP format now in [[./new-code/frame-loader.lisp]] (asdf system clip-1992/loader)
+
 ** Copyright
-This is the original copyright. Based on that, I assume that publishing this is OK.
+This is the original copyright. Based on that, I assume that publishing this is OK. My new code, if any relevant, is under the MIT license.
 #+begin_quote
 Copyright (c) 1994 University of Massachusetts
 Department of Computer Science

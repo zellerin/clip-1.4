@@ -1,0 +1,63 @@
+* Using callbacks to report internal statistics
+:PROPERTIES:
+:header-args:lisp: :tangle demo-var-callback.lisp
+:END:
+
+The original documentation provides two ways to collect the data during
+experiment run: scheduled clips, and event clips. Event clips are based on advice.
+
+It also mentions the ~clip:collect~ function that can be used, noting that this needs an application change.
+
+I did not want to have application with calls to clip (and to depend on it). However, I already had hooks there to call for debugging. So the best option is to add data collection to these hooks. Let us do it for a simplified example.
+
+First, we need the hook to exist, and application ("simulation") to use it:
+#+begin_src lisp
+  (in-package clip-user)
+
+  (defvar *fn*)
+
+  (define-simulator sim
+    :start-system (dotimes (i 10) (funcall *fn* 10 i)))
+#+end_src
+
+Now the clip to make use of the reporting.
+#+begin_src lisp
+  (defclip testa (a b)
+  (:enable-function (setf *fn* (lambda (a b) (clip::collect 'testa a b)))
+   :disable-function (setf *fn* nil)
+   :components (xa xb)
+   :output-file "b"
+   :class clip::composite-time-series-instrumentation)
+  (values a b))
+#+end_src
+
+We use enable and disable functions to set up the callbeck, ~collect~ to actually
+collect the data, and explicitly specify a class used for time series with components.
+
+It should be relatively easy to define a new, specialized class and keyword for this.
+
+Now the experiment is defined and executed with simple
+#+begin_src lisp
+  (define-experiment exp ()
+    "A test for variable callback series"
+    :simulator sim
+    :timestamp get-internal-real-time
+    :instrumentation (testa)
+    :after-trial (write-current-experiment-data))
+
+  (clip:run-experiment 'exp :output-file "/tmp/a.clasp" )
+#+end_src
+with data in ~/tmp/b.clasp~ (merged output file from clip and from the experiment)
+
+* Loading data from clasp files
+Originally, there was a corresponding package CLASP that was able to visualize .clasp file. I am not going to resurrect that one.
+
+Instead, the data can be loaded with the added loader as data-frames of [[https://lisp-stat.dev/][lisp-stat]]. Assuming that there is a clasp file with two experiment results, foo and bar, one can write
+
+#+begin_src lisp
+  (ql:quickload 'clip-1994/loader)
+
+  (clip/loader:load-measurements "/tmp/b.clasp" 'foo 'bar)
+#+end_src
+
+This creates variables FOO, BAR with data frames, as well as packages FOO and BAR and (assuming the columns in FOO were trial, X and Y) variables FOO::TRIAL, FOO::X and FOO::Y with appropriate data as vectors.
