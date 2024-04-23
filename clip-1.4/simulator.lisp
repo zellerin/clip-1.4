@@ -58,6 +58,7 @@
   (:metaclass named-class))
 
 (defmacro define-simulator (name &key
+		     description
 		     system-name
 		     system-version
 		     reset-system
@@ -96,7 +97,8 @@
              :schedule-function-hook ',schedule-function
              :deactivate-scheduled-function-hook ',deactivate-scheduled-function
              :seconds-per-time-unit ',seconds-per-time-unit
-             :timestamp-function ',timestamp))
+             :timestamp-function ',timestamp
+             :description ,description))
      ',name))
 
 ;;; ***************************************************************************

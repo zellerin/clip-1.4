@@ -30,8 +30,14 @@
                (:file "define-experiment")))
 
 (asdf:defsystem clip-1994/loader
-  :depends-on ("lisp-stat")
+  :depends-on ("lisp-stat" "mgl-pax")
   :pathname"new-code"
   :version "1.4.1"
   :components ((:file "package")
                (:file "frame-loader")))
+
+(asdf:defsystem clip-1994/doc
+  :depends-on ("clip-1994" "dref" "mgl-pax")
+  :pathname "new-code"
+  :version "1.4.1"
+  :components ((:file "pax-doc")))
