@@ -1,11 +1,11 @@
 ;;;-*- Mode:Common-Lisp; Package:CLIP-USER; Base:10 -*-
-;;;; *-* Last-edit: Tuesday, December 7, 1993  15:47:10; Edited-By: File Server *-* 
+;;;; *-* Last-edit: Tuesday, December 7, 1993  15:47:10; Edited-By: File Server *-*
 
 
 ;;; This file defines a simple agent based simulation using the generic simulator.
 ;;; Basically, each time step each agent changes state with some probability.
 
-(in-package :clip-user)
+(in-package #:clip-user)
 
 ;;;----------------------------------------------------------------------------
 ;;; The agent class
@@ -77,7 +77,7 @@
 (defun reset-agent-simulation ()
   (clip::forget-instances 'agent)
   (initialize-simulation))
-      
+
 (defun run-agent-simulation (&key (reset t) (number-of-agents 3) (end-time most-positive-fixnum)
 			     ((:verbose *verbose*) *verbose*))
   (when reset (reset-agent-simulation))
@@ -98,7 +98,7 @@
 
 ;;;----------------------------------------------------------------------------
 ;;; Some utilities
-  
+
 (defun probability-p (p)
   (< (random 1.0)  p))
 

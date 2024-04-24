@@ -36,6 +36,17 @@
   :components ((:file "package")
                (:file "frame-loader")))
 
+(asdf:defsystem clip-1994/demo
+  :depends-on ("clip-1994")
+  :pathname "demos/agent-simulator"
+  :version "1.4.1"
+  :components (
+               (:file "generic-simulator")
+               (:file "agent-simulator")
+               (:file "simple-agent-experiment")
+               (:file "super-agent-experiment")
+               (:file "agent-experiment")))
+
 (asdf:defsystem clip-1994/doc
   :depends-on ("clip-1994" "dref" "mgl-pax")
   :pathname "new-code"

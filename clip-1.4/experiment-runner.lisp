@@ -373,17 +373,17 @@ running the after-experiment code)."
 			 (output-format *output-format*)
                          (starting-trial-number 1))
 
-  "Run the experiment named `experiment-name'.  `output-file' is
-optional, but must be specified if `write-current-experiment-data' is
-called from within your experiment.  `error-stream' can be used to direct
+  "Run the experiment named EXPERIMENT-NAME.  OUTPUT-FILE is
+optional, but must be specified if WRITE-CURRENT-EXPERIMENT-DATA is
+called from within your experiment.  ERROR-STREAM can be used to direct
 output to an open stream.  It defaults to the *error-output* which sends
-error/debug output to the appropriate place.  `error-file' can also be
-used to direct the error/debug output to a file.  `extra-header' is
+error/debug output to the appropriate place.  ERROR-FILE can also be
+used to direct the error/debug output to a file.  EXTRA-HEADER is
 written at the end of the header of the output file.
-`starting-trial-number' can be used to change this value to something
-other than one (1).  If `number-of-trials' is not specified it will be
+STARTING-TRIAL-NUMBER can be used to change this value to something
+other than one (1).  If NUMBER-OF-TRIALS is not specified it will be
 calculated so as to vary all the independent variables across all their
-values `repetitions' (default 1) times.
+values REPETITIONS (default 1) times.
 "
 
   (run (setf *current-experiment* (find-experiment experiment-name))
@@ -576,13 +576,13 @@ values `repetitions' (default 1) times.
 				      (format *output-format*)
 				      instrumentation
 				      stream)
-  "Causes each experiment instrumentation to write its data to `filename'.
-`separator' should be a character which will be used to separate fields.  It
-defaults to the value of *data-separator-character*.  `format' should be one of
+  "Causes each experiment instrumentation to write its data to FILENAME.
+SEPARATOR should be a character which will be used to separate fields.  It
+defaults to the value of *data-separator-character*.  FORMAT should be one of
 :CLASP which means write a clasp native format data file, :ASCII which means
-write a standard `separator' delimited data file including column names or
+write a standard SEPARATOR delimited data file including column names or
 :DATA-ONLY which is the same as :ASCII except no column names are included.  It
-defaults to the value of *output-format*.  `instrumentation' can be used to
+defaults to the value of *output-format*.  INSTRUMENTATION can be used to
 specify a subset of the experiments instrumentation to write to the data file."
 
   (assert *current-experiment* () "there is no experiment currently running.")

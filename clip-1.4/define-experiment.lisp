@@ -45,12 +45,14 @@
 
 (defmacro define-experiment (name arguments &body body &aux documentation)
   "Defines an experiment named `name' that can be run using the
-`run-experiment' function.
+RUN-EXPERIMENT function.
 
 :SIMULATOR should be the name used in a previous define-simulation form.
 
 :BEFORE-TRIAL and :AFTER-TRIAL are called with the current values of the
-independent variables and the arguments.  :BEFORE-EXPERIMENT and
+independent variables and the arguments.
+
+:BEFORE-EXPERIMENT and
 :AFTER-EXPERIMENT are called with the just the arguments.  The value of all of
 these should be a form that refers to the arguments or a function that handles
 the correct number of arguments.
@@ -70,6 +72,8 @@ after-trial code to write the data to the appropriate output files.
 a time interval and should be a fixnum or form.
 
 The way things work:
+
+```
  Run :BEFORE-EXPERIMENT code with args
  LOOP
    Update IVs for trial
@@ -82,6 +86,7 @@ The way things work:
    Run :AFTER-TRIAL code (possible post-mortem collection done)
  END LOOP when all trials completed
  Run :AFTER-EXPERIMENT code with args
+```
 "
 
   #+Explorer

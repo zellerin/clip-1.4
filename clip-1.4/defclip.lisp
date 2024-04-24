@@ -113,27 +113,38 @@
 
   "Defines a method for managing a set of functions used to collect data.
 
-:COMPONENTS is list of clips that are associated with this clip; ie., they are
+  :COMPONENTS is list of clips that are associated with this clip; ie., they are
 collected and reported as a group by collecting or report this clip.
-:MAP-FUNCTION provides a list of items to map the `components' over.
-:REPORT-KEY allows overriding of the default key output to the data stream.
-:PERIOD provides the time interval between collections, if this is not specified
+
+  :MAP-FUNCTION provides a list of items to map the `components' over.
+
+  :REPORT-KEY allows overriding of the default key output to the data stream.
+
+  :PERIOD provides the time interval between collections, if this is not specified
 collection will be done immediately prior to the report is output to the data
 stream.
-:TRIGGER-EVENT is a function which triggers collection
-:ENABLE-FUNCTION, :DISABLE-FUNCTION, :RESET-FUNCTION, :DISPLAY-FUNCTION are code
+
+  :TRIGGER-EVENT is a function which triggers collection
+
+  :ENABLE-FUNCTION, :DISABLE-FUNCTION, :RESET-FUNCTION, :DISPLAY-FUNCTION are code
 that will be called to enable, disable, reset and display the clip.
-:REPORT-FUNCTION can be used to override the default report function.
+
+  :REPORT-FUNCTION can be used to override the default report function.
 
  For example:
 
  Another simple one with code used to report a value:
+
+```
    \(defclip number-of-dead-bulldozers ()
      \(:report-key \"# of Dead bulldozers\"\)
 
      (length (bds-that-died)))
+```
 
  An example showing one with components:
+
+```
   \(defclip methods-each-bd (bulldozer)
     \"Salient info for each instance of applying a recovery method:\"
     (:components (trial-number agent-name method-type failure-type calculate-recovery-cost
@@ -141,15 +152,18 @@ that will be called to enable, disable, reset and display the clip.
      :map-function (gather-recovery-method-instances (name-of bulldozer)))
     ;; This code executes before the map-function is executed.
     (send (fire-system) :set-frame-system (name-of bulldozer)))
+```
 
  This one reports no values it simply provides an interface to some metering code:
+
+```
    \(defclip scorched-earth-meter ()
      \"Records amount of torched terrain.\"
      \(:enable-function  (send (fire-system) :turn-on-scorched-earth-metering)
       :disable-function (send (fire-system) :turn-off-scorched-earth-metering)
       :reset-function   (send (fire-system) :reset-scorched-earth-meter)
       :display-function (send (fire-system) :display-scorched-earth-meter)))
-
+```
 "
   #+Explorer
   (declare (arglist name args [documentation] (&key

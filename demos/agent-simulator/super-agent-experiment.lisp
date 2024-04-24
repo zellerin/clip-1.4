@@ -1,6 +1,6 @@
 ;;;; -*- Mode:Common-Lisp; Package:CLIP-USER; Fonts:(MEDFNT); Base:10 -*-
 ;;;; *-* File: Titanic: /usr/users/eksl/systems/clip/demos/agent-simulator/super-agent-experiment.lisp *-*
-;;;; *-* Last-edit: Tuesday, October 26, 1993  17:23:46; Edited-By: Westy *-* 
+;;;; *-* Last-edit: Tuesday, October 26, 1993  17:23:46; Edited-By: Westy *-*
 ;;;; *-* Machine: Count (Explorer II, Microcode 489) *-*
 ;;;; *-* Software: TI Common Lisp System 6.49 *-*
 ;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
@@ -25,7 +25,7 @@
 ;;; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ;;; --*--
 
-(in-package #+CLTL2 clip-user #-CLTL2 'clip-user)
+(in-package #:clip-user)
 
 ;;; --*--
 ;;; ***************************************************************************
@@ -34,15 +34,16 @@
 ;(load (merge-pathnames "simple-agent-experiment" (user::clip-load-pathname)))
 
 ;;;----------------------------------------------------------------------------
-;;; Super clip to collect cost of each agent
+
 
 (defclip all-agents-costs ()
+  "Super clip to collect cost of each agent."
   (:map-function (find-agents)
    :components   (each-agent-cost)))
 
 (defclip each-agent-cost (agent)
   ()
-  
+
   (cost agent))
 
 ;;; ***************************************************************************
@@ -54,7 +55,7 @@
   :ivs ((transition-probability in '(.01 .1))
 	      (cost-factor from 1 to 3))
   :instrumentation (agents-cost all-agents-costs completion-time)
-  :before-trial (setf *transition-probability* transition-probability 
+  :before-trial (setf *transition-probability* transition-probability
 		      *relative-cost* cost-factor)
   :after-trial (write-current-experiment-data))
 
@@ -67,12 +68,6 @@
 (run-experiment 'simple-agent-experiment-2 :output-file #+Explorer "ed-buffer:data.clasp")
 
 |#
-  
+
 ;;; ***************************************************************************
 ;;; EOF
-
-
-
-
-
-

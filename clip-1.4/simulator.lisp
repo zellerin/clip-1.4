@@ -69,17 +69,25 @@
 		     seconds-per-time-unit
 		     timestamp)
   "Define the interface to a simulation. The following args are recognized:
+
 :SYSTEM-NAME system-name
+
 :SYSTEM-VERSION function or form that handles same args as :BEFORE-EXPERIMENT
+
 :START-SYSTEM   function or form that handles same args as :BEFORE-TRIAL
+
 :RESET-SYSTEM   function or form that handles same args as :BEFORE-TRIAL
+
 :STOP-SYSTEM    function or form that handles same args as :BEFORE-TRIAL
+
 :SECONDS-PER-TIME-UNIT value (default is 1)
 
 :SCHEDULE-FUNCTION (lambda (function time period name) . body) - interface to
   system event scheduling mechanism
+
 :DEACTIVATE-SCHEDULED-FUNCTION (lambda (scheduled-function-object) . body) - interface
   to system event unscheduling mechanism
+
 :TIMESTAMP a function that returns the current simulation time
 "
   `(eval-when (:load-toplevel :compile-toplevel :execute)

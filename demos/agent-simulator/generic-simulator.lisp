@@ -3,7 +3,7 @@
 ;; This file defines a simple event-based simulator.  The events are represented by
 ;; functions which are kept on a time-sorted queue.
 
-(in-package :clip-user)
+(in-package #:clip-user)
 
 (defvar *current-time* 0)
 (defvar *event-queue* nil)
@@ -27,15 +27,15 @@
                   (>= *current-time* finish-time)
                   (null *event-queue*))
         for event = (pop *event-queue*)
-        do 
+        do
         (setf *current-time* (event.time event))
         (run-event event)))
-        
+
 (defun run-event (event)
   (apply (event.function event) (event.args event))
   (when (event.period event)
-    (schedule-event (event.function event) 
-                    (event.args event) 
+    (schedule-event (event.function event)
+                    (event.args event)
                     (+ (event.time event) (event.period event))
                     (event.period event))))
 
@@ -43,7 +43,7 @@
   "Schedule `function' to run at `time'.  If period is specified the function will be
 rescheduled each time after it has run."
 
-  (el::pushnew-ordered  
+  (el::pushnew-ordered
    (make-event :time time
                :function function
                :args args
@@ -79,4 +79,3 @@ rescheduled each time after it has run."
   (simulate 1000))
 
 |#
-  

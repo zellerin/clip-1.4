@@ -48,7 +48,7 @@
    (trial-number
      :initform nil
      :documentation "In a run of trials, this is the number of the trial that is currently being run.")
-   
+
    (first-trial-number
      :initarg :first-trial-number
      :initform nil
@@ -74,7 +74,7 @@ and the `after-experiment-run' function is executed.")
      :accessor error-file-name
      :documentation "Bound by `run-experiment' to the file used for error output.")
    (extra-header-string :initform nil :initarg :extra-header-string)
-   
+
    (headers-output-already :initform nil)
    ;; Currently unused...
    (scenario
@@ -144,7 +144,13 @@ and the `after-experiment-run' function is executed.")
    )
   (:metaclass named-class)
   (:default-initargs
-    :status :disabled))
+    :status :disabled)
+  (:documentation
+   "Simple clips have no components and collect data immediately prior to reporting
+it to the output le at :AFTER-TRIAL time. If they are defined with a :schedule or
+:trigger-event defclip option their default behavior is store all of the data
+collected during a trial and report a single value which is the mean of all the
+values collected."))
 
 ;;; ----------------------------------------------------------------------------
 ;;; Mixins
@@ -161,7 +167,7 @@ and the `after-experiment-run' function is executed.")
 
 (defclass column-producing-instrumentation-mixin ()
   ((components     :initarg :components :reader instr.components)
-   ;; note that I decided to star calling them columns 
+   ;; note that I decided to star calling them columns
    ;; but did not change the old names
    (unmapped-columns :initarg :unmapped-columns :initform nil))
   (:metaclass named-class))
@@ -169,7 +175,7 @@ and the `after-experiment-run' function is executed.")
 (defclass composite-instrumentation-mixin (column-producing-instrumentation-mixin)
   ()
   (:metaclass named-class)
-  (:default-initargs :combiner 'last-value-combiner 
+  (:default-initargs :combiner 'last-value-combiner
 		     :extracter 'last-value-extracter))
 
 (defclass mapping-instrumentation-mixin (column-producing-instrumentation-mixin)
@@ -205,7 +211,14 @@ and the `after-experiment-run' function is executed.")
 (defclass super-instrumentation (mapping-instrumentation-mixin
 				 instrumentation)
   ()
-  (:metaclass named-class))
+  (:metaclass named-class)
+  (:documentation
+   "Mapping clips are specified using the :map-function and :components option to
+defclip. They generate multiple columns of data each time they are reported -
+they produce multiple columns per component.
+
+All clips with components are referred to as super clips. For a good example of
+clips with components and further discussion of their use, see Appendix A.1.1."))
 
 #+Explorer
 (finalize-inheritance (find-class 'super-instrumentation))
@@ -223,7 +236,17 @@ and the `after-experiment-run' function is executed.")
                                           mapping-instrumentation-mixin
 					  instrumentation)
   ()
-  (:metaclass named-class))
+  (:metaclass named-class)
+  (:documentation
+   "Clips that have COMPONENTS and SCHEDULE option are
+periodic time-series clips. They generate multiple data columns in the manner of
+component clips (which they are) and also multiple data rows. Each row
+corresponds to a single collection activated periodically. Since time-series
+clips generate multiple rows, they are generally written to a data le that is
+separate from the main experiment (summary) data le. The name of the data file
+associated with a time-series clip is speci ed using the OUTPUT-FILE option to
+defclip.  The SCHEDULE-FUNCTION, SECONDS-PER-TIME-UNIT, and TIMESTAMP keywords
+to define-simulator must be specified."))
 
 #+Explorer
 (finalize-inheritance (find-class 'periodic-super-instrumentation))
@@ -232,8 +255,15 @@ and the `after-experiment-run' function is executed.")
 				     instrumentation)
   ()
   (:metaclass named-class)
-  (:default-initargs :combiner 'last-value-combiner 
-		     :extracter 'last-value-extracter))
+  (:default-initargs :combiner 'last-value-combiner
+		     :extracter 'last-value-extracter)
+  (:documentation
+   "Clips with components, as specified by the :components keyword, generate
+multiple columns in a data le each time they are reported. Without other options
+they produce one column per component (composite clips).
+
+All clips with components are referred to as super clips. For a good example of
+clips with components and further discussion of their use,"))
 
 #+Explorer
 (finalize-inheritance (find-class 'composite-instrumentation))
@@ -242,11 +272,13 @@ and the `after-experiment-run' function is executed.")
 						 composite-instrumentation-mixin
 						 instrumentation)
   ()
-  (:metaclass named-class))
+  (:metaclass named-class)
+  (:documentation
+   "Time series clip that uses explicit CLIP::COLLECT to collect the data."))
 
 #+Explorer
 (finalize-inheritance (find-class 'composite-time-series-instrumentation))
-  
+
 (defclass periodic-composite-instrumentation (time-series-instrumentation-mixin
                                                scheduled-instrumentation-mixin
                                                composite-instrumentation-mixin
@@ -262,7 +294,18 @@ and the `after-experiment-run' function is executed.")
                                                  composite-instrumentation-mixin
 						 instrumentation)
   ()
-  (:metaclass named-class))
+  (:metaclass named-class)
+  (:documentation
+   "Clips that have COMPONENTS and TRIGGER-EVENT option are
+event based time-series clips. They generate multiple data columns in the manner
+of component clips (which they are) and also multiple data rows. Each row
+corresponds to a single collection and is triggered by a particular event. Since
+time-series clips generate multiple rows, they are generally written to a data
+file that is separate from the main experiment (summary) data file. The name of
+the data le associated with a time-series clip is specified using the
+OUTPUT-FILE option to defclip. Event-based time-series clips require that the
+Common Lisp implementation provide some mechanism similar to the advise
+function."))
 
 #+Explorer
 (finalize-inheritance (find-class 'functional-composite-instrumentation))
@@ -284,7 +327,7 @@ and the `after-experiment-run' function is executed.")
 #+Explorer
 (finalize-inheritance (find-class 'composite-child-of-composite-instrumentation))
 
-(defclass composite-child-of-functional-composite-instrumentation 
+(defclass composite-child-of-functional-composite-instrumentation
      (time-series-instrumentation-mixin
       functional-instrumentation-mixin
       composite-instrumentation-mixin
@@ -296,7 +339,7 @@ and the `after-experiment-run' function is executed.")
 #+Explorer
 (finalize-inheritance (find-class 'composite-child-of-functional-composite-instrumentation))
 
-;; NOTE: These do not work. There is a problem with the way arguments are 
+;; NOTE: These do not work. There is a problem with the way arguments are
 ;; passed to components that are both children and mappers. A workaround is
 ;; to define all the components as mapping clips that map over the same list.
 
@@ -314,7 +357,9 @@ and the `after-experiment-run' function is executed.")
 					      mapping-instrumentation-mixin
 					      instrumentation)
   ()
-  (:metaclass named-class))
+  (:metaclass named-class)
+  (:documentation
+   "Event based collection with mapping."))
 
 #+Explorer
 (finalize-inheritance (find-class 'functional-mapping-instrumentation))
@@ -329,4 +374,3 @@ and the `after-experiment-run' function is executed.")
 (finalize-inheritance (find-class 'simple-instrumentation))
 
 ;;;----------------------------------------------------------------------------
-

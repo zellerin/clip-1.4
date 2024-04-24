@@ -1,6 +1,6 @@
 ;;;; -*- Mode:Common-Lisp; Package:CLIP-USER; Fonts:(MEDFNT); Base:10 -*-
 ;;;; *-* File: Titanic: /usr/users/eksl/systems/clip/demos/agent-simulator/agent-experiment.lisp *-*
-;;;; *-* Last-edit: Friday, January 7, 1994  17:57:58; Edited-By: StAmant *-* 
+;;;; *-* Last-edit: Friday, January 7, 1994  17:57:58; Edited-By: StAmant *-*
 ;;;; *-* Machine: Lester (Explorer II, Microcode 489) *-*
 ;;;; *-* Software: TI Common Lisp System 6.49 *-*
 ;;;; *-* Lisp: TI Common Lisp System 6.49  *-*
@@ -25,7 +25,7 @@
 ;;; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ;;; --*--
 
-(in-package #+CLTL2 clip-user #-CLTL2 'clip-user)
+(in-package #:clip-user)
 
 ;;; --*--
 ;;; ***************************************************************************
@@ -55,8 +55,8 @@
 
 (defclip highest-agent-state ()
   (:components (highest-state highest-agent))
-  
-  (loop 
+
+  (loop
     with agents = (find-agents)
     with highest-agent = (first agents)
     with highest-state = (state highest-agent)
@@ -124,14 +124,14 @@
 ;;;----------------------------------------------------------------------------
 ;;; Example of component that is a mapping clip
 
-;; NOTE: These do not work. There is a problem with the way arguments are 
+;; NOTE: These do not work. There is a problem with the way arguments are
 ;; passed to components that are both children and mappers. A workaround is
 ;; to define all the components as mapping clips that map over the same list.
 
 #+THIS-DOES-NOT-WORK
 (defclip posthoc-state-snapshot ()
    (:components (event-based-generic-state-snapshot))
-   
+
    (values 'agent))
 
 #+THIS-DOES-NOT-WORK
@@ -150,7 +150,7 @@
 
 ;;;----------------------------------------------------------------------------
 ;;; This examples shows the use of the `clip::collect' function to explicitly
-;;; collect some values. 
+;;; collect some values.
 
 (defclip self-collection (two-item-list)
   (:time-series t
@@ -182,8 +182,8 @@
                                 #+NEW
                                 posthoc-state-snapshot)
   :before-experiment (setf *verbose* verbose)
-  
-  :before-trial (setf *transition-probability* transition-probability 
+
+  :before-trial (setf *transition-probability* transition-probability
 		      *relative-cost* cost-factor)
 
   ;; Set up a script that will call a function (in this case one that
@@ -194,7 +194,7 @@
     (progn
       (collect-self-collector) ; do one final collection of the `self-collection' clip
       (write-current-experiment-data))
-    
+
   :after-experiment (setf *verbose* nil))
 
 (define-experiment sae ()
@@ -204,7 +204,7 @@
 	      (cost-factor in '(1)))
   :instrumentation (posthoc-agent-state-snapshot
 		    periodic-agent-state-snapshot)
-  :before-trial (setf *transition-probability* transition-probability 
+  :before-trial (setf *transition-probability* transition-probability
 		      *relative-cost* cost-factor)
   :after-trial
     (write-current-experiment-data))
@@ -239,12 +239,6 @@
 		  :length-of-trial "500 minutes"))
 
 
-  
+
 ;;; ***************************************************************************
 ;;; EOF
-
-
-
-
-
-

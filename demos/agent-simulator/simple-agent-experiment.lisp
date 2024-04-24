@@ -25,7 +25,7 @@
 ;;; * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 ;;; --*--
 
-(in-package clip-user)
+(in-package #:clip-user)
 
 ;;; --*--
 ;;; ***************************************************************************
@@ -39,12 +39,14 @@
 ;;; Clip Definitions
 
 (defclip agents-cost ()
+  "Collects the combined cost of all agents at the end of each trial."
   ()
 
   (reduce #'+ (find-agents) :key #'cost))
 
 
 (defclip completion-time ()
+  "Records the time at which the trial ends."
   ()
 
   (current-time))
