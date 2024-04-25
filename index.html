@@ -40,20 +40,26 @@
 <ul>
 <li><a href="#%22clip-1994%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994&quot; ASDF/SYSTEM:SYSTEM">2.1 The clip-1994 ASDF System</a></li>
 </ul></li>
-<li><a href="#CLIP%2FDOC:@CLIP-CLASSES%20MGL-PAX:SECTION" title="Clip classes">3 Clip classes</a></li>
-<li><a href="#CLIP%2FDOC:@LOCATIVES%20MGL-PAX:SECTION" title="New locatives">4 New locatives</a>
+<li><a href="#CLIP%2FDOC:@LOADER%20MGL-PAX:SECTION" title="Loading `CLASP` format">3 Loading <code>CLASP</code> format</a>
 
 <ul>
-<li><a href="#%22clip-1994%2Fdoc%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/doc&quot; ASDF/SYSTEM:SYSTEM">4.1 The clip-1994/doc ASDF System</a></li>
+<li><a href="#%22clip-1994%2Floader%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/loader&quot; ASDF/SYSTEM:SYSTEM">3.1 The clip-1994/loader ASDF System</a></li>
 </ul></li>
-<li><a href="#CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION" title="Demos">5 Demos</a>
+<li><a href="#CLIP%2FDOC:@CLIP-CLASSES%20MGL-PAX:SECTION" title="Clip classes">4 Clip classes</a></li>
+<li><a href="#CLIP%2FDOC:@LOCATIVES%20MGL-PAX:SECTION" title="New locatives">5 New locatives</a>
 
 <ul>
-<li><a href="#%22clip-1994%2Fdemo%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/demo&quot; ASDF/SYSTEM:SYSTEM">5.1 The clip-1994/demo ASDF System</a></li>
-<li><a href="#CLIP-USER:@SIMPLE-AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the simple agent experiment">5.2 Documentation of the simple agent experiment</a></li>
-<li><a href="#CLIP-USER:@AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the agent experiment">5.3 Documentation of the agent experiment</a></li>
-<li><a href="#CLIP-USER:@SUPER-AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the super agent experiment">5.4 Documentation of the super agent experiment</a></li>
+<li><a href="#%22clip-1994%2Fdoc%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/doc&quot; ASDF/SYSTEM:SYSTEM">5.1 The clip-1994/doc ASDF System</a></li>
 </ul></li>
+<li><a href="#CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION" title="Demos">6 Demos</a>
+
+<ul>
+<li><a href="#%22clip-1994%2Fdemo%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/demo&quot; ASDF/SYSTEM:SYSTEM">6.1 The clip-1994/demo ASDF System</a></li>
+<li><a href="#CLIP-USER:@SIMPLE-AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the simple agent experiment">6.2 Documentation of the simple agent experiment</a></li>
+<li><a href="#CLIP-USER:@AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the agent experiment">6.3 Documentation of the agent experiment</a></li>
+<li><a href="#CLIP-USER:@SUPER-AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the super agent experiment">6.4 Documentation of the super agent experiment</a></li>
+</ul></li>
+<li><a href="#CLIP%2FDOC:@BACKGROUND%20MGL-PAX:SECTION" title="Background">7 Background</a></li>
 </ul>
 <h6>[in package CLIP/DOC]</h6>
 <p><a id="x-28CLIP-2FDOC-3A-40CONCEPTS-20MGL-PAX-3ASECTION-29"></a>
@@ -61,39 +67,42 @@
 <p><span class="outer-navigation"><span class="navigation"> <a href="index.html" title="MGL-PAX documentation for clips">&#8592;</a> <a href="index.html" title="MGL-PAX documentation for clips">&#8593;</a> <a href="#CLIP%2FDOC:@API%20MGL-PAX:SECTION" title="Documented interface">&#8594;</a> <a href="#CLIP%2FDOC:@CONCEPTS%20MGL-PAX:SECTION" title="Motivation and concept">&#8634;</a></span></span></p>
 <h2><a href="#CLIP%2FDOC:@CONCEPTS%20MGL-PAX:SECTION">1 Motivation and concept</a></h2>
 <p>From the original manual:</p>
-<p>We collect information from software systems for many reasons. Sometimes, the very pur-
-pose of the system is to produce information. Other times, we collect data for debugging,
-feedback to the user|in general, for understanding the system's behavior. Unfortunately,
-there seem to be few general tools available for this task. Instead, we often nd ad hoc,
-domain-specific code, spread throughout a system, varying from component to component,
-despite strong similarity in the requirements for any data collection code.</p>
-<p>Clip, the Common Lisp Instrumentation Package, standardizes data collection. It is
-named by analogy with the &quot;alligator clips&quot; that connect diagnostic equipment to electrical
-components. By standardizing data collection, we can more easily add and delete instru-
-mentation from our systems. We can reuse a piece of data collection code, called a &quot;clip,&quot;
-in other systems we are studying. We can use general tools to analyze the collected data.
-Instrumentation in a system becomes more easily used and understood, because the basic
-functionality of the system is separated from the functionality of the instrumentation.
-We designed Clip to be used for scienti c experiments, in which a system is run under a
-number of di erent conditions to see whether and how the behavior changes as a function of
-the condition. Consequently, we view an experiment as a series of trials, varying the settings
-of experiment variables and collecting information. Generally speaking, an experiment
+<p>We collect information from software systems for many reasons. Sometimes, the
+very purpose of the system is to produce information. Other times, we collect
+data for debugging, feedback to the user - in general, for understanding the
+system's behavior. Unfortunately, there seem to be few general tools available
+for this task. Instead, we often find ad hoc, domain-specific code, spread
+throughout a system, varying from component to component, despite strong
+similarity in the requirements for any data collection code.</p>
+<p>Clip, the Common Lisp Instrumentation Package, standardizes data collection. It
+is named by analogy with the &quot;alligator clips&quot; that connect diagnostic
+equipment to electrical components. By standardizing data collection, we can
+more easily add and delete instrumentation from our systems. We can reuse a
+piece of data collection code, called a <a href="#CLIP%2FDOC:CLIP%20MGL-PAX:GLOSSARY-TERM" title="`CLIP`"><code>CLIP</code></a> in other systems we are
+studying. We can use general tools to analyze the collected data.
+Instrumentation in a system becomes more easily used and understood, because the
+basic functionality of the system is separated from the functionality of the
+instrumentation.  We designed Clip to be used for scientific experiments, in
+which a system is run under a number of different conditions to see whether and
+how the behavior changes as a function of the condition. Consequently, we view
+an experiment as a series of trials, varying the settings of experiment
+variables and collecting information. Generally speaking, an experiment
 comprises the following steps:</p>
 <ol>
-<li><p>Creating clips and inserting them into the system to be studied. Generally, clip
-measures one particular aspect of a system, but you can also de ne clips that combine
-many measurements, including other clips. Often, the clips you need will already be
-de ned.</p></li>
-<li><p>Define the experiment, in terms of what system is to be run, any necessary initializa-
-tion code, and the conditions under which it is to run (different input parameters or
-environmental conditions).</p></li>
+<li><p>Creating clips and inserting them into the system to be studied. Generally,
+clip measures one particular aspect of a system, but you can also define clips
+that combine many measurements, including other clips. Often, the clips you need
+will already be defined.</p></li>
+<li><p>Define the experiment, in terms of what system is to be run, any necessary
+initialization code, and the conditions under which it is to run (different
+input parameters or environmental conditions).</p></li>
 <li><p>Run a series of trials, saving the output into a Clasp format data file. This format
 is described in the Clasp manual section Data Manipulation Functions, although it
 isn't necessary to understand the file format. Clasp can read what Clip writes.</p></li>
 </ol>
-<p>Clip can also write data les in standard tab or space delimited format used by
+<p>Clip can also write data files in standard tab or space delimited format used by
 most other statistical packages, databases and spreadsheets.</p>
-<p>Instead of Clasp, <code>CLIP/LOADER::LOAD-MEASUREMENTS</code> can be used to load the data in lisp-utils format.</p>
+<p>Instead of <a href="#CLIP%2FDOC:CLASP%20MGL-PAX:GLOSSARY-TERM" title="`CLASP`"><code>CLASP</code></a>, <a href="#CLIP%2FLOADER:LOAD-MEASUREMENTS%20FUNCTION" title="CLIP/LOADER:LOAD-MEASUREMENTS FUNCTION"><code>CLIP/LOADER::LOAD-MEASUREMENTS</code></a> can be used to load the data as lisp-utils frames.</p>
 <p><a id="x-28CLIP-2FDOC-3ACLIP-2FSYSTEM-20MGL-PAX-3AGLOSSARY-TERM-29"></a>
 <a id="CLIP%2FDOC:CLIP%2FSYSTEM%20MGL-PAX:GLOSSARY-TERM"></a></p>
 <ul>
@@ -101,7 +110,7 @@ most other statistical packages, databases and spreadsheets.</p>
 
 <p>A tool for automating experimentation and
 data collection. Clip was originally designed to be used in combination with the
-Common Lisp Analytical Statistics Package (Clasp), though it can be used as a
+Common Lisp Analytical Statistics Package (<a href="#CLIP%2FDOC:CLASP%20MGL-PAX:GLOSSARY-TERM" title="`CLASP`"><code>CLASP</code></a>), though it can be used as a
 standalone instrumentation package for Common Lisp applications.</p>
 
 <p>The original 1.4 version was released in Jan 1994. This version was modified to
@@ -114,23 +123,25 @@ run on Common Lisp systems in 2023.</p>
 <ul>
 <li><p><span class=reference-bullet><span class=reference><span class="locative-type">[glossary-term]</span> <span class="reference-object"><a href="#CLIP%2FDOC:CLIP%20MGL-PAX:GLOSSARY-TERM" >CLIP</a></span></span></span></p>
 
-<p>There are basically only a small number of ways to instrument a software system. These
-are: adding special purpose code to collect data, interrogating global (usually objects with
-state) data structures or using advice.</p>
+<p>There are basically only a small number of ways to instrument a software
+system. These are: adding special purpose code to collect data, interrogating
+global (usually objects with state) data structures or using advice.</p>
 
-<p>The first way is to build in special purpose code to collect data about the state of the
-system while the system is running. We used this technique in the Phoenix testbed to keep
-information about the execution time of timeline entries and also message trafic patterns.
-The Transsim simulator also uses this technique when it keeps track of daily costs, ship
-locations, demon ring intervals. The key point here is that the only reason for adding the
-piece of code was to allow an experimenter to analyze the behavior of the system. The
-simulation itself does not use the information. This method increases the complexity and
-reduces the readability and maintainability of the software system. In code that is highly
-instrumented it is often dificult to determine what is intrinsic to the running of the system and what is used to instrument.</p>
+<p>The first way is to build in special purpose code to collect data about the
+state of the system while the system is running. We used this technique in the
+Phoenix testbed to keep information about the execution time of timeline entries
+and also message traffic patterns.  The Transsim simulator also uses this
+technique when it keeps track of daily costs, ship locations, demon ring
+intervals. The key point here is that the only reason for adding the piece of
+code was to allow an experimenter to analyze the behavior of the system. The
+simulation itself does not use the information. This method increases the
+complexity and reduces the readability and maintainability of the software
+system. In code that is highly instrumented it is often difficult to determine
+what is intrinsic to the running of the system and what is used to instrument.</p>
 
-<p>Another method involves interrogating global data structures to determine
-the state post hoc. Examples include most everything we collected about
-Phoenix (ie., fireline built, first plan tried, bulldozer digging times,
+<p>Another method involves interrogating global data structures to determine the
+state post hoc. Examples include most everything we collected about
+Phoenix (i.e., fireline built, first plan tried, bulldozer digging times,
 etc.). This technique is fine if the information is hanging around after you
 have finished running the simulation, but this is not always the case. Also,
 there is some information that is time-sensitive, and therefore must be
@@ -138,13 +149,16 @@ collected on a periodic or event-driven basis. Collecting this type of
 information often involves resorting to the first method -- altering the code
 itself.</p>
 
-<p>Alternatively, one can use the advise facility available in many lisp environments to non-
-intrusively collect information when functions are called. This is a nice modular approach,
-but requires a good deal of knowledge about the advise facility and the software system
-itself. Unfortunately, the advise facility is not standardized across Lisp implementations.
-The <a href="#CLIP:DEFCLIP%20MGL-PAX:MACRO" title="CLIP:DEFCLIP MGL-PAX:MACRO"><code>DEFCLIP</code></a> macro encapsulates the code necessary to instrument a software system
-and separates it from the system itself. It avoids the pitfalls of adding special purpose code directly to the software system while at the same time allowing periodic and event-driven
-data collection. It also allows collection to be done by perusing global data structures.</p></li>
+<p>Alternatively, one can use the advise facility available in many lisp
+environments to non- intrusively collect information when functions are
+called. This is a nice modular approach, but requires a good deal of knowledge
+about the advise facility and the software system itself. Unfortunately, the
+advise facility is not standardized across Lisp implementations.  The <a href="#CLIP:DEFCLIP%20MGL-PAX:MACRO" title="CLIP:DEFCLIP MGL-PAX:MACRO"><code>DEFCLIP</code></a>
+macro encapsulates the code necessary to instrument a software system and
+separates it from the system itself. It avoids the pitfalls of adding special
+purpose code directly to the software system while at the same time allowing
+periodic and event-driven data collection. It also allows collection to be done
+by perusing global data structures.</p></li>
 </ul>
 <p><a id="x-28CLIP-2FDOC-3A-40API-20MGL-PAX-3ASECTION-29"></a>
 <a id="CLIP%2FDOC:@API%20MGL-PAX:SECTION"></a></p>
@@ -320,7 +334,7 @@ specify a subset of the experiments instrumentation to write to the data file.</
 </ul>
 <p><a id="x-28-22clip-1994-22-20ASDF-2FSYSTEM-3ASYSTEM-29"></a>
 <a id="%22clip-1994%22%20ASDF%2FSYSTEM:SYSTEM"></a></p>
-<p><span class="outer-navigation"><span class="navigation"> <a href="#CLIP%2FDOC:@API%20MGL-PAX:SECTION" title="Documented interface">&#8592;</a> <a href="#CLIP%2FDOC:@API%20MGL-PAX:SECTION" title="Documented interface">&#8593;</a> <a href="#CLIP%2FDOC:@CLIP-CLASSES%20MGL-PAX:SECTION" title="Clip classes">&#8594;</a> <a href="#%22clip-1994%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994&quot; ASDF/SYSTEM:SYSTEM">&#8634;</a></span></span></p>
+<p><span class="outer-navigation"><span class="navigation"> <a href="#CLIP%2FDOC:@API%20MGL-PAX:SECTION" title="Documented interface">&#8592;</a> <a href="#CLIP%2FDOC:@API%20MGL-PAX:SECTION" title="Documented interface">&#8593;</a> <a href="#CLIP%2FDOC:@LOADER%20MGL-PAX:SECTION" title="Loading `CLASP` format">&#8594;</a> <a href="#%22clip-1994%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994&quot; ASDF/SYSTEM:SYSTEM">&#8634;</a></span></span></p>
 <h3><a href="#%22clip-1994%22%20ASDF%2FSYSTEM:SYSTEM">2.1 The clip-1994 ASDF System</a></h3>
 <ul>
 <li>Version: 1.4.1</li>
@@ -328,10 +342,57 @@ specify a subset of the experiments instrumentation to write to the data file.</
   release year to prevent collision with another unrelated asdf system that is in
   the Quicklisp.</li>
 </ul>
+<p><a id="x-28CLIP-2FDOC-3A-40LOADER-20MGL-PAX-3ASECTION-29"></a>
+<a id="CLIP%2FDOC:@LOADER%20MGL-PAX:SECTION"></a></p>
+<p><span class="outer-navigation"><span class="navigation"> <a href="#%22clip-1994%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994&quot; ASDF/SYSTEM:SYSTEM">&#8592;</a> <a href="index.html" title="MGL-PAX documentation for clips">&#8593;</a> <a href="#%22clip-1994%2Floader%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/loader&quot; ASDF/SYSTEM:SYSTEM">&#8594;</a> <a href="#CLIP%2FDOC:@LOADER%20MGL-PAX:SECTION" title="Loading `CLASP` format">&#8634;</a></span></span></p>
+<h2><a href="#CLIP%2FDOC:@LOADER%20MGL-PAX:SECTION">3 Loading <code>CLASP</code> format</a></h2>
+<p><a id="x-28-22CLIP-2FLOADER-22-20PACKAGE-29"></a>
+<a id="%22CLIP%2FLOADER%22%20PACKAGE"></a></p>
+<ul>
+<li><span class=reference-bullet><span class=reference><span class="locative-type">[package]</span> <span class="reference-object"><a href="#%22CLIP%2FLOADER%22%20PACKAGE" >&quot;CLIP/LOADER&quot;</a></span></span></span></li>
+</ul>
+<p><a id="x-28CLIP-2FLOADER-3ALOAD-MEASUREMENTS-20FUNCTION-29"></a>
+<a id="CLIP%2FLOADER:LOAD-MEASUREMENTS%20FUNCTION"></a></p>
+<ul>
+<li><p><span class=reference-bullet><span class=reference><span class="locative-type">[function]</span> <span class="reference-object"><a href="#CLIP%2FLOADER:LOAD-MEASUREMENTS%20FUNCTION" >CLIP/LOADER:LOAD-MEASUREMENTS</a></span></span> <span class="locative-args">FILE &amp;REST NAMES</span></span></p>
+
+<p>Load frames from a single <a href="#CLIP%2FDOC:CLASP%20MGL-PAX:GLOSSARY-TERM" title="`CLASP`"><code>CLASP</code></a> file to variables and packages in NAMES.</p>
+
+<p>As an example</p>
+
+<pre><code><span class="code"><span class="paren1">(<span class="code">load-measurements
+   <span class="paren2">(<span class="code">asdf:system-relative-pathname <span class="string">"clip-1994"</span> <span class="string">"demos/agent-simulatordata-1-31-94-10-39.clasp"</span></span>)</span>
+ 'simulator-data</span>)</span></span></code></pre>
+
+<p>creates global variable SIMULATOR-DATA in current package with the data frame,
+new package &quot;SIMULATOR-DATA&quot;, and symbols such as
+<code>SIMULATOR-DATA::HIGHEST-AGENT</code>.</p></li>
+</ul>
+<p><a id="x-28CLIP-2FLOADER-3ALOAD-CLASP-FRAME-20FUNCTION-29"></a>
+<a id="CLIP%2FLOADER:LOAD-CLASP-FRAME%20FUNCTION"></a></p>
+<ul>
+<li><p><span class=reference-bullet><span class=reference><span class="locative-type">[function]</span> <span class="reference-object"><a href="#CLIP%2FLOADER:LOAD-CLASP-FRAME%20FUNCTION" >CLIP/LOADER:LOAD-CLASP-FRAME</a></span></span> <span class="locative-args">NAME STREAM</span></span></p>
+
+<p>Load data from a <a href="#CLIP%2FDOC:CLIP%20MGL-PAX:GLOSSARY-TERM" title="`CLIP`"><code>CLIP</code></a> experiment to variable and package NAME.</p>
+
+<p>NAME is upcased and turned to a variable that contains the data frame.</p>
+
+<p>Aditionally, package of same name is created and a symbol in this package is created for each column of the experiment.</p>
+
+<p>As second value, return experiment run description.</p></li>
+</ul>
+<p><a id="x-28-22clip-1994-2Floader-22-20ASDF-2FSYSTEM-3ASYSTEM-29"></a>
+<a id="%22clip-1994%2Floader%22%20ASDF%2FSYSTEM:SYSTEM"></a></p>
+<p><span class="outer-navigation"><span class="navigation"> <a href="#CLIP%2FDOC:@LOADER%20MGL-PAX:SECTION" title="Loading `CLASP` format">&#8592;</a> <a href="#CLIP%2FDOC:@LOADER%20MGL-PAX:SECTION" title="Loading `CLASP` format">&#8593;</a> <a href="#CLIP%2FDOC:@CLIP-CLASSES%20MGL-PAX:SECTION" title="Clip classes">&#8594;</a> <a href="#%22clip-1994%2Floader%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/loader&quot; ASDF/SYSTEM:SYSTEM">&#8634;</a></span></span></p>
+<h3><a href="#%22clip-1994%2Floader%22%20ASDF%2FSYSTEM:SYSTEM">3.1 The clip-1994/loader ASDF System</a></h3>
+<ul>
+<li>Version: 1.4.1</li>
+<li>Description: Auxiliary functions for loading of the data in <a href="#CLIP%2FDOC:CLASP%20MGL-PAX:GLOSSARY-TERM" title="`CLASP`"><code>CLASP</code></a> format.</li>
+</ul>
 <p><a id="x-28CLIP-2FDOC-3A-40CLIP-CLASSES-20MGL-PAX-3ASECTION-29"></a>
 <a id="CLIP%2FDOC:@CLIP-CLASSES%20MGL-PAX:SECTION"></a></p>
-<p><span class="outer-navigation"><span class="navigation"> <a href="#%22clip-1994%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994&quot; ASDF/SYSTEM:SYSTEM">&#8592;</a> <a href="index.html" title="MGL-PAX documentation for clips">&#8593;</a> <a href="#CLIP%2FDOC:@LOCATIVES%20MGL-PAX:SECTION" title="New locatives">&#8594;</a> <a href="#CLIP%2FDOC:@CLIP-CLASSES%20MGL-PAX:SECTION" title="Clip classes">&#8634;</a></span></span></p>
-<h2><a href="#CLIP%2FDOC:@CLIP-CLASSES%20MGL-PAX:SECTION">3 Clip classes</a></h2>
+<p><span class="outer-navigation"><span class="navigation"> <a href="#%22clip-1994%2Floader%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/loader&quot; ASDF/SYSTEM:SYSTEM">&#8592;</a> <a href="index.html" title="MGL-PAX documentation for clips">&#8593;</a> <a href="#CLIP%2FDOC:@LOCATIVES%20MGL-PAX:SECTION" title="New locatives">&#8594;</a> <a href="#CLIP%2FDOC:@CLIP-CLASSES%20MGL-PAX:SECTION" title="Clip classes">&#8634;</a></span></span></p>
+<h2><a href="#CLIP%2FDOC:@CLIP-CLASSES%20MGL-PAX:SECTION">4 Clip classes</a></h2>
 <p>This is for a reference from clips.</p>
 <p><a id="x-28CLIP-3AINSTRUMENTATION-20CLASS-29"></a>
 <a id="CLIP:INSTRUMENTATION%20CLASS"></a></p>
@@ -421,7 +482,7 @@ function.</p></li>
 <p><a id="x-28CLIP-2FDOC-3A-40LOCATIVES-20MGL-PAX-3ASECTION-29"></a>
 <a id="CLIP%2FDOC:@LOCATIVES%20MGL-PAX:SECTION"></a></p>
 <p><span class="outer-navigation"><span class="navigation"> <a href="#CLIP%2FDOC:@CLIP-CLASSES%20MGL-PAX:SECTION" title="Clip classes">&#8592;</a> <a href="index.html" title="MGL-PAX documentation for clips">&#8593;</a> <a href="#%22clip-1994%2Fdoc%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/doc&quot; ASDF/SYSTEM:SYSTEM">&#8594;</a> <a href="#CLIP%2FDOC:@LOCATIVES%20MGL-PAX:SECTION" title="New locatives">&#8634;</a></span></span></p>
-<h2><a href="#CLIP%2FDOC:@LOCATIVES%20MGL-PAX:SECTION">4 New locatives</a></h2>
+<h2><a href="#CLIP%2FDOC:@LOCATIVES%20MGL-PAX:SECTION">5 New locatives</a></h2>
 <p><a id="x-28-22CLIP-2FDOC-22-20PACKAGE-29"></a>
 <a id="%22CLIP%2FDOC%22%20PACKAGE"></a></p>
 <ul>
@@ -453,18 +514,18 @@ function.</p></li>
 <p><a id="x-28-22clip-1994-2Fdoc-22-20ASDF-2FSYSTEM-3ASYSTEM-29"></a>
 <a id="%22clip-1994%2Fdoc%22%20ASDF%2FSYSTEM:SYSTEM"></a></p>
 <p><span class="outer-navigation"><span class="navigation"> <a href="#CLIP%2FDOC:@LOCATIVES%20MGL-PAX:SECTION" title="New locatives">&#8592;</a> <a href="#CLIP%2FDOC:@LOCATIVES%20MGL-PAX:SECTION" title="New locatives">&#8593;</a> <a href="#CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION" title="Demos">&#8594;</a> <a href="#%22clip-1994%2Fdoc%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/doc&quot; ASDF/SYSTEM:SYSTEM">&#8634;</a></span></span></p>
-<h3><a href="#%22clip-1994%2Fdoc%22%20ASDF%2FSYSTEM:SYSTEM">4.1 The clip-1994/doc ASDF System</a></h3>
+<h3><a href="#%22clip-1994%2Fdoc%22%20ASDF%2FSYSTEM:SYSTEM">5.1 The clip-1994/doc ASDF System</a></h3>
 <ul>
 <li>Version: 1.4.1</li>
 </ul>
 <p><a id="x-28CLIP-2FDOC-3A-40DEMOS-20MGL-PAX-3ASECTION-29"></a>
 <a id="CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION"></a></p>
 <p><span class="outer-navigation"><span class="navigation"> <a href="#%22clip-1994%2Fdoc%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/doc&quot; ASDF/SYSTEM:SYSTEM">&#8592;</a> <a href="index.html" title="MGL-PAX documentation for clips">&#8593;</a> <a href="#%22clip-1994%2Fdemo%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/demo&quot; ASDF/SYSTEM:SYSTEM">&#8594;</a> <a href="#CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION" title="Demos">&#8634;</a></span></span></p>
-<h2><a href="#CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION">5 Demos</a></h2>
+<h2><a href="#CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION">6 Demos</a></h2>
 <p><a id="x-28-22clip-1994-2Fdemo-22-20ASDF-2FSYSTEM-3ASYSTEM-29"></a>
 <a id="%22clip-1994%2Fdemo%22%20ASDF%2FSYSTEM:SYSTEM"></a></p>
 <p><span class="outer-navigation"><span class="navigation"> <a href="#CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION" title="Demos">&#8592;</a> <a href="#CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION" title="Demos">&#8593;</a> <a href="#CLIP-USER:@SIMPLE-AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the simple agent experiment">&#8594;</a> <a href="#%22clip-1994%2Fdemo%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/demo&quot; ASDF/SYSTEM:SYSTEM">&#8634;</a></span></span></p>
-<h3><a href="#%22clip-1994%2Fdemo%22%20ASDF%2FSYSTEM:SYSTEM">5.1 The clip-1994/demo ASDF System</a></h3>
+<h3><a href="#%22clip-1994%2Fdemo%22%20ASDF%2FSYSTEM:SYSTEM">6.1 The clip-1994/demo ASDF System</a></h3>
 <ul>
 <li>Version: 1.4.1</li>
 <li>Description: Original demos for the CLIP system. They show different ways to use clips.</li>
@@ -472,11 +533,11 @@ function.</p></li>
 <p><a id="x-28CLIP-USER-3A-40SIMPLE-AGENT-EXPERIMENT-20MGL-PAX-3ASECTION-29"></a>
 <a id="CLIP-USER:@SIMPLE-AGENT-EXPERIMENT%20MGL-PAX:SECTION"></a></p>
 <p><span class="outer-navigation"><span class="navigation"> <a href="#%22clip-1994%2Fdemo%22%20ASDF%2FSYSTEM:SYSTEM" title="&quot;clip-1994/demo&quot; ASDF/SYSTEM:SYSTEM">&#8592;</a> <a href="#CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION" title="Demos">&#8593;</a> <a href="#CLIP-USER:@AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the agent experiment">&#8594;</a> <a href="#CLIP-USER:@SIMPLE-AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the simple agent experiment">&#8634;</a></span></span></p>
-<h3><a href="#CLIP-USER:@SIMPLE-AGENT-EXPERIMENT%20MGL-PAX:SECTION">5.2 Documentation of the simple agent experiment</a></h3>
+<h3><a href="#CLIP-USER:@SIMPLE-AGENT-EXPERIMENT%20MGL-PAX:SECTION">6.2 Documentation of the simple agent experiment</a></h3>
 <h6>[in package CLIP-USER]</h6>
 <p>This example collects trial summary data about overall agent-cost and task
 completion-time. Collection occurs at the end of each trial and is written out
-to a summary fole in Clasp format.</p>
+to a summary file in Clasp format.</p>
 <p><a id="x-28CLIP-USER-3AAGENT-SIM-1-20CLIP-2FDOC-3ASIMULATOR-29"></a>
 <a id="CLIP-USER:AGENT-SIM-1%20CLIP%2FDOC:SIMULATOR"></a></p>
 <ul>
@@ -512,11 +573,11 @@ to a summary fole in Clasp format.</p>
 <p><a id="x-28CLIP-USER-3A-40AGENT-EXPERIMENT-20MGL-PAX-3ASECTION-29"></a>
 <a id="CLIP-USER:@AGENT-EXPERIMENT%20MGL-PAX:SECTION"></a></p>
 <p><span class="outer-navigation"><span class="navigation"> <a href="#CLIP-USER:@SIMPLE-AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the simple agent experiment">&#8592;</a> <a href="#CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION" title="Demos">&#8593;</a> <a href="#CLIP-USER:@SUPER-AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the super agent experiment">&#8594;</a> <a href="#CLIP-USER:@AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the agent experiment">&#8634;</a></span></span></p>
-<h3><a href="#CLIP-USER:@AGENT-EXPERIMENT%20MGL-PAX:SECTION">5.3 Documentation of the agent experiment</a></h3>
+<h3><a href="#CLIP-USER:@AGENT-EXPERIMENT%20MGL-PAX:SECTION">6.3 Documentation of the agent experiment</a></h3>
 <h6>[in package CLIP-USER]</h6>
 <p>This example collects trial summary data about overall agent-cost and task
 completion-time. Collection occurs at the end of each trial and is written out
-to a summary fole in Clasp format.</p>
+to a summary file in Clasp format.</p>
 <p><a id="x-28CLIP-USER-3AAGENT-SIM-20CLIP-2FDOC-3ASIMULATOR-29"></a>
 <a id="CLIP-USER:AGENT-SIM%20CLIP%2FDOC:SIMULATOR"></a></p>
 <ul>
@@ -641,8 +702,8 @@ to a summary fole in Clasp format.</p>
 </ul>
 <p><a id="x-28CLIP-USER-3A-40SUPER-AGENT-EXPERIMENT-20MGL-PAX-3ASECTION-29"></a>
 <a id="CLIP-USER:@SUPER-AGENT-EXPERIMENT%20MGL-PAX:SECTION"></a></p>
-<p><span class="outer-navigation"><span class="navigation"> <a href="#CLIP-USER:@AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the agent experiment">&#8592;</a> <a href="#CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION" title="Demos">&#8593;</a> <a href="#CLIP-USER:@SUPER-AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the super agent experiment">&#8634;</a></span></span></p>
-<h3><a href="#CLIP-USER:@SUPER-AGENT-EXPERIMENT%20MGL-PAX:SECTION">5.4 Documentation of the super agent experiment</a></h3>
+<p><span class="outer-navigation"><span class="navigation"> <a href="#CLIP-USER:@AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the agent experiment">&#8592;</a> <a href="#CLIP%2FDOC:@DEMOS%20MGL-PAX:SECTION" title="Demos">&#8593;</a> <a href="#CLIP%2FDOC:@BACKGROUND%20MGL-PAX:SECTION" title="Background">&#8594;</a> <a href="#CLIP-USER:@SUPER-AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the super agent experiment">&#8634;</a></span></span></p>
+<h3><a href="#CLIP-USER:@SUPER-AGENT-EXPERIMENT%20MGL-PAX:SECTION">6.4 Documentation of the super agent experiment</a></h3>
 <h6>[in package CLIP-USER]</h6>
 <p>This example collects trial summary data about overall agent-cost and task
 completion-time. Collection occurs at the end of each trial and is written out
@@ -673,6 +734,35 @@ to a summary fole in Clasp format.</p>
 <p>A test experiment.</p>
 
 <p>Instrumentation: (<a href="#CLIP-USER:AGENTS-COST%20CLIP%2FDOC:CLIP" title="CLIP-USER:AGENTS-COST CLIP/DOC:CLIP"><code>AGENTS-COST</code></a> <a href="#CLIP-USER:ALL-AGENTS-COSTS%20CLIP%2FDOC:CLIP" title="CLIP-USER:ALL-AGENTS-COSTS CLIP/DOC:CLIP"><code>ALL-AGENTS-COSTS</code></a> <a href="#CLIP-USER:COMPLETION-TIME%20CLIP%2FDOC:CLIP" title="CLIP-USER:COMPLETION-TIME CLIP/DOC:CLIP"><code>COMPLETION-TIME</code></a>)</p></li>
+</ul>
+<p><a id="x-28CLIP-2FDOC-3A-40BACKGROUND-20MGL-PAX-3ASECTION-29"></a>
+<a id="CLIP%2FDOC:@BACKGROUND%20MGL-PAX:SECTION"></a></p>
+<p><span class="outer-navigation"><span class="navigation"> <a href="#CLIP-USER:@SUPER-AGENT-EXPERIMENT%20MGL-PAX:SECTION" title="Documentation of the super agent experiment">&#8592;</a> <a href="index.html" title="MGL-PAX documentation for clips">&#8593;</a> <a href="#CLIP%2FDOC:@BACKGROUND%20MGL-PAX:SECTION" title="Background">&#8634;</a></span></span></p>
+<h2><a href="#CLIP%2FDOC:@BACKGROUND%20MGL-PAX:SECTION">7 Background</a></h2>
+<p><a id="x-28CLIP-2FDOC-3ACLASP-20MGL-PAX-3AGLOSSARY-TERM-29"></a>
+<a id="CLIP%2FDOC:CLASP%20MGL-PAX:GLOSSARY-TERM"></a></p>
+<ul>
+<li><p><span class=reference-bullet><span class=reference><span class="locative-type">[glossary-term]</span> <span class="reference-object"><a href="#CLIP%2FDOC:CLASP%20MGL-PAX:GLOSSARY-TERM" >CLASP</a></span></span></span></p>
+
+<p>Common Lisp Analytical Statistics Package - another tool of same origin as <a href="#CLIP%2FDOC:CLIP%20MGL-PAX:GLOSSARY-TERM" title="`CLIP`"><code>CLIP</code></a>.</p></li>
+</ul>
+<p><a id="x-28CLIP-2FDOC-3ACLASP-2FFORMAT-20MGL-PAX-3AGLOSSARY-TERM-29"></a>
+<a id="CLIP%2FDOC:CLASP%2FFORMAT%20MGL-PAX:GLOSSARY-TERM"></a></p>
+<ul>
+<li><p><span class=reference-bullet><span class=reference><span class="locative-type">[glossary-term]</span> <span class="reference-object"><a href="#CLIP%2FDOC:CLASP%2FFORMAT%20MGL-PAX:GLOSSARY-TERM" >CLASP format</a></span></span></span></p>
+
+<p>Format of the data used by clasp and documented in <a href="#CLIP%2FDOC:CLASP%20MGL-PAX:GLOSSARY-TERM" title="`CLASP`"><code>CLASP</code></a> manual.</p></li>
+</ul>
+<p><a id="x-28CLIP-2FDOC-3APHOENIX-20MGL-PAX-3AGLOSSARY-TERM-29"></a>
+<a id="CLIP%2FDOC:PHOENIX%20MGL-PAX:GLOSSARY-TERM"></a></p>
+<ul>
+<li><p><span class=reference-bullet><span class=reference><span class="locative-type">[glossary-term]</span> <span class="reference-object"><a href="#CLIP%2FDOC:PHOENIX%20MGL-PAX:GLOSSARY-TERM" >Phoenix system</a></span></span></span></p>
+
+<p>Phoenix was a multi-agent planning system that fights simulated
+forest-fires. The simulation used terrain, elevation, and feature data from
+Yellowstone.</p>
+
+<p>It is used for the demos. See original manual for more specifics.</p></li>
 </ul>
   </div>
 </div>
