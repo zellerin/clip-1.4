@@ -128,7 +128,8 @@ The way things work:
 			      schedule-function
 			      deactivate-scheduled-function
 			      seconds-per-time-unit
-                              timestamp)
+                              timestamp
+                              timestamp-clip-name)
 			    body
 			    "~s is not a valid keyword for DEFINE-EXPERIMENT.")
     (labels (#+OLD
@@ -304,9 +305,10 @@ The way things work:
         `(eval-when (:load-toplevel :compile-toplevel :execute)
            ;; Create the experiment instance.
            ,@(mapcar #'build-iv-defclip-form ivs-vars)
-           ,(build-timestamp-defclip-form (if (consp timestamp)
-                                           (second timestamp)
-                                           'timestamp))
+           ,(unless timestamp-clip-name
+             (build-timestamp-defclip-form (if (consp timestamp)
+                                                (second timestamp)
+                                                'timestamp)))
            (make-instance
              'experiment
              :name ,(string name)
@@ -340,9 +342,10 @@ The way things work:
              :timestamp-function ',(if (consp timestamp)
                                      (first timestamp)
                                      timestamp)
-             :timestamp-clip-name ',(if (consp timestamp)
-                                     (second timestamp)
-                                     'timestamp))
+             :timestamp-clip-name ',(or timestamp-clip-name
+                                        (if (consp timestamp)
+                                            (second timestamp)
+                                            'timestamp)))
            ',name)))))
 
 (defun build-iv-defclip-form (iv)
