@@ -5,9 +5,9 @@
 
 NAME is upcased and turned to a variable that contains the data frame.
 
-Aditionally, package of same name is created and a symbol in this package is created for each columnt of the experiment.
+Aditionally, package of same name is created and a symbol in this package is created for each column of the experiment.
 
-As second value, return package description"
+As second value, return experiment run description."
   (let* ((symbol (intern (string-upcase name)))
          (package (or (find-package (string-upcase name))
                       (make-package (string-upcase name))))
@@ -29,7 +29,19 @@ As second value, return package description"
     (values frame note)))
 
 (defun load-measurements (file &rest names)
-  "Load frames from a single CLASP file to variables and packages in NAMES."
+  "Load frames from a single CLASP file to variables and packages in NAMES.
+
+As an example
+
+```
+(load-measurements
+   (asdf:system-relative-pathname \"clip-1994\" \"demos/agent-simulatordata-1-31-94-10-39.clasp\")
+ 'simulator-data)
+```
+
+creates global variable SIMULATOR-DATA in current package with the data frame,
+new package \"SIMULATOR-DATA\", and symbols such as
+SIMULATOR-DATA::HIGHEST-AGENT."
   (with-open-file (in file)
     (dolist (name names)
       (load-clasp-frame name in))))

@@ -14,6 +14,9 @@
                             #+use-cl-advice "cl-advice")
   :pathname"clip-1.4"
   :version "1.4.1"
+  :description "Original parts of the CLIP/SYSTEM. The name is suffixed with the original
+release year to prevent collision with another unrelated asdf system that is in
+the Quicklisp."
   :components ((:file "packages")
                (:file "utilities")
                (:file "super-intrinsic-mixins")
@@ -32,6 +35,7 @@
 
 (asdf:defsystem clip-1994/loader
   :depends-on ("lisp-stat" "mgl-pax")
+  :description "Auxiliary functions for loading of the data in CLASP format."
   :pathname"new-code"
   :version "1.4.1"
   :components ((:file "package")
@@ -41,6 +45,7 @@
   :depends-on ("clip-1994")
   :pathname "demos/agent-simulator"
   :version "1.4.1"
+  :description "Original demos for the \\CLIP system. They show different ways to use clips."
   :components (
                (:file "generic-simulator")
                (:file "agent-simulator")
