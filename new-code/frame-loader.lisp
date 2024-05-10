@@ -1,5 +1,12 @@
 (in-package #:clip/loader)
 
+(defclass clasp-frame (df:data-frame)
+  ((description :accessor get-description :initarg :description)))
+
+(defmethod describe-object :after ((df clasp-frame) stream)
+  (princ (get-description df) stream))
+
+
 (defun load-clasp-frame (name stream)
   "Load data from a CLIP experiment to variable and package NAME.
 
@@ -24,7 +31,9 @@ As second value, return experiment run description."
                          columns
                          (apply 'mapcar 'vector data)))))
     (set symbol frame)
-    (setf (lisp-stat:name frame) symbol)
+    (change-class frame 'clasp-frame
+                  :description note)
+    (setf (lisp-stat:name frame) (symbol-name symbol))
     (heuristicate-types frame)
     (values frame note)))
 
