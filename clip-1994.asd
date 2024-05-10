@@ -27,7 +27,8 @@
                (:file "simulator")
                (:file "experiment-runner")
                (:file "standard-clips")
-               (:file "define-experiment")))
+               (:file "define-experiment")
+               (:file "../new-code/utils")))
 
 (asdf:defsystem clip-1994/loader
   :depends-on ("lisp-stat" "mgl-pax")

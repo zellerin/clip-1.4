@@ -53,7 +53,10 @@
            "SHUTDOWN-EXPERIMENT"
 	   "*DATA-SEPARATOR-CHARACTER*"
 	   "*OUTPUT-FORMAT*"
-	   "*CURRENT-EXPERIMENT*")
+	   "*CURRENT-EXPERIMENT*"
+           ;; Introspection for editor
+           "LIST-NAMED-OBJECTS" "CLIP-USERS"
+           )
   #+Explorer
   (:nicknames CLIPS)
   #+lcl4.0
