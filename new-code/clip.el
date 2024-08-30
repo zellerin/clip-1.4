@@ -20,4 +20,16 @@
   (insert (format "(clip:run-experiment '%s :output-file \"%s\" :args '()) "
                   experiment file)))
 
+;;;###autoload
+(define-derived-mode clasp-mode lisp-mode "Clasp"
+  "Mode for CLASP files. Handles experiment as a page and trial as a paragraph."
+  (setq-local page-delimiter "^\"$"
+              paragraph-start "("
+              paragraph-separate "^")
+  (font-lock-add-keywords nil '(("\\*\\{4\\} [A-Za-z]*: \\(.*\\)\s *\\*\\{4\\}" 1 '(bold t)))
+                  'set)
+  (setq truncate-lines t)
+  (font-lock-mode))
+
+
 (bind-key "<f5>r" 'clip-run-experiment-skeleton sly-mrepl-mode-map)
