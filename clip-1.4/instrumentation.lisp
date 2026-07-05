@@ -122,12 +122,15 @@ instead of signalling an error."
 	  (no-error-p nil)
 	  (t (error "no instrumentation named ~s has been defined" instrumentation-spec)))))
 
+(defun find-local-instrumentation (experiment instrumentation-spec)
+  (find-instrumentation (el::form-symbol (name experiment) "%" instrumentation-spec)))
+
 (defun find-all-instrumentation (instrumentation-spec)
   (delete-duplicates
-    (mapcan #'(lambda (class)
-		(let ((ins (find-instrumentation instrumentation-spec t class)))
-		  (if ins (list ins))))
-	    *all-instrumentation-classes*)))
+   (mapcan #'(lambda (class)
+	       (let ((ins (find-instrumentation instrumentation-spec t class)))
+		 (if ins (list ins))))
+	   *all-instrumentation-classes*)))
 
 ;;;----------------------------------------------------------------------------
 ;;; Generic functions
@@ -386,7 +389,9 @@ instead of signalling an error."
   (apply #'report-internal (find-instrumentation 'trial-number) stream extracter nil)
   (with-slots (timestamp-clip ivs) *current-experiment*
     (dolist (iv ivs)
-      (apply #'report-internal (find-instrumentation iv) stream extracter nil))
+      (apply #'report-internal
+             (find-local-instrumentation the-experiment iv)
+             stream extracter nil))
     (when (and include-timestamp timestamp-clip)
       (apply #'report-internal timestamp-clip stream extracter nil))))
 
@@ -402,7 +407,7 @@ instead of signalling an error."
   (apply #'print-report-key (find-instrumentation 'trial-number) stream t nil nil)
   (with-slots (timestamp-clip ivs) the-experiment
     (dolist (iv ivs)
-      (apply #'print-report-key (find-instrumentation iv) stream nil))
+      (apply #'print-report-key (find-local-instrumentation the-experiment iv) stream nil))
     (when (and include-timestamp timestamp-clip)
       (apply #'print-report-key timestamp-clip stream nil))))
 

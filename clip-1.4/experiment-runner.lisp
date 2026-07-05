@@ -249,9 +249,9 @@ running the after-experiment code)."
   (with-slots (status ivs timestamp-clip instrumentation) the-experiment
     (setf status :reset-instrumentation)
     (reset (find-instrumentation 'trial-number))
-    (dolist (iv ivs)
-      (reset (find-instrumentation iv))
-      (enable (find-instrumentation iv)))
+    (dolist (ivg ivs)
+      (reset (find-local-instrumentation the-experiment iv))
+      (enable (find-local-instrumentation the-experiment iv)))
     (when timestamp-clip
       (reset timestamp-clip)
       (enable timestamp-clip))

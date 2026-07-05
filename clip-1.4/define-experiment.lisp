@@ -89,25 +89,6 @@ The way things work:
 ```
 "
 
-  #+Explorer
-  (declare (arglist name arguments [documentation]
-                    &key
-		    simulator
-		    before-experiment
-                    before-trial after-trial
-                    after-experiment
-                    script
-                    instrumentation
-                    ivs locals
-                    system-name
-                    system-version
-                    start-system
-                    reset-system
-                    stop-system
-                    schedule-function
-                    deactivate-scheduled-function
-                    seconds-per-time-unit
-                    timestamp))
   (setf documentation
 	(if (stringp (car body)) (pop body) "No documentation supplied."))
   (el::with-keywords-bound ((simulator
@@ -132,225 +113,167 @@ The way things work:
                               timestamp-clip-name)
 			    body
 			    "~s is not a valid keyword for DEFINE-EXPERIMENT.")
-    (labels (#+OLD
-             (build-code-call (code-name code &optional arguments)
-               (etypecase code
-                 (symbol   `',code)
-                 (function `',code)
-                 (cons
-                  (if (eq (first code) 'lambda)
-                  `(defun ,(el::form-symbol "%" name "-" code-name "-FUNCTION" )
-                          ,@(rest code))
-		  `(defun ,(el::form-symbol "%" name "-" code-name "-FUNCTION" )
-			  ,arguments
-		     ;; get rid of not referenced errors
-		     ,.(extract-arguments-from-lambda-list arguments)
-		     ,code)))))
-             #+OLD
-             (process-script-specs (specs)
-               `(progn
-                  ,@(mapcar
-                      #'(lambda (element)
-                          (cond ((atom element)
-                                 `(schedule (find-script-element ',element)))
-                                ((= (length element) 1)
-                                 `(schedule (find-script-element ',(first element))))
-                                ((= (length element) 3)
-                                 (let* ((name (first element))
-                                        (time (second element))
-                                        (code (third element)))
-                                   (check-type name symbol)
-                                   (check-type time (or number string cons symbol))
-                                   (check-type code cons)
-                                   `(schedule-function
-                                      ,(build-code-call name code)
-                                      (parse-time-specifier ,time)
-                                      :name ',name)))
-                                ((= (length element) 4)
-                                 (let* ((name (first element))
-                                        (time (second element))
-                                        (repeat-time (third element))
-                                        (code (fourth element)))
-                                   (check-type name symbol)
-                                   (check-type time (or number string cons symbol))
-                                   (check-type repeat-time (or number cons symbol))
-                                   (check-type code cons)
-                                   `(schedule-function
-                                      ,(build-code-call name code)
-                                      (parse-time-specifier ,time)
-                                      :period (parse-time-specifier ,repeat-time :interval-p t)
-                                      :name ',name)))
-                                (t
-                                 (error "improper script element specification; ~s" element))))
-                      specs))))
-
-
       ;; Attempt to default values from simulation object
-      (let ((sim (and simulator (find-instance-by-name simulator 'simulator))))
-	(when sim
-	  (macrolet ((get-from-sim (var slot)
-				   `(setf ,var (or ,var (slot-value sim ',slot)))))
-	    (get-from-sim system-name system-name)
-	    (get-from-sim system-version system-version-hook)
-	    (get-from-sim reset-system reset-system-hook)
-	    (get-from-sim start-system start-system-hook)
-	    (get-from-sim stop-system stop-system-hook)
-	    (get-from-sim schedule-function schedule-function-hook)
-	    (get-from-sim deactivate-scheduled-function deactivate-scheduled-function-hook)
-	    (get-from-sim seconds-per-time-unit seconds-per-time-unit)
-	    (get-from-sim timestamp timestamp-function))))
+    (let ((sim (and simulator (find-instance-by-name simulator 'simulator))))
+      (when sim
+        (macrolet ((get-from-sim (var slot)
+                     `(setf ,var (or ,var (slot-value sim ',slot)))))
+          (get-from-sim system-name system-name)
+          (get-from-sim system-version system-version-hook)
+          (get-from-sim reset-system reset-system-hook)
+          (get-from-sim start-system start-system-hook)
+          (get-from-sim stop-system stop-system-hook)
+          (get-from-sim schedule-function schedule-function-hook)
+          (get-from-sim deactivate-scheduled-function deactivate-scheduled-function-hook)
+          (get-from-sim seconds-per-time-unit seconds-per-time-unit)
+          (get-from-sim timestamp timestamp-function))))
 
 
-      (let* ((ivs-vars     (mapcar #'first  ivs))
-             (ivs-elements (mapcar #'rest ivs))
-	     (local-symbols      (mapcar #'(lambda (item) (if (consp item) (first item) item)) locals))
-	     (local-init-values  (mapcar #'(lambda (item) (when (consp item) (second item))) locals))
-	     (local-values-init-function
-	       (build-code-call
-                name
-		 'init-local-values
-		 `(progn
-		    ,@(mapcar #'(lambda (symbol value)
-				  `(store-local *current-experiment* ',symbol ,value))
-			      local-symbols
-			      local-init-values))
-		 `(,@arguments)))
-             (before-experiment-function
-	       (build-code-call
-                name
-                'before-experiment (build-locals-accessor-code-wrapper
-						     local-symbols
-						     before-experiment)
-				`(,@arguments)))
-             (before-trial-function
-	       (build-code-call
-                 name
-                'before-trial (build-locals-accessor-code-wrapper
-						local-symbols
-						before-trial)
-                                ;; Reversed order because of lambda-list-keywords. (Rubinstein)
-				`(,@ivs-vars ,@arguments)))
-	     (stop-system-function
-	       (build-code-call
-                 name
-                'stop-system
-				(build-locals-accessor-code-wrapper
-				  local-symbols
-				  stop-system)
-				`(,@ivs-vars ,@arguments)))
-	     (reset-system-function
-	       (build-code-call
-                 name
-                'reset-system
-				(build-locals-accessor-code-wrapper
-				  local-symbols
-				  reset-system)
-				`(,@ivs-vars ,@arguments)))
-	     (start-system-function
-	       (build-code-call
-                name
-		 'start-system
-		 (build-locals-accessor-code-wrapper
-		   local-symbols
-		   start-system)
-		 `(,@ivs-vars ,@arguments)))
-	     (system-version-function
-	       (build-code-call
-                 name
-		 'system-version
-		 (build-locals-accessor-code-wrapper
-		   local-symbols
-		   system-version)
-		 `(,@arguments)))
-	     (after-trial-function
-	       (build-code-call
-                 name
-                'after-trial (build-locals-accessor-code-wrapper
-					       local-symbols
-					       after-trial)
-                                ;; Reversed order because of lambda-list-keywords. (Rubinstein)
-				`(,@ivs-vars ,@arguments)))
-	     (after-experiment-function
-	       (build-code-call
-                 name
-                'after-experiment (build-locals-accessor-code-wrapper
-						    local-symbols
-						    after-experiment)
-				`(,@arguments)))
-	     (ivs-elements-init-function
-	       (build-code-call
-                 name
-		 'init-ivs-elements
-		 `(progn
-		    (setf (slot-value *current-experiment* 'ivs-elements)
-			  (list ,@(mapcar #'(lambda (element-list)
-					      (if (intersection '(from downfrom upfrom in) element-list
-								:key #'(lambda (item)
-									 (if (symbolp item)
-									     (symbol-name item)
-									     ""))
-								:test #'string-equal)
-						  `(loop for val ,@element-list
-							 collect val)
-						  (first element-list))
-					      )
-					  ivs-elements))
-			  #+OLD
-			  (list ,@ivs-elements)
-			  ))
-		 `(,@arguments)))
-	     (script-setup-function
-	       (build-code-call name 'script-setup (process-script-specs name script))))
+    (let* ((ivs-vars     (mapcar #'first  ivs))
+           (ivs-elements (mapcar #'rest ivs))
+           (local-symbols      (mapcar #'(lambda (item) (if (consp item) (first item) item)) locals))
+           (local-init-values  (mapcar #'(lambda (item) (when (consp item) (second item))) locals))
+           (local-values-init-function
+             (build-code-call
+              name
+              'init-local-values
+              `(progn
+                 ,@(mapcar #'(lambda (symbol value)
+                               `(store-local *current-experiment* ',symbol ,value))
+                           local-symbols
+                           local-init-values))
+              `(,@arguments)))
+           (before-experiment-function
+             (build-code-call
+              name
+              'before-experiment (build-locals-accessor-code-wrapper
+                                  local-symbols
+                                  before-experiment)
+              `(,@arguments)))
+           (before-trial-function
+             (build-code-call
+              name
+              'before-trial (build-locals-accessor-code-wrapper
+                             local-symbols
+                             before-trial)
+              ;; Reversed order because of lambda-list-keywords. (Rubinstein)
+              `(,@ivs-vars ,@arguments)))
+           (stop-system-function
+             (build-code-call
+              name
+              'stop-system
+              (build-locals-accessor-code-wrapper
+               local-symbols
+               stop-system)
+              `(,@ivs-vars ,@arguments)))
+           (reset-system-function
+             (build-code-call
+              name
+              'reset-system
+              (build-locals-accessor-code-wrapper
+               local-symbols
+               reset-system)
+              `(,@ivs-vars ,@arguments)))
+           (start-system-function
+             (build-code-call
+              name
+              'start-system
+              (build-locals-accessor-code-wrapper
+               local-symbols
+               start-system)
+              `(,@ivs-vars ,@arguments)))
+           (system-version-function
+             (build-code-call
+              name
+              'system-version
+              (build-locals-accessor-code-wrapper
+               local-symbols
+               system-version)
+              `(,@arguments)))
+           (after-trial-function
+             (build-code-call
+              name
+              'after-trial (build-locals-accessor-code-wrapper
+                            local-symbols
+                            after-trial)
+              ;; Reversed order because of lambda-list-keywords. (Rubinstein)
+              `(,@ivs-vars ,@arguments)))
+           (after-experiment-function
+             (build-code-call
+              name
+              'after-experiment (build-locals-accessor-code-wrapper
+                                 local-symbols
+                                 after-experiment)
+              `(,@arguments)))
+           (ivs-elements-init-function
+             (build-code-call
+              name
+              'init-ivs-elements
+              `(progn
+                 (setf (slot-value *current-experiment* 'ivs-elements)
+                       (list ,@(mapcar #'(lambda (element-list)
+                                           (if (intersection '(from downfrom upfrom in) element-list
+                                                             :key #'(lambda (item)
+                                                                      (if (symbolp item)
+                                                                          (symbol-name item)
+                                                                          ""))
+                                                             :test #'string-equal)
+                                               `(loop for val ,@element-list
+                                                      collect val)
+                                               (first element-list))
+                                           )
+                                       ivs-elements))))
+              `(,@arguments)))
+           (script-setup-function
+             (build-code-call name 'script-setup (process-script-specs name script))))
 
-        `(eval-when (:load-toplevel :compile-toplevel :execute)
-           ;; Create the experiment instance.
-           ,@(mapcar #'build-iv-defclip-form ivs-vars)
-           ,(unless timestamp-clip-name
-             (build-timestamp-defclip-form (if (consp timestamp)
-                                                (second timestamp)
-                                                'timestamp)))
-           (make-instance
-             'experiment
-             :name ,(string name)
-             :description ,(string documentation)
-             :arguments ',arguments
-             :ivs ',ivs-vars
-             :ivs-element-init-function ,ivs-elements-init-function
-             :locals ',local-symbols
-	     :locals-init-function ,local-values-init-function
-             :before-experiment-function ,before-experiment-function
-             :before-trial-function      ,before-trial-function
-             :after-trial-function       ,after-trial-function
-             :after-experiment-function  ,after-experiment-function
-             :script-setup-function ,script-setup-function
-             :instrumentation-names ',instrumentation
-             :system-name ',system-name
-             :system-version-hook ,system-version-function
-             :start-system-hook   ,start-system-function
-             :reset-system-hook   ,reset-system-function
-             :stop-system-hook    ,stop-system-function
-             :schedule-function-hook ,(build-code-call
-                                       name
-                                       'schedule-function schedule-function
-                                       '(function time period name))
-             :deactivate-scheduled-function-hook ,(build-code-call
-                                                   name
-                                                   'deactivate-scheduled-function
-                                                   deactivate-scheduled-function
-                                                   '(event))
-	     :seconds-per-time-unit ,(or seconds-per-time-unit 1)
-             :timestamp-function ',(if (consp timestamp)
-                                     (first timestamp)
-                                     timestamp)
-             :timestamp-clip-name ',(or timestamp-clip-name
-                                        (if (consp timestamp)
-                                            (second timestamp)
-                                            'timestamp)))
-           ',name)))))
+      `(eval-when (:load-toplevel :compile-toplevel :execute)
+         ;; Create the experiment instance.
+         ,@(mapcar (lambda (iv) (build-iv-defclip-form iv name)) ivs-vars)
+         ,(unless timestamp-clip-name
+            (setf timestamp-clip-name (if (consp timestamp)
+                                              (second timestamp)
+                                              (el::form-symbol name "%" 'timestamp)))
+            (build-timestamp-defclip-form timestamp-clip-name))
+         (make-instance
+          'experiment
+          :name ,(string name)
+          :description ,(string documentation)
+          :arguments ',arguments
+          :ivs ',ivs-vars
+          :ivs-element-init-function ,ivs-elements-init-function
+          :locals ',local-symbols
+          :locals-init-function ,local-values-init-function
+          :before-experiment-function ,before-experiment-function
+          :before-trial-function      ,before-trial-function
+          :after-trial-function       ,after-trial-function
+          :after-experiment-function  ,after-experiment-function
+          :script-setup-function ,script-setup-function
+          :instrumentation-names ',instrumentation
+          :system-name ',system-name
+          :system-version-hook ,system-version-function
+          :start-system-hook   ,start-system-function
+          :reset-system-hook   ,reset-system-function
+          :stop-system-hook    ,stop-system-function
+          :schedule-function-hook ,(build-code-call
+                                    name
+                                    'schedule-function schedule-function
+                                    '(function time period name))
+          :deactivate-scheduled-function-hook ,(build-code-call
+                                                name
+                                                'deactivate-scheduled-function
+                                                deactivate-scheduled-function
+                                                '(event))
+          :seconds-per-time-unit ,(or seconds-per-time-unit 1)
+          :timestamp-function ',(if (consp timestamp)
+                                    (first timestamp)
+                                    timestamp)
+          :timestamp-clip-name ',timestamp-clip-name)
+         ',name))))
 
-(defun build-iv-defclip-form (iv)
-  `(defclip ,iv ()
-     (:class simple-instrumentation)
+(defun build-iv-defclip-form (iv experiment-name)
+  `(defclip ,(el::form-symbol experiment-name "%" iv) ()
+     (:class simple-instrumentation :report-key ,(build-report-key iv nil))
      (assert *current-experiment* () "there is no experiment currently running.")
      (get-local *current-experiment* ',iv)))
 
