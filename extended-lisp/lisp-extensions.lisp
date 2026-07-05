@@ -54,7 +54,7 @@
 
 
 #-Explorer
-(eval-when #+CLTL2 (:compile-toplevel :load-toplevel :execute) #-CLTL2 (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 (defmacro once-only (variable-list &body body)
   "Generate code that evaluates certain expressions only once.
 This is used in macros, for computing expansions.
@@ -133,30 +133,6 @@ Example:
            ,sequence))
 
 ;;;----------------------------------------------------------------------------
-
-(defun nordered-adjoin (item list lessp-predicate &key (test #'eql) key)
-  "Implements a destructive ordered-insert operation as an alternative to SORT.
-Inserts ITEM into the sorted LIST using the LESSP-PREDICATE as in SORT, but only if the
-item is not already present, as determined by the TEST as in MEMBER.
-KEY is applied to the item and members of LIST when applying LESSP-PREDICATE."
-  (declare (optimize (compilation-speed 0) (speed 3) (space 0) (safety 0) (debug 0)))
-  (if (null list)
-      (list item)
-      (do* ((item-value (if key (funcall key item) item))
-            (previous-cons nil tail)
-            (tail list (rest tail))
-            (head (first tail) (first tail)))
-           ((endp tail)
-            (setf (rest previous-cons) (list item))                       ;item appended at end
-            list)
-        (cond ((funcall test item head)                                   ;item = head?
-               (return list))
-              ((funcall lessp-predicate item-value (if key (funcall key head) head))    ;item < head?
-               (cond ((null previous-cons)
-                      (return (cons item list)))                          ;item inserted at head of list
-                     (t
-                      (setf (rest previous-cons) (cons item tail))
-                      (return list))))))))
 
 (defmacro pushnew-ordered (value place lessp-predicate
                             &rest nordered-adjoin-keywords)
@@ -368,7 +344,7 @@ to key and value"
 ;;; is that if you give a prefix to GENSYM it remains the prefix
 ;;; until you change it.
 
-(eval-when (compile load eval)
+(eval-when (:compile-toplevel :load-toplevel :execute)
 
 (defvar *newsym-counter* 0
   "Counter used by NEWSYM for generating print names.")
@@ -467,7 +443,6 @@ corresponding file `filename'.  `Filename' is opened using `options', which
 are the same as for the OPEN function.  If `filename' is nil, the OPEN is
 bypassed and nil is bound to `stream'."
 
-  (declare (arglist stream filename [{option}*] {form}*))
   (once-only (filename)
     (let ((close? (newsym 'close?)))
       `(let* ((,close? nil)
@@ -493,7 +468,6 @@ corresponding file `filename'.  `Filename' is opened using `options', which
 are the same as for the OPEN function.  If `filename' is nil, the OPEN is
 bypassed and nil is bound to `stream'."
 
-  (declare (arglist {(stream filename [{option}*])}* {form}*))
   (cond ((endp streams) `(progn ,@body))
         (t `(with-conditional-open-file ,(first streams)
               (with-conditional-open-files ,(rest streams) ,@body)))))
@@ -601,299 +575,6 @@ bypassed and nil is bound to `stream'."
        ,@body)))
 
 ;;;----------------------------------------------------------------------------
-
-;;; ---------------------------------------------------------------------------
-;;;
-;;; Kevin's Generic Slot Functions :::
-;;;
-;;; ---------------------------------------------------------------------------
-
-#+PICCL
-(defun nostruct (type)
-  (error "~A is not a defined structure" type))
-#+PICCL
-(defmacro getstruct (type &Optional (ifnot nil noerrp))
-  (if noerrp
-      `(or (sys::symbol-get ,type 'sys::%structure-definition)
-	   ,ifnot)
-      `(or (sys::symbol-get ,type 'sys::%structure-definition)
-	   (nostruct ,type))))
-
-
-(defun GET-DEFSTRUCT-DESCRIPTION (name)
-
-  "GET-DESFSTRUCT-DESCRIPTION name
-
-If `name' has been defined as a structure then return its
-description.  Otherwise signal an error."
-
-  #+LISPM   (si::get-defstruct-description name)
-  #+DEC     (or (get name 'defstruct-description)
-                (error "~s is not the name of a defstruct." name))
-  #+PICCL (getstruct name)
-  #+MCL (or (ccl::structure-class-p name)
-            (error "~s is not the name of a defstruct." name))
-  #-(or LISPM DEC PICCL MCL)
-    (error "Can't do generic defstruct operations on ~a yet."
-	   (machine-type)))
-
-;;; ---------------------------------------------------------------------------
-
-(defun DEFSTRUCT-P (symbol)
-
-  "DEFSTRUCT-P symbol
-
-This predicate returns a non-nil value if symbol is
-the name of a defstruct type; nil otherwise."
-
-  (when (symbolp symbol)
-
-    #+LISPM   (si::getdecl symbol 'si::defstruct-description)
-    #+DEC     (get symbol 'defstruct-description)
-    #+MCL     (ccl::structure-class-p symbol)
-    #+PICCL (if (getstruct symbol NIL) T NIL) ;; Probably should just return value of getstruct.
-    )
-
-  #-(or LISPM DEC PICCL MCL) (nyi))
-
-;;; ---------------------------------------------------------------------------
-
-(defun STRUCTURE-SLOT-NAMES (type)
-
-  "STRUCTURE-SLOT-NAMES type
-
-This function returns a list of structure slot names
-given the type (symbol) of the structure."
-
-  #-(or LISPM DEC PICCL MCL)
-  (nyi "STRUCTURE-SLOT-NAMES")
-
-  #+(or LISPM DEC)
-  (let* ((description (get-defstruct-description type)))
-    (assert (not (null description)) ()
-            "~S is not a structure instance." type)
-    (let* ((slot-data
-	     #+DEC    (defstruct-description-slot-data description)
-	     #+LISPM  (si::defstruct-description-slot-alist description)))
-      (mapcar #'first slot-data)))
-  #+MCL
-  (mapcar #'first (rest (aref (get-defstruct-description type) 1)))
-  #+PICCL
-  (let ((dsd (get-defstruct-description type)))
-    (mapcar #'piccl::ssd-%name (piccl::sd-slots dsd)))
-  )
-
-;;; ---------------------------------------------------------------------------
-
-(defun STRUCTURE-SLOT-P (type slot)
-
-  "STRUCTURE-SLOT-P type slot
-
-   This function returns true if `Slot' is the name of a slot in the
-   defstruct type named by `Type.'"
-
-  (and (structure-slot-index-1 type slot) t))
-
-;;; ---------------------------------------------------------------------------
-;;;
-;;; Stucture Slot Index Computation Function :::
-;;;
-;;; Common to both access and setting functions.
-;;;
-;;; ---------------------------------------------------------------------------
-
-(defun STRUCTURE-SLOT-INDEX-1 (type slot)
-
-  ;; Returns the index of the slot or nil if the slot doesn't
-  ;; exist.  Used by STRUCTURE-SLOT-P and STRUCTURE-SLOT-INDEX.
-
-  #+(or DEC LISPM)
-  (let* ((description (get-defstruct-description type)))
-
-    #+DEC
-    (let* ((slot-data (defstruct-description-slot-data description))
-	   (index (second (assoc slot slot-data
-                                 ;; We use string= to avoid package
-                                 ;; requirements.
-                                 :TEST #'string=))))
-      index)
-
-    #+LISPM
-    (let* ((slot-data (si::defstruct-description-slot-alist
-                        description))
-	   (index (second (assoc slot slot-data
-                                 ;; We use string= to avoid package
-                                 ;; requirements.
-                                 :TEST #'string=))))
-      (unless (null index)
-	(case (second description)
-	   (:NAMED-ARRAY (+ 1 index))
-	   (otherwise index)))))
-  #+MCL
-  (let ((pos (position (symbol-name slot) (rest (aref (GET-DEFSTRUCT-DESCRIPTION type) 1))
-                       :key #'first
-                       :TEST #'string=)))
-    (when pos (1+ pos)))
-  #+PICCL
-  (let ((dsd (GET-DEFSTRUCT-DESCRIPTION type)))
-    (find (symbol-name slot) (sys::sd-slots dsd)
-	  :KEY #'sys::ssd-%name
-	  :TEST #'string=)))
-
-;;; ---------------------------------------------------------------------------
-
-(defun STRUCTURE-SLOT-INDEX (type slot)
-
-  ;; Returns the index of the slot or signals an error
-  ;; if the slot doesn't exist.
-
-  (or (structure-slot-index-1 type slot)
-      (error "~S is not a slot in ~S." slot type)))
-
-;;;---------------------------------------------------------------------------
-;;;
-;;; Structure Slot Access Functions :::
-;;;
-;;; ---------------------------------------------------------------------------
-
-(defun GET-STRUCTURE-SLOT-ACCESSOR-FUNCTION (type slot)
-
-  "GET-STRUCTURE-SLOT-ACCESSOR-FUNCTION type slot
-
-Returns the accessor function for ``slot'' in structures of type ``type''."
-
-  slot type
-  #-(or DEC LISPM)
-  (nyi "GET-STRUCTURE-SLOT-ACCESSOR-FUNCTION")
-  #+(or DEC LISPM)
-  (let* ((description (get-defstruct-description type)))
-
-    #+DEC
-    (let* ((slot-data (defstruct-description-slot-data description))
-           (defstruct-name (system::defstruct-description-name slot-data))
-           ;; The following means of obtaining the package of the defstruct
-           ;; functions should work in all (?) cases ::
-           (defstruct-package
-             (symbol-package
-               (system::defstruct-description-constructor slot-data))))
-      ;; The following requires the umass-extended-lisp patch to VAXLisp which
-      ;; saves the :CONC-NAME on the symbols PList:
-      (intern (concatenate 'string
-                           (get type :conc-name)
-                           (symbol-name slot))
-              defstruct-package))
-
-    #+LISPM
-    (let* ((slot-data (si::defstruct-description-slot-alist
-                        description))
-	   (accessor (seventh (assoc slot slot-data
-                                 ;; We use string= to avoid package
-                                 ;; requirements.
-                                 :TEST #'string=))))
-      accessor)))
-
-;;; ---------------------------------------------------------------------------
-
-(defun GET-STRUCTURE-SLOT (object slot)
-
-  "GET-STRUCTURE-SLOT object slot
-
-Returns the value of a slot in a structure
-given the name of the slot.
-
-This function may be used as a place form for SETF."
-  #+DEC
-  (let ((type (type-of object)))
-    (%sp-structref type object (structure-slot-index type slot)))
-  #+Explorer
-  (let ((type (type-of object)))
-    (aref object (structure-slot-index type slot)))
-  #+MCL
-  (let ((type (type-of object)))
-    (ccl::struct-ref object (structure-slot-index type slot)))
-  #+PICCL
-  (let* ((dsd (getstruct
-		;; Fast but lower
-               (sys::%stref object 0)
-               ;; Slow, but better error message!
-               ;; (type-of object)
-               ))
-         (ssd (find slot (sys::sd-slots dsd)
-                    :KEY #'sys::ssd-%name
-                    :TEST #'string=)))
-    (sys::%stref object (sys::ssd-index ssd)))
-  #-(or DEC Explorer PICCL MCL)
-  (nyi "GET-STRUCTURE-SLOT")
-  )
-
-;;; ---------------------------------------------------------------------------
-;;;
-;;; Structure Slot Setting Functions :::
-;;;
-;;; ---------------------------------------------------------------------------
-
-(defun SET-STRUCTURE-SLOT (object slot value)
-
-  ;; SET-STRUCTURE-SLOT object slot value
-  ;;
-  ;; Sets the value of a slot in a structure
-  ;; given the name of the slot.
-
-  #+DEC
-  (let ((type (type-of object)))
-    (%sp-structset type object (structure-slot-index type slot) value))
-  #+Explorer
-  (let ((type (type-of object)))
-    (si::set-aref object (structure-slot-index type slot) value))
-  #+MCL
-  (let ((type (type-of object)))
-    (ccl::struct-set object (structure-slot-index type slot) value))
-  #+PICCL
-  (let* ((dsd (getstruct
-		;; Fast but lower
-		(sys::%stref object 0)
-		;; Slow, but better error message!
-		;; (type-of object)
-		))
-	 (ssd (find (symbol-name slot) (sys::sd-slots dsd)
-		    :KEY #'sys::ssd-%name
-		    :TEST #'string=)))
-    (sys::%stset object (sys::ssd-index ssd) value))
-  #-(or DEC Explorer MCL PICCL)
-  (nyi "SET-STRUCTURE-SLOT"))
-
-(defsetf get-structure-slot set-structure-slot)
-
-;;; ---------------------------------------------------------------------------
-
-;; The VaxLisp version of defstruct-conc-name is in BOOKKEEP.LISP ::
-
-#-DEC
-(defun DEFSTRUCT-CONC-NAME (STRUCTURE)
-
-  "DEFSTRUCT-CONC-NAME structure
-
-Return a string which is the prefix for building defstruct slot
-accessors for this structure.  STRUCTURE must be a symbol which
-names a structure type."
-
-  structure
-  #+LISPM
-  (let* ((description (get-defstruct-description structure)))
-    (assert (not (null description)) (structure)
-	    "~s is not the name of a structure." structure)
-    (if (si:defstruct-description-conc-name description)
-      (string (si:defstruct-description-conc-name description))
-      ""))
-
-  #+PICCL
-  (let ((dsd (getstruct structure)))
-    (sys::sd-conc-name dsd))
-
-  #-(or LISPM PICCL)
-  (error "Can't do generic defstruct operations on ~a yet."
-	 (machine-type)))
-
 
 ;;; ---------------------------------------------------------------------------
 ;;;				  End of File
