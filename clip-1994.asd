@@ -54,7 +54,7 @@ the Quicklisp."
                (:file "agent-experiment")))
 
 (asdf:defsystem clip-1994/doc
-  :depends-on ("clip-1994" "dref" "mgl-pax")
+  :depends-on ("clip-1994" "dref" "mgl-pax" "clip-1994/loader")
   :pathname "new-code"
   :version "1.4.1"
   :components ((:file "pax-doc")))
